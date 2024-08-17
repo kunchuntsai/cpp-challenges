@@ -1,2 +1,0 @@
-g++ -o output/run src/ringbuffer.cpp
-./output/run

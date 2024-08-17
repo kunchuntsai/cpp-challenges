@@ -21,12 +21,10 @@ private:
     /* a pointer to hold the memory */
     float* buffer = nullptr;
 
-    /*
-    buffer [5] = [0, 0, 0, 0, 0, 0]
-    head = 0
+    /* buffer [5] = [0, 0, 0, 0, 0, 0]
+       head = 0
     tail = 0
-    full = false
-    */
+    full = false */
 public:
     RingBuffer(int size) : Size(size) {
         if (Size <= 0) {
@@ -80,7 +78,7 @@ public:
 };
 
 int main(int argc, char **argv) {
-    std::cout << "Run main()" << std::endl;
+    std::cout << "Run RingBuffer" << std::endl;
 
     RingBuffer rb(5);
     rb.add(10.f);

@@ -62,6 +62,8 @@ private:
 };
 
 int main() {
+    std::cout << "Run Logger" << std::endl;
+
     Logger& log = Logger::getInstance();
     log.log("Check log level");
 
