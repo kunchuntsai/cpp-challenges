@@ -1,4 +1,21 @@
 # C++ Challenges
+This order allows for a gradual increase in difficulty, testing various aspects of C++ programming along the way. It starts with basic data structures and algorithms, progresses through memory management and design patterns, and culminates in advanced concurrency and system-level programming.
+
+Keep in mind that the perceived difficulty can vary based on individual experience. For example, someone with strong concurrency experience might find the Thread Pool easier than the JSON Parser.
+
+* Circular Buffer: This is a relatively straightforward data structure implementation, making it a good starting point.
+* Trie (Prefix Tree): While it involves tree structures, the concept and implementation are generally straightforward.
+* LRU Cache: This requires understanding of data structures and basic algorithms, but is still relatively manageable.
+* Simple Smart Pointer: This introduces memory management and some modern C++ concepts, increasing the difficulty slightly.
+* Thread-Safe Singleton Logger: This brings in basic concurrency and design patterns, stepping up the complexity.
+* Generic Observable Pattern: This challenge tests understanding of templates and design patterns, which can be tricky.
+* Thread-Safe Queue: This further tests concurrency knowledge, focusing on synchronization primitives.
+* JSON Parser: Parsing involves more complex string manipulation and recursive logic, increasing the difficulty.
+* Memory Pool Allocator: This requires deep understanding of memory management and low-level optimizations.
+* Thread Pool: This is the most complex, combining advanced concurrency, templates, and careful resource management.
+
+# Description
+This repository contains a collection of C++ challenges that cover various aspects of C++ programming. Each challenge is designed to test different skills and concepts in C++.
 
 ## Circular Buffer
 This challenge tests your ability to implement a data structure and manage memory efficiently. It requires understanding of array manipulation and possibly dynamic memory allocation.

@@ -5,6 +5,9 @@
 // - log(message): Add a message to the log
 // - setLogLevel(level): Set the current log level
 // - getLogLevel(): Get the current log level
+#ifndef LOGGER_HPP
+#define LOGGER_HPP
+
 #include <iostream>
 #include <stdexcept>
 
@@ -22,7 +25,7 @@ public:
         return instance;
     }
 
-    void log(std::string message) {
+    void log(std::string& message) {
         std::lock_guard<std::mutex> lock(mutex_);
         std::cout << "[" << getLogLevelString(currentLevel_) << "] " << message << std::endl;
     }
@@ -47,6 +50,7 @@ public:
 private:
     Logger() : currentLevel_(LogLevel::INFO) {}
 
+    //static const char* logLevelToString(LogLevel level) {
     std::string getLogLevelString(LogLevel level) {
         switch (level) {
             case LogLevel::DEBUG: return "DEBUG";
@@ -61,14 +65,20 @@ private:
     mutable std::mutex mutex_;
 };
 
-int main() {
-    std::cout << "Run Logger" << std::endl;
+// Convenience macros for logging
+#define LOG_DEBUG(message) Logger::getInstance().log(message, Logger::LogLevel::DEBUG)
+#define LOG_INFO(message) Logger::getInstance().log(message, Logger::LogLevel::INFO)
+#define LOG_WARNING(message) Logger::getInstance().log(message, Logger::LogLevel::WARNING)
+#define LOG_ERROR(message) Logger::getInstance().log(message, Logger::LogLevel::ERROR)
 
-    Logger& log = Logger::getInstance();
-    log.log("Check log level");
+#endif // LOGGER_HPP
 
-    log.setLogLevel(Logger::WARNING);
-    log.log("Check log level");
+// int main() {
+//     std::cout << "Run Logger" << std::endl;
 
-    return 0;
-}
+//     Logger& log = Logger::getInstance();
+//     log.log("Check log level");
+//     log.setLogLevel(Logger::WARNING);
+//     log.log("Check log level");
+//     return 0;
+// }

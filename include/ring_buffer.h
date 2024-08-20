@@ -5,6 +5,9 @@
 // - pop(): Remove and return the oldest element
 // - isFull(): Check if the buffer is full
 // - isEmpty(): Check if the buffer is empty
+#ifndef RINGBUFFER_HPP
+#define RINGBUFFER_HPP
+
 #include <iostream>
 #include <stdexcept>
 
@@ -76,21 +79,21 @@ public:
         std::cout << "(h: " << head << ", t: " << tail << ", f: " << full << std::endl;
     }
 };
+#endif // RINGBUFFER_HPP
 
-int main(int argc, char **argv) {
-    std::cout << "Run RingBuffer" << std::endl;
+// int main(int argc, char **argv) {
+//     std::cout << "Run RingBuffer" << std::endl;
 
-    RingBuffer rb(5);
-    rb.add(10.f);
-    rb.add(20.f);
-    rb.add(30.f);
-    rb.add(40.f);
-    rb.add(50.f);
+//     RingBuffer rb(5);
+//     rb.add(10.f);
+//     rb.add(20.f);
+//     rb.add(30.f);
+//     rb.add(40.f);
+//     rb.add(50.f);
 
-    float value;
-    value = rb.pop();
-    value = rb.pop();
-    value = rb.pop();
-
-    return 0;
-}
+//     float value;
+//     value = rb.pop();
+//     value = rb.pop();
+//     value = rb.pop();
+//     return 0;
+// }

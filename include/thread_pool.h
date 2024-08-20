@@ -5,6 +5,9 @@
 // - enqueue(task): Add a task to the pool's queue
 // - shutdown(): Stop all threads and clean up resources
 // The thread pool should be able to handle any type of task (use templates or std::function)
+#ifndef THREADPOOL_HPP
+#define THREADPOOL_HPP
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -79,11 +82,13 @@ private:
     bool stop;
 };
 
-int main() {
-    std::cout << "Run ThreadPool" << std::endl;
+#endif // THREADPOOL_HPP
 
-    ThreadPool pool(4);
-    auto result = pool.enqueue([](int answer) { return answer; }, 42);
-    std::cout << result.get() << std::endl;
-    return 0;
-}
+// int main() {
+//     std::cout << "Run ThreadPool" << std::endl;
+
+//     ThreadPool pool(4);
+//     auto result = pool.enqueue([](int answer) { return answer; }, 42);
+//     std::cout << result.get() << std::endl;
+//     return 0;
+// }

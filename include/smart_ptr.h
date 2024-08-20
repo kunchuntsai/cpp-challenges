@@ -5,8 +5,12 @@
 // - Destructor that deletes the managed object
 // - Overload the -> and * operators
 // - Implement move semantics (move constructor and move assignment operator)
+#ifndef SMARTPTR_HPP
+#define SMARTPTR_HPP
 
 template <typename T>
 class SmartPtr {
     // TODO: Implement the smart pointer class
 };
+
+#endif // SMARTPTR_HPP
