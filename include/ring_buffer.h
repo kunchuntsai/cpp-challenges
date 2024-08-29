@@ -8,41 +8,39 @@
 #ifndef RINGBUFFER_HPP
 #define RINGBUFFER_HPP
 
-#include <iostream>
+#include <vector>
 #include <stdexcept>
+#include <iostream>
 
 class RingBuffer {
 private:
     /* buffer size */
-    int Size = 0;
+    size_t Size;
     /* index for output data */
-    int head = 0;
+    size_t head;
     /* index for input data */
-    int tail = 0;
-    /* index for output data */
-    bool full = false;
-    /* a pointer to hold the memory */
-    float* buffer = nullptr;
+    size_t tail;
+    /* flag to indicate if buffer is full */
+    bool full;
+    /* vector to hold the data */
+    std::vector<float> buffer;
 
-    /* buffer [5] = [0, 0, 0, 0, 0, 0]
-       head = 0
-    tail = 0
-    full = false */
 public:
-    RingBuffer(int size) : Size(size) {
-        if (Size <= 0) {
+    RingBuffer(size_t size) : 
+        Size(size), 
+        head(0), 
+        tail(0), 
+        full(false),
+        buffer(size, 0.0f)  // Initialize vector with size elements, all set to 0.0f
+    {
+        if (Size == 0) {
             throw std::runtime_error("Size is invalid");
-        } else {
-            buffer = new float[Size];
-            std::fill(buffer, buffer + Size, 0.0f);
         }
     }
 
-    ~RingBuffer() {
-        delete[] buffer;
-    }
+    // No need for a destructor, vector manages its own memory
 
-    void add(float value) {
+    void push(float value) {
         buffer[tail] = value;
         tail = (tail + 1) % Size;
         full = (head == tail);
@@ -73,10 +71,10 @@ public:
 
     void print() const {
         std::cout << "Buffer: ";
-        for (int i = 0; i < Size; i++) {
-            std::cout << buffer[i] << ", ";
+        for (const auto& value : buffer) {
+            std::cout << value << ", ";
         }
-        std::cout << "(h: " << head << ", t: " << tail << ", f: " << full << std::endl;
+        std::cout << "(h: " << head << ", t: " << tail << ", f: " << full << ")" << std::endl;
     }
 };
 #endif // RINGBUFFER_HPP
@@ -85,11 +83,11 @@ public:
 //     std::cout << "Run RingBuffer" << std::endl;
 
 //     RingBuffer rb(5);
-//     rb.add(10.f);
-//     rb.add(20.f);
-//     rb.add(30.f);
-//     rb.add(40.f);
-//     rb.add(50.f);
+//     rb.push(10.f);
+//     rb.push(20.f);
+//     rb.push(30.f);
+//     rb.push(40.f);
+//     rb.push(50.f);
 
 //     float value;
 //     value = rb.pop();

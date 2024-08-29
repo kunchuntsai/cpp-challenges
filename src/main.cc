@@ -7,11 +7,11 @@ int main() {
     std::cout << "Run main()" << std::endl;
 
     RingBuffer rb(5);
-    rb.add(10.f);
-    rb.add(20.f);
-    rb.add(30.f);
-    rb.add(40.f);
-    rb.add(50.f);
+    rb.push(10.f);
+    rb.push(20.f);
+    rb.push(30.f);
+    rb.push(40.f);
+    rb.push(50.f);
 
     float value;
     value = rb.pop();
