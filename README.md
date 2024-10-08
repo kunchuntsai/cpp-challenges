@@ -14,6 +14,20 @@ Keep in mind that the perceived difficulty can vary based on individual experien
 * Memory Pool Allocator: This requires deep understanding of memory management and low-level optimizations.
 * Thread Pool: This is the most complex, combining advanced concurrency, templates, and careful resource management.
 
+# How to build
+```
+./run.sh
+```
+With nix configuration, you can build the project with `nix build` or `nix build ".?submodules=1"`
+```
+direnv allow
+nix flake show   # show flake.lock
+nix flake update # update flake.lock
+nix develop
+nix build
+./result/bin/cpp-challenges
+```
+
 # Description
 This repository contains a collection of C++ challenges that cover various aspects of C++ programming. Each challenge is designed to test different skills and concepts in C++.
 

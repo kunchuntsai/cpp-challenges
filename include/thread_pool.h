@@ -83,12 +83,3 @@ private:
 };
 
 #endif // THREADPOOL_HPP
-
-// int main() {
-//     std::cout << "Run ThreadPool" << std::endl;
-
-//     ThreadPool pool(4);
-//     auto result = pool.enqueue([](int answer) { return answer; }, 42);
-//     std::cout << result.get() << std::endl;
-//     return 0;
-// }

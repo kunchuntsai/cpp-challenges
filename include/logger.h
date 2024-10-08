@@ -72,13 +72,3 @@ private:
 #define LOG_ERROR(message) Logger::getInstance().log(message, Logger::LogLevel::ERROR)
 
 #endif // LOGGER_HPP
-
-// int main() {
-//     std::cout << "Run Logger" << std::endl;
-
-//     Logger& log = Logger::getInstance();
-//     log.log("Check log level");
-//     log.setLogLevel(Logger::WARNING);
-//     log.log("Check log level");
-//     return 0;
-// }

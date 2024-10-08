@@ -1,21 +1,25 @@
 #include <iostream>
+#include "ring_buffer.h"
+#include "trie.h"
+#include "logger.h"
+#include "unit_test.h"
 
-#include "../include/ring_buffer.h"
-#include "../include/unit_test.h"
+// Declare test functions
+void runTrieTests();
+void runRingBufferTests();
+void runLoggerTests();
 
 int main() {
-    std::cout << "Run main()" << std::endl;
+    std::cout << "Running all tests..." << std::endl;
 
-    RingBuffer rb(5);
-    rb.push(10.f);
-    rb.push(20.f);
-    rb.push(30.f);
-    rb.push(40.f);
-    rb.push(50.f);
+    std::cout << "\nRunning Trie tests:" << std::endl;
+    runTrieTests();
 
-    float value;
-    value = rb.pop();
-    value = rb.pop();
-    value = rb.pop();
+    std::cout << "\nRunning RingBuffer tests:" << std::endl;
+    runRingBufferTests();
+
+    std::cout << "\nRunning Logger tests:" << std::endl;
+    runLoggerTests();
+
     return 0;
 }
