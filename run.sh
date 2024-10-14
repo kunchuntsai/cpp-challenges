@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# gcc
-# g++ -o output/run src/threadpool.cpp
-#./output/run
-
 # Check if build directory exists
 if [ -d "build" ]; then
     echo "Build directory already exists. Cleaning..."

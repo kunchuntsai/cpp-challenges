@@ -3,15 +3,26 @@
 #include <sstream>
 #include <thread>
 
-// Helper function to capture cout output
+// Helper class to capture cout output
 class CoutCapture {
-    std::streambuf* old;
-    std::ostringstream capture;
+private:
+    std::streambuf* oldBuf;
+    std::ostringstream captureStream;
 
 public:
-    CoutCapture() : old(std::cout.rdbuf(capture.rdbuf())) {}
-    ~CoutCapture() { std::cout.rdbuf(old); }
-    std::string get() const { return capture.str(); }
+    CoutCapture() : oldBuf(nullptr) {
+        oldBuf = std::cout.rdbuf(captureStream.rdbuf());
+    }
+
+    ~CoutCapture() {
+        if (oldBuf) {
+            std::cout.rdbuf(oldBuf);
+        }
+    }
+
+    std::string get() const {
+        return captureStream.str();
+    }
 };
 
 TEST(LoggerSingletonBehavior) {
