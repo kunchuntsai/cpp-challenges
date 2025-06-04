@@ -14,18 +14,40 @@ Keep in mind that the perceived difficulty can vary based on individual experien
 * Memory Pool Allocator: This requires deep understanding of memory management and low-level optimizations.
 * Thread Pool: This is the most complex, combining advanced concurrency, templates, and careful resource management.
 
-# How to build
+# How to build and run
+
+## Prerequisites
+- CMake (version 3.10 or higher)
+- C++ compiler with C++17 support (gcc, clang, or MSVC)
+
+## Build and Run
+The project uses CMake for building and includes convenient scripts for building and running:
+
+```bash
+# Build the project
+./scripts/build.sh
+
+# Run the first available program
+./scripts/run.sh
+
+# List all available programs
+./scripts/run.sh -l
+
+# Run a specific program
+./scripts/run.sh program_name
 ```
-./run.sh
-```
-With nix configuration, you can build the project with `nix build` or `nix build ".?submodules=1"`
-```
-direnv allow
-nix flake show   # show flake.lock
-nix flake update # update flake.lock
-nix develop
-nix build
-./result/bin/cpp-challenges
+
+### Build Options
+The build script supports several options:
+```bash
+# Build with debug flags
+./scripts/build.sh -d
+
+# Clean build directory and rebuild
+./scripts/build.sh -c
+
+# Build and run
+./scripts/build.sh -r
 ```
 
 # Description
