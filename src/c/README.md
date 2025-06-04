@@ -5,29 +5,20 @@ This directory contains focused C programming exercises organized into key pract
 ## Structure
 
 - `memory/` - Pointer Manipulation & Memory Management
-  - Dynamic memory allocation (malloc, calloc, free)
-  - Pointer arithmetic and multi-level pointers
-  - Common pitfalls: memory leaks, dangling pointers, buffer overflows
+  - [pointer_demo.c](memory/pointer_demo.c) - Dynamic memory allocation, pointer arithmetic, and multi-level pointers with proper memory management practices
+  - [memory_management.c](memory/memory_management.c) - Custom memory allocator implementation with safe string operations and memory block management
 
 - `strings/` - String Processing
-  - Manual string operations
-  - Character array manipulation
-  - Parsing and tokenization
+  - [string_processing.c](strings/string_processing.c) - Manual string operations, character array manipulation, and string tokenization with memory safety
 
 - `arrays/` - Array & Buffer Operations
-  - Array traversal and manipulation
-  - Fixed-size vs dynamic arrays
-  - Circular buffers (especially for embedded systems)
+  - [array_operations.c](arrays/array_operations.c) - Fixed-size arrays, dynamic arrays with automatic growth, and circular buffer implementation
 
 - `bits/` - Bit Manipulation
-  - Bitwise operations (&, |, ^, ~, <<, >>)
-  - Setting/clearing/toggling specific bits
-  - Bit masking techniques
+  - [bit_operations.c](bits/bit_operations.c) - Bitwise operations, bit masking, and bit manipulation algorithms with best practices
 
 - `system/` - Low-Level System Concepts
-  - Understanding of stack vs heap
-  - Function pointers and callbacks
-  - Basic understanding of memory layout
+  - [system_concepts.c](system/system_concepts.c) - Stack vs heap memory, function pointers, and program memory layout with safety considerations
 
 ## How to Build and Run
 
