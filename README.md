@@ -50,29 +50,37 @@ The build script supports several options:
 ./scripts/build.sh -r
 ```
 
-# Description
-This repository contains a collection of C++ challenges that cover various aspects of C++ programming. Each challenge is designed to test different skills and concepts in C++.
 
-## Circular Buffer
-This challenge tests your ability to implement a data structure and manage memory efficiently. It requires understanding of array manipulation and possibly dynamic memory allocation.
+# C Practices
+This section contains focused C programming exercises organized into key practice areas to help improve C programming skills. The exercises are located in `src/c/` and cover fundamental C concepts.
 
-## Simple Smart Pointer
-This challenge focuses on memory management and modern C++ features. It tests your understanding of RAII (Resource Acquisition Is Initialization), move semantics, and operator overloading.
+## Structure
+- `memory/` - Pointer manipulation and memory management
+- `strings/` - String processing and manipulation
+- `arrays/` - Array and buffer operations
+- `bits/` - Bit manipulation techniques
+- `system/` - Low-level system concepts
 
-## Thread-safe Singleton Logger
-This challenge combines object-oriented design with concurrent programming. It tests your ability to implement the singleton pattern in a thread-safe manner and basic logging functionality.
+## How to Build and Run
+The C practice section uses dedicated build and run scripts:
 
-## Thread Pool
-Aspects of C++ programming tested in the thread pool implementation:
-* Thread Management: Creating, joining, and detaching threads.
-* Synchronization Primitives: Using mutexes, condition variables, and atomic operations.
-* Task Queue Management: Implementing a thread-safe queue for tasks.
-* Template Programming: For generic task types and result handling.
-* Lambda Functions: Often used for worker thread functions.
-* Smart Pointers: For managing dynamically allocated resources.
-* RAII Principles: Ensuring proper resource cleanup.
-* Move Semantics: For efficient task object handling.
-* Exception Handling: Dealing with exceptions in multithreaded contexts.
-* Standard Library Containers: Such as std::queue for the task queue.
+```bash
+# Build all C programs
+./scripts/build_c.sh
 
-This challenge is particularly relevant for positions involving high-performance or system-level programming, where understanding of concurrency and efficient resource utilization is crucial. It's also relevant to the job description you provided earlier, which mentions embedded software development and performance optimization.
+# Build a specific program
+./scripts/build_c.sh -t src/c/memory/pointer_demo
+
+# Run all programs
+./scripts/run_c.sh -a
+
+# Run a specific program
+./scripts/run_c.sh -t pointer_demo
+
+# List all available programs
+./scripts/run_c.sh -l
+```
+
+For more detailed information about the C practices, please refer to the [C Practice README](src/c/README.md).
+
+Please refer to 
