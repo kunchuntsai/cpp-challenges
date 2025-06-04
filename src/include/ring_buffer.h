@@ -41,6 +41,9 @@ public:
     // No need for a destructor, vector manages its own memory
 
     void push(float value) {
+        if (isFull()) {
+            head = (head + 1) % Size;  // Advance head when buffer is full
+        }
         buffer[tail] = value;
         tail = (tail + 1) % Size;
         full = (head == tail);
