@@ -5,7 +5,7 @@ DEBUG=false
 CLEAN=false
 TARGET=""
 COMPILER="gcc"
-FLAGS="-Wall -Wextra"
+FLAGS="-Wall -Wextra -pthread"
 BUILD_DIR="build"
 
 # Help message
@@ -54,34 +54,34 @@ fi
 # Function to build a single program
 build_program() {
     local dir=$1
-    local source_file=$(find "$dir" -maxdepth 1 -name "*.c" | head -n 1)
     
-    if [ -z "$source_file" ]; then
-        # Try subdirectories if no .c file found in current directory
-        source_file=$(find "$dir" -maxdepth 2 -name "*.c" | head -n 1)
-    fi
+    # Find all .c files in the directory and its immediate subdirectories
+    local source_files=$(find "$dir" -maxdepth 2 -name "*.c")
     
-    if [ -z "$source_file" ]; then
-        echo "No .c file found in $dir or its subdirectories"
+    if [ -z "$source_files" ]; then
+        echo "No .c files found in $dir or its subdirectories"
         return 1
     fi
     
-    local program_name=$(basename "$source_file" .c)
-    local category_name=$(basename "$(dirname "$source_file")")
-    local build_path="$BUILD_DIR/$category_name"
-    
-    # Create build directory if it doesn't exist
-    mkdir -p "$build_path"
-    
-    echo "Building $program_name..."
-    $COMPILER $FLAGS -o "$build_path/$program_name" "$source_file"
-    
-    if [ $? -eq 0 ]; then
-        echo "Successfully built $program_name"
-    else
-        echo "Failed to build $program_name"
-        return 1
-    fi
+    # Build each .c file found
+    for source_file in $source_files; do
+        local program_name=$(basename "$source_file" .c)
+        local category_name=$(basename "$(dirname "$source_file")")
+        local build_path="$BUILD_DIR/$category_name"
+        
+        # Create build directory if it doesn't exist
+        mkdir -p "$build_path"
+        
+        echo "Building $program_name..."
+        $COMPILER $FLAGS -o "$build_path/$program_name" "$source_file"
+        
+        if [ $? -eq 0 ]; then
+            echo "Successfully built $program_name"
+        else
+            echo "Failed to build $program_name"
+            return 1
+        fi
+    done
 }
 
 # Clean build directory if requested
