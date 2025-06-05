@@ -16,6 +16,7 @@ This directory contains focused C programming exercises organized into key pract
 
 - `bits/` - Bit Manipulation
   - [bit_operations.c](bits/bit_operations.c) - Bitwise operations, bit masking, and bit manipulation algorithms with best practices
+  - [bit_swap.c](bits/bit_swap.c) - Efficient bit swapping algorithms and bit manipulation techniques
 
 - `system/` - Low-Level System Concepts
   - [system_concepts.c](system/system_concepts.c) - Stack vs heap memory, function pointers, and program memory layout with safety considerations
