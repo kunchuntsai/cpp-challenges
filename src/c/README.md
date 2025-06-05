@@ -13,6 +13,7 @@ This directory contains focused C programming exercises organized into key pract
 
 - `arrays/` - Array & Buffer Operations
   - [array_operations.c](arrays/array_operations.c) - Fixed-size arrays, dynamic arrays with automatic growth, and circular buffer implementation
+  - [max_subarray.c](arrays/max_subarray.c) - Implementation of Kadane's algorithm for finding the maximum sum subarray with index tracking
 
 - `bits/` - Bit Manipulation
   - [bit_operations.c](bits/bit_operations.c) - Bitwise operations, bit masking, and bit manipulation algorithms with best practices
