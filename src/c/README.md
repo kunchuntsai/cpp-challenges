@@ -4,23 +4,25 @@ This directory contains focused C programming exercises organized into key pract
 
 ## Structure
 
-- `memory/` - Pointer Manipulation & Memory Management
-  - [pointer_demo.c](memory/pointer_demo.c) - Dynamic memory allocation, pointer arithmetic, and multi-level pointers with proper memory management practices
-  - [memory_management.c](memory/memory_management.c) - Custom memory allocator implementation with safe string operations and memory block management
+`memory/` - Pointer Manipulation & Memory Management
+- [pointer_demo.c](memory/pointer_demo.c) - Dynamic memory allocation, pointer arithmetic, and multi-level pointers with proper memory management practices
+- [memory_management.c](memory/memory_management.c) - Custom memory allocator implementation with safe string operations and memory block management
+- [memory_management_pitfalls.c](memory/memory_management_pitfalls.c) - Common memory management pitfalls and their solutions
+- [raii_patterns.c](memory/raii_patterns.c) - Resource Acquisition Is Initialization (RAII) patterns in C
 
-- `strings/` - String Processing
-  - [string_processing.c](strings/string_processing.c) - Manual string operations, character array manipulation, and string tokenization with memory safety
+`strings/` - String Processing
+- [string_processing.c](strings/string_processing.c) - Manual string operations, character array manipulation, and string tokenization with memory safety
 
-- `arrays/` - Array & Buffer Operations
-  - [array_operations.c](arrays/array_operations.c) - Fixed-size arrays, dynamic arrays with automatic growth, and circular buffer implementation
-  - [max_subarray.c](arrays/max_subarray.c) - Implementation of Kadane's algorithm for finding the maximum sum subarray with index tracking
+`arrays/` - Array & Buffer Operations
+- [array_operations.c](arrays/array_operations.c) - Fixed-size arrays, dynamic arrays with automatic growth, and circular buffer implementation
+- [max_subarray.c](arrays/max_subarray.c) - Implementation of Kadane's algorithm for finding the maximum sum subarray with index tracking
 
-- `bits/` - Bit Manipulation
-  - [bit_operations.c](bits/bit_operations.c) - Bitwise operations, bit masking, and bit manipulation algorithms with best practices
-  - [bit_swap.c](bits/bit_swap.c) - Efficient bit swapping algorithms and bit manipulation techniques
+`bits/` - Bit Manipulation
+- [bit_operations.c](bits/bit_operations.c) - Bitwise operations, bit masking, and bit manipulation algorithms with best practices
+- [bit_swap.c](bits/bit_swap.c) - Efficient bit swapping algorithms and bit manipulation techniques
 
-- `system/` - Low-Level System Concepts
-  - [system_concepts.c](system/system_concepts.c) - Stack vs heap memory, function pointers, and program memory layout with safety considerations
+`system/` - Low-Level System Concepts
+- [system_concepts.c](system/system_concepts.c) - Stack vs heap memory, function pointers, and program memory layout with safety considerations
 
 ## How to Build and Run
 
