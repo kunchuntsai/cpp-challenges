@@ -6,6 +6,21 @@ This document outlines various patterns for implementing RAII (Resource Acquisit
 
 RAII is a programming idiom where resource acquisition and release are bound to object lifetime. In C, we can implement similar patterns using various techniques to ensure proper resource cleanup.
 
+## Table of Contents
+
+- [Key Patterns](#key-patterns)
+  - [1. Clear Ownership Transfer](#1-clear-ownership-transfer)
+  - [2. Reference Counting](#2-reference-counting)
+  - [3. Thread-Safe Queue with Ownership](#3-thread-safe-queue-with-ownership)
+  - [4. Thread Pool with Data Processing](#4-thread-pool-with-data-processing)
+  - [5. Shared Memory with Copy Semantics](#5-shared-memory-with-copy-semantics)
+- [Best Practices](#best-practices)
+- [Implementation Tips](#implementation-tips)
+- [Example Usage](#example-usage)
+- [Common Pitfalls](#common-pitfalls)
+- [Tools and Debugging](#tools-and-debugging)
+- [Additional Resources](#additional-resources)
+
 ## Key Patterns
 
 ### 1. Clear Ownership Transfer

@@ -442,7 +442,7 @@ void threadpool_destroy(ThreadPool* pool) {
 // Example work functions
 void process_string_data(void* data) {
     char* str = (char*)data;
-    printf("Thread %lu processing: %s\n", pthread_self(), str);
+    printf("Thread %lu processing: %s\n", (unsigned long)pthread_self(), str);
     usleep(100000);  // Simulate work
 }
 

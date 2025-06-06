@@ -314,7 +314,7 @@ void buffer_overflow_fixed_alt() {
 // BUGGY CODE:
 char* get_string_buggy() {
     char local_array[100] = "Hello World";
-    return local_array; // BUG: Returning pointer to stack memory
+    return local_array; // BUG DEMO: Returning pointer to stack memory
 }
 
 void use_stack_memory_bug() {
