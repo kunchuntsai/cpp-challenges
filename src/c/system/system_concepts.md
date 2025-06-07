@@ -33,6 +33,24 @@ typedef void (*StringProcessor)(char*);
 Operation op = &some_function;
 ```
 
+#### Comparator Example
+```c
+// Comparison function for integers
+int compare_ints(const void* a, const void* b) {
+    return (*(int*)a - *(int*)b);
+}
+
+// Usage with qsort
+int numbers[] = {5, 2, 8, 1, 9, 3};
+int num_count = sizeof(numbers) / sizeof(numbers[0]);
+qsort(numbers, num_count, sizeof(int), compare_ints);
+```
+
+The `Comparator` type is commonly used with sorting functions like `qsort`. The comparison function:
+- Takes two `const void*` parameters for generic type support
+- Returns negative if a < b, 0 if equal, positive if a > b
+- Is used as a callback by the sorting algorithm
+
 #### Common Uses
 - Callback mechanisms
 - State machines

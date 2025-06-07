@@ -103,7 +103,7 @@ if [ -n "$TARGET" ]; then
     fi
 else
     # Build all programs in all subdirectories
-    for dir in src/c/memory src/c/strings src/c/arrays src/c/bits src/c/system; do
+    for dir in src/c/memory src/c/strings src/c/arrays src/c/bits src/c/system src/c/test; do
         if [ -d "$dir" ]; then
             build_program "$dir"
         fi

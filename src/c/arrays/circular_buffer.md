@@ -23,6 +23,11 @@ This example demonstrates various concepts related to array manipulation and buf
    - Push and pop operations
    - Buffer full/empty conditions
    - Wraparound handling
+   ```
+   [HEAD] --> [data] [data] [data] --> [TAIL]
+            ^                        ^
+         read from               write to
+   ```
 
 ## Expected Output
 
