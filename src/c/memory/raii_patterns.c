@@ -79,6 +79,7 @@ DataBuffer* process_data_return_ownership(DataBuffer* buf, int new_owner_id) {
     }
     
     snprintf(new_data, new_size, "%s [processed by %d]", buf->data, new_owner_id);
+    printf("Processed data: %s\n", new_data);
     
     // Cleanup old buffer
     free(buf->data);
@@ -100,6 +101,8 @@ DataBuffer* process_data_return_ownership(DataBuffer* buf, int new_owner_id) {
 
 void ownership_example() {
     printf("\n=== OWNERSHIP TRANSFER EXAMPLE ===\n");
+    printf("Demonstrating clear ownership transfer between functions:\n");
+    printf("--------------------------------------------------------\n");
     
     // Create buffer (caller owns)
     DataBuffer* buf = create_buffer("Hello World", 1);
@@ -113,6 +116,7 @@ void ownership_example() {
     
     // Final cleanup (current owner)
     if (buf) {
+        printf("--------------------------------------------------------\n");
         printf("Final cleanup by owner %d\n", buf->owner_id);
         free(buf->data);
         free(buf);
@@ -150,7 +154,7 @@ RefCountedBuffer* refbuf_create(const char* data) {
         return NULL;
     }
     
-    printf("RefBuffer created with ref_count=1\n");
+    printf("RefBuffer created,  ref_count=1\n");
     return buf;
 }
 
@@ -160,7 +164,7 @@ RefCountedBuffer* refbuf_retain(RefCountedBuffer* buf) {
     
     pthread_mutex_lock(&buf->mutex);
     buf->ref_count++;
-    printf("RefBuffer retained, ref_count=%d\n", buf->ref_count);
+    printf("RefBuffer + +, ref_count=%d\n", buf->ref_count);
     pthread_mutex_unlock(&buf->mutex);
     
     return buf;
@@ -173,7 +177,7 @@ void refbuf_release(RefCountedBuffer* buf) {
     pthread_mutex_lock(&buf->mutex);
     buf->ref_count--;
     int should_free = (buf->ref_count == 0);
-    printf("RefBuffer released, ref_count=%d\n", buf->ref_count);
+    printf("RefBuffer - -, ref_count=%d\n", buf->ref_count);
     pthread_mutex_unlock(&buf->mutex);
     
     if (should_free) {
@@ -196,6 +200,41 @@ void process_with_refcount(RefCountedBuffer* buf) {
     
     // Release when done
     refbuf_release(local_ref);
+}
+
+void* ref_counting_thread(void* arg) {
+    RefCountedBuffer* buf = (RefCountedBuffer*)arg;
+    
+    for (int i = 0; i < 3; i++) {
+        process_with_refcount(buf);
+        usleep(50000);
+    }
+    
+    return NULL;
+}
+
+void ref_counting_example() {
+    printf("\n=== REFERENCE COUNTING EXAMPLE ===\n");
+    printf("Demonstrating shared ownership with reference counting:\n");
+    printf("--------------------------------------------------------\n");
+    
+    RefCountedBuffer* buf = refbuf_create("Shared Data");
+    if (!buf) return;
+    
+    // Start multiple threads that use the buffer
+    pthread_t threads[3];
+    for (int i = 0; i < 3; i++) {
+        pthread_create(&threads[i], NULL, ref_counting_thread, buf);
+    }
+    
+    // Wait for threads to complete
+    for (int i = 0; i < 3; i++) {
+        pthread_join(threads[i], NULL);
+    }
+    
+    printf("--------------------------------------------------------\n");
+    // Release original reference
+    refbuf_release(buf);
 }
 
 // ========================================
@@ -317,6 +356,71 @@ void queue_destroy(ThreadSafeQueue* q) {
     pthread_mutex_destroy(&q->mutex);
     pthread_cond_destroy(&q->not_empty);
     free(q);
+}
+
+// Producer thread function
+void* producer_thread(void* arg) {
+    ThreadSafeQueue* q = (ThreadSafeQueue*)arg;
+    for (int i = 0; i < 5; i++) {
+        // Create data for the queue
+        char* data = malloc(50);
+        snprintf(data, 50, "Message %d from producer", i);
+        
+        printf("Producer: Pushing %s\n", data);
+        if (queue_push(q, data) != 0) {
+            printf("Producer: Failed to push data\n");
+            free(data);
+        }
+        
+        usleep(100000);  // 100ms delay
+    }
+    return NULL;
+}
+
+// Consumer thread function
+void* consumer_thread(void* arg) {
+    ThreadSafeQueue* q = (ThreadSafeQueue*)arg;
+    while (1) {
+        char* data = (char*)queue_pop(q);
+        if (!data) {
+            printf("Consumer: Queue shutdown\n");
+            break;
+        }
+        
+        printf("Consumer: Received %s\n", data);
+        free(data);  // Consumer owns the data and must free it
+        usleep(150000);  // 150ms delay
+    }
+    return NULL;
+}
+
+void thread_safe_queue_example() {
+    printf("\n=== THREAD-SAFE QUEUE EXAMPLE ===\n");
+    printf("Demonstrating producer-consumer pattern with ownership transfer:\n");
+    printf("--------------------------------------------------------\n");
+    
+    // Create the queue
+    ThreadSafeQueue* queue = queue_create();
+    if (!queue) {
+        printf("Failed to create queue\n");
+        return;
+    }
+    
+    // Create producer and consumer threads
+    pthread_t producer, consumer;
+    pthread_create(&producer, NULL, producer_thread, queue);
+    pthread_create(&consumer, NULL, consumer_thread, queue);
+    
+    // Wait for producer to finish
+    pthread_join(producer, NULL);
+    
+    // Shutdown queue and wait for consumer
+    queue_shutdown(queue);
+    pthread_join(consumer, NULL);
+    
+    // Cleanup
+    queue_destroy(queue);
+    printf("--------------------------------------------------------\n");
 }
 
 // ========================================
@@ -450,6 +554,29 @@ void cleanup_string_data(void* data) {
     free(data);
 }
 
+void threadpool_example() {
+    printf("\n=== THREAD POOL EXAMPLE ===\n");
+    printf("Demonstrating work distribution across thread pool:\n");
+    printf("--------------------------------------------------------\n");
+    
+    ThreadPool* pool = threadpool_create(2);
+    if (!pool) return;
+    
+    // Submit work items
+    for (int i = 0; i < 5; i++) {
+        char* data = malloc(50);
+        snprintf(data, 50, "Work item %d", i);
+        
+        threadpool_submit(pool, data, process_string_data, cleanup_string_data);
+    }
+    
+    // Let work complete
+    sleep(1);
+    
+    printf("--------------------------------------------------------\n");
+    threadpool_destroy(pool);
+}
+
 // ========================================
 // PATTERN 5: SHARED MEMORY WITH COPY SEMANTICS
 // ========================================
@@ -527,64 +654,10 @@ void shared_buffer_destroy(SharedBuffer* buf) {
     free(buf);
 }
 
-// ========================================
-// DEMONSTRATION FUNCTIONS
-// ========================================
-
-void* ref_counting_thread(void* arg) {
-    RefCountedBuffer* buf = (RefCountedBuffer*)arg;
-    
-    for (int i = 0; i < 3; i++) {
-        process_with_refcount(buf);
-        usleep(50000);
-    }
-    
-    return NULL;
-}
-
-void ref_counting_example() {
-    printf("\n=== REFERENCE COUNTING EXAMPLE ===\n");
-    
-    RefCountedBuffer* buf = refbuf_create("Shared Data");
-    if (!buf) return;
-    
-    // Start multiple threads that use the buffer
-    pthread_t threads[3];
-    for (int i = 0; i < 3; i++) {
-        pthread_create(&threads[i], NULL, ref_counting_thread, buf);
-    }
-    
-    // Wait for threads to complete
-    for (int i = 0; i < 3; i++) {
-        pthread_join(threads[i], NULL);
-    }
-    
-    // Release original reference
-    refbuf_release(buf);
-}
-
-void threadpool_example() {
-    printf("\n=== THREAD POOL EXAMPLE ===\n");
-    
-    ThreadPool* pool = threadpool_create(2);
-    if (!pool) return;
-    
-    // Submit work items
-    for (int i = 0; i < 5; i++) {
-        char* data = malloc(50);
-        snprintf(data, 50, "Work item %d", i);
-        
-        threadpool_submit(pool, data, process_string_data, cleanup_string_data);
-    }
-    
-    // Let work complete
-    sleep(1);
-    
-    threadpool_destroy(pool);
-}
-
 void shared_memory_example() {
     printf("\n=== SHARED MEMORY EXAMPLE ===\n");
+    printf("Demonstrating thread-safe shared memory access:\n");
+    printf("--------------------------------------------------------\n");
     
     SharedBuffer* shared = shared_buffer_create("Initial data");
     if (!shared) return;
@@ -605,6 +678,7 @@ void shared_memory_example() {
         free(copy2);
     }
     
+    printf("--------------------------------------------------------\n");
     shared_buffer_destroy(shared);
 }
 
@@ -613,10 +687,13 @@ void shared_memory_example() {
 // ========================================
 
 int main() {
-    printf("=== MULTI-FUNCTION & MULTI-THREADING PATTERNS ===\n");
+    printf("\n=== MULTI-FUNCTION & MULTI-THREADING PATTERNS ===\n");
+    printf("Demonstrating various memory management patterns in C:\n");
+    printf("==================================================\n");
     
     ownership_example();
     ref_counting_example();
+    thread_safe_queue_example();
     threadpool_example();
     shared_memory_example();
     

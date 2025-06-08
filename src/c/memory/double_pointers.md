@@ -85,6 +85,26 @@ void example3() {
 }
 ```
 
+### Step-by-Step Insertion Process
+Let's trace through the insertion process:
+```
+Initial: head -> NULL
+
+After inserting 3:
+head -> [3|next] -> NULL
+
+After inserting 2:
+head -> [2|next] -> [3|next] -> NULL
+
+After inserting 1:
+head -> [1|next] -> [2|next] -> [3|next] -> NULL
+```
+Each insertion at the beginning:
+1. Creates a new node
+2. Sets its data to the provided value
+3. Makes it point to the current head
+4. Updates the head to point to the new node
+
 ### 4. Function Pointer Arrays
 
 ```c

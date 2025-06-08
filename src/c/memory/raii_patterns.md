@@ -20,6 +20,7 @@ RAII is a programming idiom where resource acquisition and release are bound to 
 - [Common Pitfalls](#common-pitfalls)
 - [Tools and Debugging](#tools-and-debugging)
 - [Additional Resources](#additional-resources)
+- [Interview Insights](#interview-insights)
 
 ## Key Patterns
 
@@ -52,6 +53,8 @@ DataBuffer* process_data_return_ownership(DataBuffer* buf, int new_owner_id);
 - Documentation of ownership rules
 - Explicit cleanup responsibilities
 
+**Interview Relevance:** ⭐⭐⭐⭐⭐ - Very commonly tested through debugging exercises and memory management questions.
+
 ### 2. Reference Counting
 
 This pattern allows multiple owners of a resource with automatic cleanup when the last reference is released.
@@ -73,6 +76,8 @@ void refbuf_release(RefCountedBuffer* buf);
 - Thread-safe reference counting
 - Automatic cleanup on last release
 - Safe sharing between threads
+
+**Interview Relevance:** ⭐⭐⭐ - More likely in senior roles or systems programming positions. Often discussed conceptually.
 
 ### 3. Thread-Safe Queue with Ownership
 
@@ -98,6 +103,8 @@ void queue_destroy(ThreadSafeQueue* q);
 - Thread-safe operations
 - Proper cleanup on shutdown
 
+**Interview Relevance:** ⭐⭐⭐⭐ - Classic producer-consumer problem. Often appears in simplified form or as debugging exercise.
+
 ### 4. Thread Pool with Data Processing
 
 This pattern implements a thread pool where work items carry their own cleanup functions.
@@ -121,6 +128,8 @@ void threadpool_destroy(ThreadPool* pool);
 - Each thread processes and cleans up independently
 - Pool manages thread lifecycle
 
+**Interview Relevance:** ⭐⭐ - Usually too complex for coding interviews. More likely in system design discussions.
+
 ### 5. Shared Memory with Copy Semantics
 
 This pattern implements shared memory access with copy-on-read semantics.
@@ -142,6 +151,8 @@ void shared_buffer_destroy(SharedBuffer* buf);
 - Each thread gets its own copy
 - No shared mutable state
 - Simple but memory-intensive
+
+**Interview Relevance:** ⭐⭐ - Concepts may appear in discussions about thread safety trade-offs.
 
 ## Best Practices
 
@@ -242,4 +253,109 @@ void example_usage() {
 
 1. [C Memory Management](https://en.wikipedia.org/wiki/C_dynamic_memory_allocation)
 2. [POSIX Threads Programming](https://computing.llnl.gov/tutorials/pthreads/)
-3. [Thread Sanitizer](https://clang.llvm.org/docs/ThreadSanitizer.html) 
+3. [Thread Sanitizer](https://clang.llvm.org/docs/ThreadSanitizer.html)
+
+## Interview Insights
+
+### What You're Most Likely to Encounter
+
+**High Probability (60-80% in systems roles):**
+- **Memory ownership debugging exercises**: "Find the memory leaks in this code"
+- **Simple thread-safe data structures**: "Make this counter thread-safe"
+- **Producer-consumer scenarios**: "Implement a bounded buffer"
+
+**Medium Probability (30-50%):**
+- **Conceptual discussions**: "How would you share data between threads safely?"
+- **Race condition identification**: "What's wrong with this threading code?"
+- **Ownership transfer patterns**: "Who should free this memory?"
+
+**Lower Probability (10-30%):**
+- **Reference counting implementation**: Usually discussed conceptually
+- **Complex synchronization**: More likely in senior interviews
+
+### Key Patterns for Real-World Scenarios
+
+1. **CLEAR OWNERSHIP RULES**
+   - Document who owns what
+   - Use naming conventions (borrow_, take_, return_)
+   - Transfer ownership explicitly
+
+2. **REFERENCE COUNTING**
+   - Multiple threads can safely share data
+   - Automatic cleanup when last reference is released
+   - Thread-safe increment/decrement
+
+3. **PRODUCER-CONSUMER QUEUES**
+   - Clear ownership transfer points
+   - Thread-safe operations
+   - Proper cleanup on shutdown
+
+4. **THREAD POOLS**
+   - Work items carry their own cleanup functions
+   - Each thread processes and cleans up independently
+   - Pool manages thread lifecycle
+
+5. **COPY SEMANTICS**
+   - Each thread gets its own copy
+   - No shared mutable state
+   - Simple but memory-intensive
+
+6. **SYNCHRONIZATION PATTERNS**
+   - Mutexes for exclusive access
+   - Read-write locks for shared reading
+   - Condition variables for signaling
+
+### [What Interviewers Actually Ask](raii_actual_ask.md)
+
+Instead of full implementations, expect:
+
+**1. Debugging Exercises**
+```c
+// "Fix the race condition"
+void buggy_function() {
+    static int counter = 0;
+    counter++;  // Race condition!
+    printf("%d\n", counter);
+}
+```
+
+**2. Conceptual Questions**
+- "How would you make this data structure thread-safe?"
+- "What's the difference between mutex and semaphore?"
+- "Explain deadlock and how to prevent it"
+
+**3. Simplified Implementations**
+```c
+// "Implement a thread-safe counter"
+typedef struct {
+    int value;
+    pthread_mutex_t mutex;
+} SafeCounter;
+```
+
+**4. Memory Management Focus**
+```c
+// "Who should free this memory?"
+char* create_message(const char* name) {
+    char* msg = malloc(100);
+    sprintf(msg, "Hello %s", name);
+    return msg;  // Caller must free!
+}
+```
+
+### Interview Preparation Strategy
+
+**Focus on:**
+- Basic synchronization primitives (mutex, condition variables)
+- Memory ownership patterns (who allocates, who frees)
+- Simple producer-consumer scenarios
+- Race condition identification and fixes
+- Basic thread safety concepts
+
+**Practice:**
+- Implement simple thread-safe data structures
+- Debug threading bugs in provided code
+- Explain ownership transfer in function interfaces
+- Discuss trade-offs between different synchronization approaches
+
+**Remember:** Interviewers want to see you can reason about concurrency and memory management. Understanding the **principles** behind these patterns is more important than memorizing complex implementations.

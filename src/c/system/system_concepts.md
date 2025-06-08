@@ -88,6 +88,43 @@ The `Comparator` type is commonly used with sorting functions like `qsort`. The 
 - Endianness considerations
 - Cache-friendly data structures
 
+#### Finding Structure Size Without sizeof
+Understanding structure size without using sizeof requires deep knowledge of:
+- How structures are laid out in memory
+- Memory alignment and padding rules
+- Pointer arithmetic to calculate offsets
+
+Common approaches to calculate structure size:
+
+1. **Using Pointer Arithmetic**
+```c
+struct MyStruct {
+    int a;
+    char b;
+    double c;
+};
+
+// Calculate size using pointer arithmetic
+int getStructSize() {
+    struct MyStruct *ptr = NULL;
+    return (char*)(ptr + 1) - (char*)ptr;
+}
+```
+
+2. **Using Array Indexing**
+```c
+int getStructSize2() {
+    struct MyStruct arr[2];
+    return (char*)&arr[1] - (char*)&arr[0];
+}
+```
+
+This type of problem tests understanding of:
+- Memory alignment
+- Structure padding
+- Pointer arithmetic
+- Low-level memory concepts
+
 ## Example Code
 
 The `system_concepts.c` example demonstrates:

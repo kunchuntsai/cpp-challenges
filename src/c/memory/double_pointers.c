@@ -9,7 +9,6 @@ void exercise1() {
     int* ptr = &value;
     int** dptr = &ptr;
 
-    // TODO: Print the value using dptr
     printf("Exercise 1: Value through double pointer: %d\n", **dptr);
 }
 
@@ -18,7 +17,6 @@ void exercise2() {
     int** matrix = NULL;
     int rows = 3, cols = 3;
 
-    // TODO: Allocate a 3x3 matrix using double pointers
     matrix = (int**)malloc(rows * sizeof(int*));
     assert(matrix != NULL);
     
@@ -39,7 +37,6 @@ void exercise2() {
         printf("\n");
     }
 
-    // TODO: Free the matrix properly
     for (int i = 0; i < rows; i++) {
         free(matrix[i]);
     }
@@ -53,7 +50,6 @@ typedef struct Node {
 } Node;
 
 void insert_at_beginning(Node** head, int value) {
-    // TODO: Implement insertion at beginning of linked list
     Node* new_node = (Node*)malloc(sizeof(Node));
     assert(new_node != NULL);
     
@@ -65,7 +61,6 @@ void insert_at_beginning(Node** head, int value) {
 void exercise3() {
     Node* head = NULL;
     
-    // TODO: Insert three nodes at the beginning
     insert_at_beginning(&head, 3);
     insert_at_beginning(&head, 2);
     insert_at_beginning(&head, 1);
@@ -79,7 +74,6 @@ void exercise3() {
     }
     printf("NULL\n");
 
-    // TODO: Free the linked list
     while (head != NULL) {
         Node* temp = head;
         head = head->next;
@@ -92,7 +86,6 @@ void exercise4() {
     char** strings = NULL;
     int num_strings = 3;
 
-    // TODO: Allocate and initialize an array of strings
     strings = (char**)malloc(num_strings * sizeof(char*));
     assert(strings != NULL);
     
@@ -109,7 +102,6 @@ void exercise4() {
         printf("%s\n", strings[i]);
     }
 
-    // TODO: Free the string array
     for (int i = 0; i < num_strings; i++) {
         free(strings[i]);
     }
@@ -127,7 +119,6 @@ void exercise5() {
     Operation* operations = NULL;
     int num_operations = 3;
 
-    // TODO: Create an array of function pointers
     operations = (Operation*)malloc(num_operations * sizeof(Operation));
     assert(operations != NULL);
     
@@ -141,7 +132,6 @@ void exercise5() {
         operations[i](5);
     }
 
-    // TODO: Free the operations array
     free(operations);
 }
 
