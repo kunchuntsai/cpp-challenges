@@ -218,6 +218,21 @@ void demonstrate_endianness() {
     }
 }
 
+// Simple bubble sort using function pointer
+void bubble_sort(int arr[], int size, Comparator compare) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            // Use the comparison function pointer
+            if (compare(&arr[j], &arr[j + 1]) > 0) {
+                // Swap elements
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
 void demonstrate_function_pointers() {
     printf("\nFunction Pointers and Callbacks:\n");
     printf("------------------------------\n");
@@ -241,10 +256,10 @@ void demonstrate_function_pointers() {
     // Demonstrate Comparator usage with qsort
     printf("\nComparator Example with qsort:\n");
     printf("----------------------------\n");
-    
+
     int numbers[] = {5, 2, 8, 1, 9, 3};
     int num_count = sizeof(numbers) / sizeof(numbers[0]);
-    
+
     printf("Original array: ");
     for (int i = 0; i < num_count; i++) {
         printf("%d ", numbers[i]);
@@ -254,9 +269,30 @@ void demonstrate_function_pointers() {
     // Use qsort with our comparison function
     qsort(numbers, num_count, sizeof(int), compare_ints);
 
-    printf("Sorted array:   ");
+    printf("Sorted array (qsort):   ");
     for (int i = 0; i < num_count; i++) {
         printf("%d ", numbers[i]);
+    }
+    printf("\n");
+
+    // Demonstrate Comparator usage with our bubble sort
+    printf("\nComparator Example with bubble sort:\n");
+    printf("----------------------------------\n");
+
+    int numbers2[] = {5, 2, 8, 1, 9, 3};  // New array with same values
+
+    printf("Original array: ");
+    for (int i = 0; i < num_count; i++) {
+        printf("%d ", numbers2[i]);
+    }
+    printf("\n");
+
+    // Use bubble_sort with our comparison function
+    bubble_sort(numbers2, num_count, compare_ints);
+
+    printf("Sorted array (bubble):   ");
+    for (int i = 0; i < num_count; i++) {
+        printf("%d ", numbers2[i]);
     }
     printf("\n");
 }

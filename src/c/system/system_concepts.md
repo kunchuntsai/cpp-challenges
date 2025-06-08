@@ -175,4 +175,80 @@ The program will demonstrate:
 2. Stack vs heap memory allocation
 3. Memory layout visualization
 4. Endianness detection
-5. Bit field usage 
+5. Bit field usage
+
+## Bubble Sort Algorithm
+
+Bubble sort is one of the simplest sorting algorithms. It's called "bubble sort" because smaller elements "bubble up" to the top of the array during each pass.
+
+### Implementation
+```c
+void bubble_sort(int arr[], int size, Comparator compare) {
+    for (int i = 0; i < size - 1; i++) {           // Outer loop: number of passes
+        for (int j = 0; j < size - i - 1; j++) {   // Inner loop: compare adjacent elements
+            // Use the comparison function pointer
+            if (compare(&arr[j], &arr[j + 1]) > 0) {  // If elements are in wrong order
+                // Swap elements
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+```
+
+### How It Works
+1. Start at the beginning of the array
+2. Compare each pair of adjacent elements
+3. If they are in the wrong order, swap them
+4. Move to the next pair
+5. Repeat until no more swaps are needed
+
+### Example
+```
+Initial array: [5, 2, 8, 1, 9, 3]
+
+First Pass:
+[5, 2, 8, 1, 9, 3]  // Start
+[2, 5, 8, 1, 9, 3]  // Swap 5 and 2
+[2, 5, 1, 8, 9, 3]  // Swap 8 and 1
+[2, 5, 1, 8, 3, 9]  // Swap 9 and 3
+
+Second Pass:
+[2, 1, 5, 8, 3, 9]  // Swap 5 and 1
+[2, 1, 5, 3, 8, 9]  // Swap 8 and 3
+
+Third Pass:
+[1, 2, 5, 3, 8, 9]  // Swap 2 and 1
+[1, 2, 3, 5, 8, 9]  // Swap 5 and 3
+```
+
+### Characteristics
+1. **Time Complexity**:
+   - Worst case: O(n²)
+   - Best case: O(n) when array is already sorted
+   - Average case: O(n²)
+
+2. **Space Complexity**: O(1) - in-place algorithm
+
+3. **Stability**: Stable sort (maintains relative order of equal elements)
+
+4. **Advantages**:
+   - Simple to understand and implement
+   - Works well for small arrays
+   - Good for nearly sorted arrays
+   - No extra memory required
+
+5. **Disadvantages**:
+   - Inefficient for large arrays
+   - Many swaps required
+   - Not suitable for real-world applications with large datasets
+
+### Use Cases
+- Educational purposes
+- Small arrays
+- Nearly sorted arrays
+- Situations where simplicity is more important than performance
+- Demonstrating sorting concepts
+- Testing and debugging other sorting algorithms

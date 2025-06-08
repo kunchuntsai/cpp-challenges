@@ -42,12 +42,14 @@ int maxSubArrayWithIndices(int arr[], int n, int* start, int* end) {
     for (int i = 0; i < n; i++) {
         max_ending_here = max_ending_here + arr[i];
         
+        // Update max_so_far if current sum is greater
         if (max_so_far < max_ending_here) {
             max_so_far = max_ending_here;
             *start = temp_start;
             *end = i;
         }
         
+        // If current sum becomes negative, reset it to 0
         if (max_ending_here < 0) {
             max_ending_here = 0;
             temp_start = i + 1;

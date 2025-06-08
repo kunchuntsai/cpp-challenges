@@ -12,7 +12,7 @@ check_error() {
 remove_trailing_spaces() {
     local file="$1"
     if [ ! -f "$file" ]; then
-        echo "Warning: File '$file' does not exist"
+        echo "Warning: '$file' is not a file"
         return 1
     fi
 
@@ -46,6 +46,12 @@ process_directory() {
     local dir="$1"
     local pattern="$2"
     
+    # If the input is a file, process it directly
+    if [ -f "$dir" ]; then
+        remove_trailing_spaces "$dir"
+        return
+    fi
+
     # Process all files matching the pattern in current directory
     find "$dir" -type f -name "$pattern" | while read -r file; do
         remove_trailing_spaces "$file"
@@ -53,13 +59,13 @@ process_directory() {
 }
 
 # Default patterns for C++ files
-CPP_PATTERNS=("*.cpp" "*.h" "*.hpp" "*.cc" "*.cxx" "*.hxx" "*.c" "*.h")
+CPP_PATTERNS=("*.cpp" "*.h" "*.hpp" "*.cc" "*.cxx" "*.hxx" "*.c" "*.h" "*.md")
 
 # Check if any directories were provided
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 <directory1> [directory2] [directory3] ..."
+    echo "Usage: $0 <path1> [path2] [path3] ..."
     echo "Example: $0 src/ test/"
-    echo "If no directories are provided, will process src/ and test/ directories"
+    echo "If no paths are provided, will process src/ and test/ directories"
     
     # Default to processing src/ and test/ directories
     DIRS=("src" "test")
@@ -67,14 +73,14 @@ else
     DIRS=("$@")
 fi
 
-# Process each directory
+# Process each path
 for dir in "${DIRS[@]}"; do
-    if [ ! -d "$dir" ]; then
-        echo "Warning: Directory '$dir' does not exist"
+    if [ ! -e "$dir" ]; then
+        echo "Warning: Path '$dir' does not exist"
         continue
     fi
     
-    echo "Processing directory: $dir"
+    echo "Processing path: $dir"
     for pattern in "${CPP_PATTERNS[@]}"; do
         process_directory "$dir" "$pattern"
     done
