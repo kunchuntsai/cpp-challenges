@@ -68,8 +68,16 @@ struct SizeDemo {
 
 // Calculate structure size using pointer arithmetic
 size_t get_struct_size_pointer() {
+#if 0
     struct SizeDemo *ptr = NULL;
     return (char*)(ptr + 1) - (char*)ptr;
+#else
+    struct SizeDemo *ptr = (struct SizeDemo *)0;
+    ptr++;
+    size_t size = (size_t)ptr;
+    printf("[SizeDemo] Structure size: %zu bytes\n", size);
+    return size;
+#endif
 }
 
 // Calculate structure size using array indexing
