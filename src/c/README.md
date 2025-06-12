@@ -2,13 +2,13 @@
 
 This directory contains focused C programming exercises organized into key practice areas to help improve C programming skills.
 
-## Structure
+## Practices
 
 `arrays/` - Array & Buffer Operations
-- [circular_buffer.c](arrays/circular_buffer.c) - Fixed-size arrays, dynamic arrays with automatic growth, and circular buffer implementation
-- [max_subarray.c](arrays/max_subarray.c) - Implementation of Kadane's algorithm for finding the maximum sum subarray with index tracking
-- [fixed_vs_dynamic.c](arrays/fixed_vs_dynamic.c) - Comprehensive comparison of stack vs heap arrays, memory management, and performance characteristics
 - [bounds_checking.c](arrays/bounds_checking.c) - Safe string operations with bounds checking and buffer overflow prevention
+- [circular_buffer.c](arrays/circular_buffer.c) - Fixed-size arrays, dynamic arrays with automatic growth, and circular buffer implementation
+- [fixed_vs_dynamic.c](arrays/fixed_vs_dynamic.c) - Comprehensive comparison of stack vs heap arrays, memory management, and performance characteristics
+- [max_subarray.c](arrays/max_subarray.c) - Implementation of Kadane's algorithm for finding the maximum sum subarray with index tracking
 - [secure_bounds_checking.c](arrays/secure_bounds_checking.c) - Advanced secure array implementation with comprehensive safety features
 
 `bits/` - Bit Manipulation
@@ -16,9 +16,9 @@ This directory contains focused C programming exercises organized into key pract
 - [bit_swap.c](bits/bit_swap.c) - Efficient bit swapping algorithms and bit manipulation techniques
 
 `memory/` - Memory Management & Pointer Concepts
+- [double_pointers.c](memory/double_pointers.c) - Advanced pointer concepts with double pointers, including dynamic 2D arrays, linked lists, and function pointer arrays
 - [memory_management.c](memory/memory_management.c) - Custom memory allocator implementation with safe string operations and memory block management
 - [memory_pitfalls.c](memory/memory_pitfalls.c) - Common memory management pitfalls and their solutions, including memory leaks and buffer overflows
-- [double_pointers.c](memory/double_pointers.c) - Advanced pointer concepts with double pointers, including dynamic 2D arrays, linked lists, and function pointer arrays
 - [raii_patterns.c](memory/raii_patterns.c) - Resource Acquisition Is Initialization (RAII) patterns in C
 
 `strings/` - String Processing
@@ -32,38 +32,69 @@ This directory contains focused C programming exercises organized into key pract
   - Endianness detection and structure padding
   - Memory safety and best practices
 
-## Core C Programming Challenges
+## Top 5 C Coding Skills for Interviews
 
-The exercises in this repository focus on four fundamental C programming challenges:
+**1. Pointer Manipulation & Memory Management**
 
-1. **Memory Leak Detection**
-   - Understanding malloc/free lifecycle
-   - Memory leak detection tools (Valgrind, ASan)
-   - Common memory leak patterns and solutions
-   - Resource cleanup in error paths
+- Dynamic memory allocation (malloc, calloc, free)
+- Pointer arithmetic and multi-level pointers
+- Common pitfalls: memory leaks, dangling pointers, buffer overflows
 
-2. **Double Pointers**
-   - Modifying pointers themselves
-   - Dynamic 2D array allocation
-   - Linked list node manipulation
-   - Function pointer arrays
-   - String array management
+**2. String Processing**
 
-3. **Buffer Overflow Prevention**
-   - Safe string operations
-   - Bounds checking
-   - Buffer size validation
-   - String truncation handling
-   - Integer overflow prevention
-   - Use-after-free detection
-   - Secure memory management
+- Manual string operations (since C has limited built-in string functions)
+- Character array manipulation
+- Parsing and tokenization
 
-4. **Array Safety and Performance**
-   - Fixed vs dynamic array trade-offs
-   - Circular buffer implementation
-   - Memory layout optimization
-   - Cache-friendly array access
-   - Thread safety considerations
+**3. Array & Buffer Operations**
+
+- Array traversal and manipulation
+- Fixed-size vs dynamic arrays
+- Circular buffers (especially for embedded systems)
+
+**4. Bit Manipulation**
+
+- Bitwise operations (&, |, ^, ~, <<, >>)
+- Setting/clearing/toggling specific bits
+- Bit masking techniques
+
+**5. Low-Level System Concepts**
+
+- Understanding of stack vs heap
+- Function pointers and callbacks
+- Basic understanding of memory layout
+
+## Typical C Coding Test Questions
+
+### General Programming Questions:
+
+- Implement string reversal without using library functions
+- Find duplicates in an array using minimal extra space
+- Implement a simple hash table with collision handling
+- Write a function to detect if a linked list has a cycle
+- Implement basic sorting algorithms (bubble, selection, insertion)
+
+### Embedded Systems Focus:
+
+- Write an interrupt service routine template
+- Implement a circular buffer for sensor data
+- Create a state machine for device control
+- Write bit manipulation functions for register operations
+- Implement a simple scheduler or task switcher
+
+### Memory Management:
+
+- Fix memory leaks in provided code
+- Implement a custom malloc/free
+- Debug pointer-related errors
+- Write safe string copy functions
+
+### Practical System Programming:
+
+- Parse command-line arguments
+- Implement file I/O operations with error handling
+- Write functions to manipulate binary data
+- Create producer-consumer patterns
 
 ## How to Build and Run
 
@@ -91,34 +122,6 @@ The project includes build and run scripts in the `scripts/` directory. All prog
 # List all available programs
 ../../scripts/run_c.sh -l
 ```
-
-## Prerequisites
-
-- GCC or Clang compiler
-- Basic understanding of C programming concepts
-
-## Getting Started
-
-1. Start with the exercises in the `memory/` directory to understand fundamental concepts:
-   - Begin with `memory_pitfalls.c` to learn common memory issues
-   - Move to `double_pointers.c` for advanced pointer concepts
-   - Study `memory_management.c` for custom memory handling
-   - Finally, explore `raii_patterns.c` for resource management
-
-2. Progress through `arrays/` to build practical skills:
-   - Start with `fixed_vs_dynamic.c` to understand array types
-   - Move to `bounds_checking.c` for basic safety
-   - Study `secure_bounds_checking.c` for advanced safety
-   - Explore `circular_buffer.c` for specialized implementations
-   - Finally, try `max_subarray.c` for algorithm practice
-
-3. Continue with `strings/` for text processing
-4. Move on to `bits/` for low-level operations
-5. Finally, explore `system/` for deeper system-level understanding:
-   - Study `system_concepts.c` for comprehensive low-level concepts
-   - Read `system_concepts.md` for detailed explanations
-   - Practice with the provided examples
-   - Experiment with the code to understand each concept
 
 ## Best Practices
 
