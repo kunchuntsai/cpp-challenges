@@ -66,9 +66,9 @@ fi
 # Configure CMake
 echo -e "${YELLOW}Configuring CMake...${NC}"
 if [ "$DEBUG" = true ]; then
-    cmake -B build -DCMAKE_BUILD_TYPE=Debug
+    cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON
 else
-    cmake -B build -DCMAKE_BUILD_TYPE=Release
+    cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON
 fi
 
 if [ $? -ne 0 ]; then
@@ -78,7 +78,7 @@ fi
 
 # Build the project
 echo -e "${YELLOW}Building project...${NC}"
-cmake --build build
+cmake --build build -j$(nproc)
 
 if [ $? -ne 0 ]; then
     echo -e "${RED}Build failed${NC}"

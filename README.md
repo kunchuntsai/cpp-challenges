@@ -76,4 +76,37 @@ The C practice section uses dedicated build and run scripts:
 
 For more detailed information about the C practices, please refer to the [C Practice README](src/c/README.md).
 
-Please refer to 
+# Leetcode Practices
+This section contains solutions to Leetcode problems, organized by categories. The solutions are located in `src/cpp/` and include test cases for each problem.
+
+## Structure
+- `arrays_hashing/` - Array and hash table based problems
+  - Two Sum
+  - Top K Frequent Elements
+  - Group Anagrams
+
+## How to Build and Run
+The Leetcode practice section uses the same build system as the main project:
+
+```bash
+# Build all Leetcode solutions
+./scripts/build.sh
+
+# Build with debug flags
+./scripts/build.sh -d
+
+# Clean build directory and rebuild
+./scripts/build.sh -c
+
+# List all available test programs
+./scripts/run.sh -l
+
+# Run a specific test
+./scripts/run.sh two_sum_test
+./scripts/run.sh top_k_frequent_test
+./scripts/run.sh group_anagrams_test
+```
+
+Each test program includes multiple test cases to verify the correctness of the solution. The output will show the test cases and their results.
+
+For more detailed information about the C practices, please refer to the [Cpp Practice README](src/cpp/README.md).
