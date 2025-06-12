@@ -105,16 +105,16 @@ The project includes build and run scripts in the `scripts/` directory. All prog
 ../../scripts/build_c.sh
 
 # Build a specific program
-../../scripts/build_c.sh -t src/c/memory/pointer_demo
+../../scripts/build_c.sh src/c/memory/pointer_demo
 
 # Build with debug flags
-../../scripts/build_c.sh -d -t src/c/memory/pointer_demo
+../../scripts/build_c.sh -d src/c/memory/pointer_demo
 
 # Clean and rebuild
-../../scripts/build_c.sh -c -t src/c/memory/pointer_demo
+../../scripts/build_c.sh -c src/c/memory/pointer_demo
 
 # Run a specific program
-../../scripts/run_c.sh -t pointer_demo
+../../scripts/run_c.sh pointer_demo
 
 # Run all programs using the generic runner
 ../../scripts/run_c.sh -a

@@ -15,8 +15,7 @@ show_help() {
     echo "  -d, --debug     Build with debug flags (-g)"
     echo "  -c, --clean     Clean build directory before building"
     echo "  -h, --help      Show this help message"
-    echo "  -t, --target    Specify target directory to build"
-    echo "Example: ./build_c.sh -d -t c-practice/memory/pointer_basics"
+    echo "Example: ./build_c.sh -d src/c/memory/pointer_basics"
 }
 
 # Parse command line arguments
@@ -34,14 +33,15 @@ while [[ $# -gt 0 ]]; do
             show_help
             exit 0
             ;;
-        -t|--target)
-            TARGET="$2"
-            shift 2
-            ;;
         *)
-            echo "Unknown option: $1"
-            show_help
-            exit 1
+            if [ -z "$TARGET" ]; then
+                TARGET="$1"
+            else
+                echo "Unknown option: $1"
+                show_help
+                exit 1
+            fi
+            shift
             ;;
     esac
 done

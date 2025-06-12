@@ -11,9 +11,8 @@ show_help() {
     echo "Options:"
     echo "  -l, --list      List all available programs"
     echo "  -h, --help      Show this help message"
-    echo "  -t, --target    Specify target program to run"
     echo "  -a, --all       Run all programs using the generic runner"
-    echo "Example: ./run_c.sh -t pointer_demo"
+    echo "Example: ./run_c.sh pointer_demo"
     echo "         ./run_c.sh -a"
     echo "         ./run_c.sh (runs all programs by default)"
 }
@@ -29,10 +28,6 @@ while [[ $# -gt 0 ]]; do
             show_help
             exit 0
             ;;
-        -t|--target)
-            TARGET="$2"
-            shift 2
-            ;;
         -a|--all)
             if [ -x "$BUILD_DIR/run_all" ]; then
                 "$BUILD_DIR/run_all"
@@ -43,9 +38,14 @@ while [[ $# -gt 0 ]]; do
             fi
             ;;
         *)
-            echo "Unknown option: $1"
-            show_help
-            exit 1
+            if [ -z "$TARGET" ]; then
+                TARGET="$1"
+            else
+                echo "Unknown option: $1"
+                show_help
+                exit 1
+            fi
+            shift
             ;;
     esac
 done
