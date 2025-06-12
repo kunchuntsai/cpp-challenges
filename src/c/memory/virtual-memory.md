@@ -332,7 +332,7 @@ Performance: 1000x slower than normal operation
 #### Non-Deterministic Timing
 Memory access times become unpredictable:
 - Cache hit: ~1 nanosecond
-- TLB miss: ~10 nanoseconds  
+- TLB miss: ~10 nanoseconds
 - Page fault: ~10 milliseconds (10,000,000x slower)
 - This variability makes real-time systems challenging
 

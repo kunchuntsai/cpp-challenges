@@ -29,13 +29,13 @@ typedef struct {
 DynamicArray* create_dynamic_array(size_t initial_capacity) {
     DynamicArray* arr = (DynamicArray*)malloc(sizeof(DynamicArray));
     if (!arr) return NULL;
-    
+
     arr->data = (int*)malloc(initial_capacity * sizeof(int));
     if (!arr->data) {
         free(arr);
         return NULL;
     }
-    
+
     arr->size = 0;
     arr->capacity = initial_capacity;
     return arr;
@@ -53,11 +53,11 @@ int push_back(DynamicArray* arr, int value) {
         size_t new_capacity = arr->capacity * 2;
         int* new_data = (int*)realloc(arr->data, new_capacity * sizeof(int));
         if (!new_data) return 0;
-        
+
         arr->data = new_data;
         arr->capacity = new_capacity;
     }
-    
+
     arr->data[arr->size++] = value;
     return 1;
 }
@@ -74,13 +74,13 @@ typedef struct {
 CircularBuffer* create_circular_buffer(size_t capacity) {
     CircularBuffer* cb = (CircularBuffer*)malloc(sizeof(CircularBuffer));
     if (!cb) return NULL;
-    
+
     cb->buffer = (int*)malloc(capacity * sizeof(int));
     if (!cb->buffer) {
         free(cb);
         return NULL;
     }
-    
+
     cb->capacity = capacity;
     cb->head = 0;
     cb->tail = 0;
@@ -97,7 +97,7 @@ void free_circular_buffer(CircularBuffer* cb) {
 
 int circular_buffer_push(CircularBuffer* cb, int value) {
     if (cb->size >= cb->capacity) return 0;
-    
+
     cb->buffer[cb->tail] = value;
     cb->tail = (cb->tail + 1) % cb->capacity;
     cb->size++;
@@ -106,7 +106,7 @@ int circular_buffer_push(CircularBuffer* cb, int value) {
 
 int circular_buffer_pop(CircularBuffer* cb, int* value) {
     if (cb->size == 0) return 0;
-    
+
     *value = cb->buffer[cb->head];
     cb->head = (cb->head + 1) % cb->capacity;
     cb->size--;
@@ -119,7 +119,7 @@ void print_circular_buffer(const CircularBuffer* cb) {
         printf("(empty)\n");
         return;
     }
-    
+
     size_t current = cb->head;
     for (size_t i = 0; i < cb->size; i++) {
         printf("%d ", cb->buffer[current]);
@@ -132,19 +132,19 @@ void print_circular_buffer(const CircularBuffer* cb) {
 void test_array_operations() {
     printf("Testing Array Operations:\n");
     printf("------------------------\n");
-    
+
     // Test fixed-size array
     printf("\n1. Fixed-size Array Operations:\n");
     int fixed_array[] = {1, 2, 3, 4, 5};
     size_t fixed_size = sizeof(fixed_array) / sizeof(fixed_array[0]);
-    
+
     printf("Original array: ");
     print_array(fixed_array, fixed_size);
-    
+
     reverse_array(fixed_array, fixed_size);
     printf("Reversed array: ");
     print_array(fixed_array, fixed_size);
-    
+
     // Test dynamic array
     printf("\n2. Dynamic Array Operations:\n");
     DynamicArray* dyn_arr = create_dynamic_array(2);
@@ -152,7 +152,7 @@ void test_array_operations() {
         printf("Failed to create dynamic array\n");
         return;
     }
-    
+
     printf("Pushing values: ");
     for (int i = 1; i <= 5; i++) {
         if (push_back(dyn_arr, i)) {
@@ -160,11 +160,11 @@ void test_array_operations() {
         }
     }
     printf("\n");
-    
+
     printf("Dynamic array contents: ");
     print_array(dyn_arr->data, dyn_arr->size);
     printf("Current capacity: %zu\n", dyn_arr->capacity);
-    
+
     // Test circular buffer
     printf("\n3. Circular Buffer Operations:\n");
     CircularBuffer* cb = create_circular_buffer(4);
@@ -173,7 +173,7 @@ void test_array_operations() {
         free_dynamic_array(dyn_arr);
         return;
     }
-    
+
     printf("Pushing values to circular buffer: ");
     for (int i = 1; i <= 6; i++) {
         if (circular_buffer_push(cb, i)) {
@@ -183,16 +183,16 @@ void test_array_operations() {
         }
     }
     printf("\n");
-    
+
     print_circular_buffer(cb);
-    
+
     printf("Popping values from circular buffer: ");
     int value;
     while (circular_buffer_pop(cb, &value)) {
         printf("%d ", value);
     }
     printf("\n");
-    
+
     // Cleanup
     free_dynamic_array(dyn_arr);
     free_circular_buffer(cb);
@@ -201,4 +201,4 @@ void test_array_operations() {
 int main() {
     test_array_operations();
     return 0;
-} 
+}

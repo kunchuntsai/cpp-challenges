@@ -1,9 +1,9 @@
 /*
  * CODING INTERVIEW QUESTION: Safe Array Operations with Bounds Checking
- * 
+ *
  * Problem: Implement a safe string copy function that prevents buffer overflows.
  * Write a function that copies from source to destination with proper bounds checking.
- * 
+ *
  * Requirements:
  * 1. Function should never write beyond the destination buffer size
  * 2. Always null-terminate the destination string
@@ -27,10 +27,10 @@ int safe_strcpy(char *dest, const char *src, size_t dest_size) {
     for (i = 0; i < dest_size - 1 && src[i] != '\0'; i++) {
         dest[i] = src[i];
     }
-    
+
     // Always null-terminate
     dest[i] = '\0';
-    
+
     // Return number of characters copied (excluding null terminator)
     return i;
 }
@@ -53,10 +53,10 @@ int safe_strcat(char *dest, const char *src, size_t dest_size) {
     for (i = 0; i < dest_size - dest_len - 1 && src[i] != '\0'; i++) {
         dest[dest_len + i] = src[i];
     }
-    
+
     // Always null-terminate
     dest[dest_len + i] = '\0';
-    
+
     // Return number of characters appended (excluding null terminator)
     return i;
 }
@@ -65,27 +65,27 @@ int safe_strcat(char *dest, const char *src, size_t dest_size) {
 int main() {
     char buffer[10];
     char small_buffer[5];
-    
+
     // Test Case 1: Normal operation
     printf("Test 1 - Normal copy:\n");
     int copied = safe_strcpy(buffer, "Hello", sizeof(buffer));
     printf("Copied: %d chars, Result: '%s'\n", copied, buffer);
-    
+
     // Test Case 2: Buffer too small (should truncate safely)
     printf("\nTest 2 - Buffer overflow prevention:\n");
     copied = safe_strcpy(small_buffer, "This is too long", sizeof(small_buffer));
     printf("Copied: %d chars, Result: '%s'\n", copied, small_buffer);
-    
+
     // Test Case 3: Edge case - empty string
     printf("\nTest 3 - Empty string:\n");
     copied = safe_strcpy(buffer, "", sizeof(buffer));
     printf("Copied: %d chars, Result: '%s'\n", copied, buffer);
-    
+
     // Test Case 4: NULL pointer handling
     printf("\nTest 4 - NULL pointer:\n");
     copied = safe_strcpy(NULL, "test", 10);
     printf("Copied: %d chars (should be -1 for error)\n", copied);
-    
+
     return 0;
 }
 
@@ -95,7 +95,7 @@ int main() {
  * - Test 2: Should copy "This" only (4 chars) and null-terminate
  * - Test 3: Should copy empty string (0 chars)
  * - Test 4: Should return -1 for error
- * 
+ *
  * COMMON MISTAKES TO AVOID:
  * 1. Not checking if dest_size is 0
  * 2. Forgetting to null-terminate

@@ -34,7 +34,7 @@ void free_circular_buffer(CircularBuffer* cb) {
 
 int circular_buffer_push(CircularBuffer* cb, int value) {
 	if(cb->size >= cb->capacity) return 0;
-		
+
     cb->data[cb->tail] = value;
     cb->tail = (cb->tail +1) % cb->capacity;
     cb->size++;
@@ -43,7 +43,7 @@ int circular_buffer_push(CircularBuffer* cb, int value) {
 
 int circular_buffer_pop(CircularBuffer* cb, int* value) {
 	if(cb->size == 0) return 0;
-		
+
     *value = cb->data[cb->head];
     cb->head = (cb->head +1) % cb->capacity;
     cb->size--;
@@ -60,7 +60,7 @@ void print_circular_buffer(CircularBuffer* cb) {
 
 int main() {
     CircularBuffer* cb = create_circular_buffer(10);
-    if(cb == NULL) {    
+    if(cb == NULL) {
         printf("Failed to create circular buffer\n");
         return 1;
     }

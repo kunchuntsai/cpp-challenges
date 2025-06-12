@@ -53,4 +53,4 @@ The implementation ensures safe concatenation by:
 2. Leave space for null terminator when calculating buffer space
 3. Use size_t for buffer sizes to handle large arrays correctly
 4. Return meaningful error codes for invalid inputs
-5. Document the behavior of the function clearly 
+5. Document the behavior of the function clearly

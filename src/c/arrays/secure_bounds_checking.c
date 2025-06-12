@@ -199,7 +199,7 @@ void test_secure_array(void) {
     printf("\n1. Setting elements:\n");
     for (int i = 0; i < 5; i++) {
         int result = set_element(arr1, i, i + 1);
-        printf("Set element %d: %s\n", i + 1, 
+        printf("Set element %d: %s\n", i + 1,
                result == SUCCESS ? "Success" : "Failed");
     }
 
@@ -252,4 +252,4 @@ void test_secure_array(void) {
 int main(void) {
     test_secure_array();
     return 0;
-} 
+}

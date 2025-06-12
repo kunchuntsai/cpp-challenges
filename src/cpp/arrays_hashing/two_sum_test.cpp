@@ -5,7 +5,7 @@
 
 void test_two_sum() {
     std::cout << "\n=== Testing Two Sum ===\n";
-    
+
     // Test Case 1: Basic case
     {
         std::vector<int> nums = {2, 7, 11, 15};
@@ -15,7 +15,7 @@ void test_two_sum() {
         auto result = TwoSum::solve(nums, target);
         print_result(result);
     }
-    
+
     // Test Case 2: Multiple possible solutions
     {
         std::vector<int> nums = {3, 2, 4};
@@ -25,7 +25,7 @@ void test_two_sum() {
         auto result = TwoSum::solve(nums, target);
         print_result(result);
     }
-    
+
     // Test Case 3: Same number used twice
     {
         std::vector<int> nums = {3, 3};
@@ -35,7 +35,7 @@ void test_two_sum() {
         auto result = TwoSum::solve(nums, target);
         print_result(result);
     }
-    
+
     // Test Case 4: No solution
     {
         std::vector<int> nums = {1, 2, 3, 4};
@@ -50,4 +50,4 @@ void test_two_sum() {
 int main() {
     test_two_sum();
     return 0;
-} 
+}

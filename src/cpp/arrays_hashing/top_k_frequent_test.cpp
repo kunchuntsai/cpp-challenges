@@ -5,7 +5,7 @@
 
 void test_top_k_frequent() {
     std::cout << "\n=== Testing Top K Frequent Elements ===\n";
-    
+
     // Test Case 1: Basic case
     {
         std::vector<int> nums = {1, 1, 1, 2, 2, 3};
@@ -15,7 +15,7 @@ void test_top_k_frequent() {
         auto result = TopKFrequent::solve(nums, k);
         print_result(result);
     }
-    
+
     // Test Case 2: Single element
     {
         std::vector<int> nums = {1};
@@ -25,7 +25,7 @@ void test_top_k_frequent() {
         auto result = TopKFrequent::solve(nums, k);
         print_result(result);
     }
-    
+
     // Test Case 3: All elements have same frequency
     {
         std::vector<int> nums = {1, 2, 3, 4, 5};
@@ -35,7 +35,7 @@ void test_top_k_frequent() {
         auto result = TopKFrequent::solve(nums, k);
         print_result(result);
     }
-    
+
     // Test Case 4: Negative numbers
     {
         std::vector<int> nums = {-1, -1, 2, 2, 2, 3, 3, 3, 3};
@@ -50,4 +50,4 @@ void test_top_k_frequent() {
 int main() {
     test_top_k_frequent();
     return 0;
-} 
+}

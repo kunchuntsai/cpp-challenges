@@ -172,4 +172,4 @@ int main(void) {
     demonstrate_fixed_array();
     demonstrate_dynamic_array();
     return 0;
-} 
+}

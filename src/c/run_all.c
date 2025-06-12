@@ -95,7 +95,7 @@ int collect_examples(const char *build_dir, Example *examples, int max_examples)
 void run_example(const char *path) {
     printf("\nRunning %s...\n", path);
     printf("----------------------------------------\n");
-    
+
     // Fork and execute the program
     pid_t pid = fork();
     if (pid == 0) {
@@ -110,7 +110,7 @@ void run_example(const char *path) {
     } else {
         perror("Error forking process");
     }
-    
+
     printf("----------------------------------------\n");
 }
 
@@ -155,4 +155,4 @@ int main(int argc, char *argv[]) {
     }
 
     return 0;
-} 
+}

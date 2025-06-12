@@ -68,7 +68,7 @@ void double_free_example() {
 void double_free_bug() {
     char* ptr = malloc(100);
     strcpy(ptr, "Some data");
-    
+
     free(ptr);
     // ... some other code ...
     free(ptr); // BUG: Double free - undefined behavior!
@@ -78,12 +78,12 @@ void double_free_bug() {
 void double_free_fixed() {
     char* ptr = malloc(100);
     if (ptr == NULL) return;
-    
+
     strcpy(ptr, "Some data");
-    
+
     free(ptr);
     ptr = NULL; // FIXED: Set pointer to NULL after freeing
-    
+
     // Now this is safe (freeing NULL is allowed)
     if (ptr != NULL) {
         free(ptr);
@@ -109,9 +109,9 @@ void use_after_free_bug() {
     for (int i = 0; i < 5; i++) {
         arr[i] = i * 10;
     }
-    
+
     free(arr);
-    
+
     // BUG: Using freed memory
     printf("First element: %d\n", arr[0]); // Undefined behavior!
 }
@@ -120,14 +120,14 @@ void use_after_free_bug() {
 void use_after_free_fixed() {
     int* arr = malloc(5 * sizeof(int));
     if (arr == NULL) return;
-    
+
     for (int i = 0; i < 5; i++) {
         arr[i] = i * 10;
     }
-    
+
     // Use the data before freeing
     printf("First element: %d\n", arr[0]);
-    
+
     free(arr);
     arr = NULL; // FIXED: Prevent accidental use
 }
@@ -191,7 +191,7 @@ void memory_leak_in_error_handling() {
     if (ptr1 == NULL) {
         return;  // Memory leak: forgot to free ptr1
     }
-    
+
     int* ptr2 = (int*)malloc(sizeof(int));
     if (ptr2 == NULL) {
         return;  // Memory leak: forgot to free ptr1 and ptr2
@@ -202,22 +202,22 @@ void memory_leak_in_error_handling() {
 int process_data_buggy(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) return -1;
-    
+
     char* buffer1 = malloc(1024);
     char* buffer2 = malloc(2048);
-    
+
     if (buffer1 == NULL) {
         fclose(file);
         return -1; // BUG: buffer2 not freed if allocated
     }
-    
+
     if (buffer2 == NULL) {
         fclose(file);
         return -1; // BUG: buffer1 not freed
     }
-    
+
     // Process data...
-    
+
     free(buffer1);
     free(buffer2);
     fclose(file);
@@ -230,31 +230,31 @@ int process_data_fixed(const char* filename) {
     char* buffer1 = NULL;
     char* buffer2 = NULL;
     int result = -1;
-    
+
     file = fopen(filename, "r");
     if (file == NULL) {
         goto cleanup;
     }
-    
+
     buffer1 = malloc(1024);
     if (buffer1 == NULL) {
         goto cleanup;
     }
-    
+
     buffer2 = malloc(2048);
     if (buffer2 == NULL) {
         goto cleanup;
     }
-    
+
     // Process data...
     result = 0; // Success
-    
+
 cleanup:
     // FIXED: Centralized cleanup handles all cases
     if (buffer2) free(buffer2);
     if (buffer1) free(buffer1);
     if (file) fclose(file);
-    
+
     return result;
 }
 
@@ -282,13 +282,13 @@ void buffer_overflow_bug() {
 void buffer_overflow_fixed() {
     const char* source = "This string is way too long for the buffer";
     size_t needed_size = strlen(source) + 1;
-    
+
     char* buffer = malloc(needed_size); // FIXED: Allocate enough space
     if (buffer == NULL) {
         printf("Memory allocation failed\n");
         return;
     }
-    
+
     strcpy(buffer, source); // Now safe
     printf("%s\n", buffer);
     free(buffer);
@@ -298,11 +298,11 @@ void buffer_overflow_fixed() {
 void buffer_overflow_fixed_alt() {
     char* buffer = malloc(10);
     if (buffer == NULL) return;
-    
+
     const char* source = "This string is way too long for the buffer";
     strncpy(buffer, source, 9); // FIXED: Use strncpy with size limit
     buffer[9] = '\0'; // Ensure null termination
-    
+
     printf("%s\n", buffer);
     free(buffer);
 }
@@ -327,7 +327,7 @@ void use_stack_memory_bug() {
 char* get_string_fixed() {
     char* heap_string = malloc(100);
     if (heap_string == NULL) return NULL;
-    
+
     strcpy(heap_string, "Hello World");
     return heap_string; // FIXED: Return heap memory
 }
@@ -371,20 +371,20 @@ void use_struct_buggy() {
 DataStruct* create_struct_fixed(const char* name, size_t size) {
     DataStruct* ds = malloc(sizeof(DataStruct));
     if (ds == NULL) return NULL;
-    
+
     ds->name = malloc(strlen(name) + 1);
     if (ds->name == NULL) {
         free(ds);
         return NULL;
     }
-    
+
     ds->data = malloc(size * sizeof(int));
     if (ds->data == NULL) {
         free(ds->name);
         free(ds);
         return NULL;
     }
-    
+
     strcpy(ds->name, name);
     ds->size = size;
     return ds;
@@ -440,11 +440,11 @@ DEBUGGING MEMORY ISSUES:
 // Example of a safe string duplication function
 char* safe_strdup(const char* src) {
     if (src == NULL) return NULL;
-    
+
     size_t len = strlen(src) + 1;
     char* dst = malloc(len);
     if (dst == NULL) return NULL;
-    
+
     memcpy(dst, src, len);
     return dst;
 }
@@ -452,7 +452,7 @@ char* safe_strdup(const char* src) {
 int main() {
     printf("Memory Management Examples:\n");
     printf("Run with Valgrind or AddressSanitizer to detect issues\n");
-    
+
     // Test the fixed versions
     use_string_fixed();
     double_free_fixed();
@@ -460,12 +460,12 @@ int main() {
     loop_leak_fixed();
     buffer_overflow_fixed();
     use_stack_memory_fixed();
-    
+
     // Test struct management
     DataStruct* ds = create_struct_fixed("test", 100);
     if (ds != NULL) {
         destroy_struct_fixed(ds);
     }
-    
+
     return 0;
-} 
+}

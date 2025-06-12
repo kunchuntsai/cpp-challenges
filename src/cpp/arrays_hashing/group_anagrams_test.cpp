@@ -19,7 +19,7 @@ void print_anagram_groups(const std::vector<std::vector<std::string>>& groups) {
 
 void test_group_anagrams() {
     std::cout << "\n=== Testing Group Anagrams ===\n";
-    
+
     // Test Case 1: Basic case
     {
         std::vector<std::string> strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
@@ -28,7 +28,7 @@ void test_group_anagrams() {
         auto result = GroupAnagrams::solve(strs);
         print_anagram_groups(result);
     }
-    
+
     // Test Case 2: Empty input
     {
         std::vector<std::string> strs = {};
@@ -37,7 +37,7 @@ void test_group_anagrams() {
         auto result = GroupAnagrams::solve(strs);
         print_anagram_groups(result);
     }
-    
+
     // Test Case 3: Single string
     {
         std::vector<std::string> strs = {"a"};
@@ -51,4 +51,4 @@ void test_group_anagrams() {
 int main() {
     test_group_anagrams();
     return 0;
-} 
+}

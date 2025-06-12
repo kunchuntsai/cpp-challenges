@@ -14,13 +14,13 @@ public:
         for (int num : nums) {
             frequencyMap[num]++;
         }
-        
+
         // Create buckets for frequencies
         std::vector<std::vector<int>> buckets(nums.size() + 1);
         for (const auto& pair : frequencyMap) {
             buckets[pair.second].push_back(pair.first);
         }
-        
+
         // Get top k frequent elements
         std::vector<int> result;
         for (int i = buckets.size() - 1; i >= 0 && result.size() < k; i--) {
@@ -29,9 +29,9 @@ public:
                 if (result.size() == k) break;
             }
         }
-        
+
         return result;
     }
 };
 
-#endif // TOP_K_FREQUENT_HPP 
+#endif // TOP_K_FREQUENT_HPP

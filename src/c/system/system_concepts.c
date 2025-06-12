@@ -329,17 +329,17 @@ void demonstrate_struct_size() {
     printf("-------------------------\n");
 
     struct SizeDemo demo = {42, 'A', 3.14};
-    
+
     printf("Structure members:\n");
     printf("  int a:    %d (size: %zu)\n", demo.a, sizeof(demo.a));
     printf("  char b:   %c (size: %zu)\n", demo.b, sizeof(demo.b));
     printf("  double c: %f (size: %zu)\n", demo.c, sizeof(demo.c));
-    
+
     printf("\nSize calculation methods:\n");
     printf("1. Using sizeof:        %zu bytes\n", sizeof(struct SizeDemo));
     printf("2. Using pointer arithmetic: %zu bytes\n", get_struct_size_pointer());
     printf("3. Using array indexing:    %zu bytes\n", get_struct_size_array());
-    
+
     printf("\nMemory layout analysis:\n");
     printf("  Start address: %p\n", (void*)&demo);
     printf("  Member offsets:\n");

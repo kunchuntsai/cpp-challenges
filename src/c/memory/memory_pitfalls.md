@@ -66,7 +66,7 @@ void memory_leak_in_error_handling() {
     if (ptr1 == NULL) {
         return;  // Memory leak: forgot to free ptr1
     }
-    
+
     int* ptr2 = (int*)malloc(sizeof(int));
     if (ptr2 == NULL) {
         return;  // Memory leak: forgot to free ptr1 and ptr2
@@ -133,17 +133,17 @@ void string_memory_management() {
 ```c
 void proper_memory_management() {
     int* ptr = NULL;
-    
+
     // Initialize pointer
     ptr = (int*)malloc(sizeof(int));
     if (ptr == NULL) {
         // Handle allocation failure
         return;
     }
-    
+
     // Use the memory
     *ptr = 42;
-    
+
     // Free the memory
     free(ptr);
     ptr = NULL;
@@ -165,4 +165,4 @@ void proper_memory_management() {
 
 1. [C Memory Management](https://en.wikipedia.org/wiki/C_dynamic_memory_allocation)
 2. [Valgrind Documentation](https://valgrind.org/docs/manual/manual.html)
-3. [AddressSanitizer](https://clang.llvm.org/docs/AddressSanitizer.html) 
+3. [AddressSanitizer](https://clang.llvm.org/docs/AddressSanitizer.html)

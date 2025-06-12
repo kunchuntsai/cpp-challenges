@@ -73,4 +73,4 @@ Implement a program that demonstrates the key differences between fixed-size arr
 ## Additional Resources
 - [Stack vs Heap](https://en.wikipedia.org/wiki/Stack-based_memory_allocation)
 - [Dynamic memory allocation](https://en.wikipedia.org/wiki/C_dynamic_memory_allocation)
-- [Array data structure](https://en.wikipedia.org/wiki/Array_data_structure) 
+- [Array data structure](https://en.wikipedia.org/wiki/Array_data_structure)

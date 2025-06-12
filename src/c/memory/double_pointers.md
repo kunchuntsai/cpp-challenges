@@ -193,4 +193,4 @@ void clear_relationships(int** ptr) {
 
 1. [Pointer to Pointer](https://en.wikipedia.org/wiki/Pointer_(computer_programming)#Multiple_indirection)
 2. [C Memory Management](https://en.wikipedia.org/wiki/C_dynamic_memory_allocation)
-3. [Linked Lists in C](https://en.wikipedia.org/wiki/Linked_list) 
+3. [Linked Lists in C](https://en.wikipedia.org/wiki/Linked_list)

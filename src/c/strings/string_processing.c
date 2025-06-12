@@ -54,7 +54,7 @@ void to_lowercase(char* str) {
 int count_words(const char* str) {
     int count = 0;
     int in_word = 0;
-    
+
     while (*str) {
         if (isspace(*str)) {
             in_word = 0;
@@ -73,16 +73,16 @@ char** split_string(const char* str, const char delimiter, int* count) {
     for (const char* p = str; *p; p++) {
         if (*p == delimiter) (*count)++;
     }
-    
+
     // Allocate array of pointers
     char** tokens = (char**)malloc(*count * sizeof(char*));
     if (!tokens) return NULL;
-    
+
     // Split the string
     int token_index = 0;
     const char* start = str;
     const char* current = str;
-    
+
     while (*current) {
         if (*current == delimiter) {
             size_t len = current - start;
@@ -102,7 +102,7 @@ char** split_string(const char* str, const char delimiter, int* count) {
         }
         current++;
     }
-    
+
     // Handle the last token
     size_t len = current - start;
     tokens[token_index] = (char*)malloc(len + 1);
@@ -116,7 +116,7 @@ char** split_string(const char* str, const char delimiter, int* count) {
     }
     my_strcpy(tokens[token_index], start);
     tokens[token_index][len] = '\0';
-    
+
     return tokens;
 }
 
@@ -124,37 +124,37 @@ char** split_string(const char* str, const char delimiter, int* count) {
 void test_string_processing() {
     printf("Testing String Processing Functions:\n");
     printf("--------------------------------\n");
-    
+
     // Test my_strlen
     const char* test_str = "Hello, World!";
     printf("String length of '%s': %zu\n", test_str, my_strlen(test_str));
-    
+
     // Test my_strcpy
     char dest[50];
     my_strcpy(dest, test_str);
     printf("Copied string: %s\n", dest);
-    
+
     // Test my_strcat
     char cat_dest[50] = "Hello, ";
     my_strcat(cat_dest, "World!");
     printf("Concatenated string: %s\n", cat_dest);
-    
+
     // Test reverse_string
     char rev_str[] = "Hello";
     reverse_string(rev_str);
     printf("Reversed string: %s\n", rev_str);
-    
+
     // Test case conversion
     char case_str[] = "Hello World";
     to_uppercase(case_str);
     printf("Uppercase: %s\n", case_str);
     to_lowercase(case_str);
     printf("Lowercase: %s\n", case_str);
-    
+
     // Test word counting
     const char* sentence = "Hello World! This is a test.";
     printf("Number of words in '%s': %d\n", sentence, count_words(sentence));
-    
+
     // Test string splitting
     const char* split_str = "Hello,World,This,is,a,test";
     int token_count;
@@ -165,11 +165,11 @@ void test_string_processing() {
         free(tokens[i]);
     }
     free(tokens);
-    
+
     printf("\n");
 }
 
 int main() {
     test_string_processing();
     return 0;
-} 
+}

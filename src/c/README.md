@@ -137,4 +137,4 @@ The project includes build and run scripts in the `scripts/` directory. All prog
 - Consider memory layout and alignment
 - Be aware of endianness in data structures
 - Use bit fields for memory optimization
-- Group related function pointers in arrays 
+- Group related function pointers in arrays

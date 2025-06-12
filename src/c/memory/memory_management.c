@@ -28,10 +28,10 @@ void init_memory_system(void) {
 // Custom malloc implementation
 void* custom_malloc(size_t size) {
     if (size == 0) return NULL;
-    
+
     // Add header size to requested size
     size_t total_size = size + MIN_BLOCK_SIZE;
-    
+
     // Find a suitable free block
     MemoryBlock* current = memory_head;
     while (current != NULL) {
@@ -42,28 +42,28 @@ void* custom_malloc(size_t size) {
                 new_block->size = current->size - total_size;
                 new_block->is_free = true;
                 new_block->next = current->next;
-                
+
                 current->size = total_size;
                 current->next = new_block;
             }
-            
+
             current->is_free = false;
             return (void*)((uint8_t*)current + MIN_BLOCK_SIZE);
         }
         current = current->next;
     }
-    
+
     return NULL;  // No suitable block found
 }
 
 // Custom free implementation
 void custom_free(void* ptr) {
     if (ptr == NULL) return;
-    
+
     // Get the block header
     MemoryBlock* block = (MemoryBlock*)((uint8_t*)ptr - MIN_BLOCK_SIZE);
     block->is_free = true;
-    
+
     // Coalesce adjacent free blocks
     MemoryBlock* current = memory_head;
     while (current != NULL && current->next != NULL) {
@@ -81,13 +81,13 @@ size_t safe_strcpy(char* dest, const char* src, size_t dest_size) {
     if (dest == NULL || src == NULL || dest_size == 0) {
         return 0;
     }
-    
+
     size_t i;
     for (i = 0; i < dest_size - 1 && src[i] != '\0'; i++) {
         dest[i] = src[i];
     }
     dest[i] = '\0';
-    
+
     return i;
 }
 
@@ -95,13 +95,13 @@ size_t safe_strncpy(char* dest, const char* src, size_t dest_size, size_t n) {
     if (dest == NULL || src == NULL || dest_size == 0) {
         return 0;
     }
-    
+
     size_t i;
     for (i = 0; i < dest_size - 1 && i < n && src[i] != '\0'; i++) {
         dest[i] = src[i];
     }
     dest[i] = '\0';
-    
+
     return i;
 }
 
@@ -109,17 +109,17 @@ size_t safe_strncpy(char* dest, const char* src, size_t dest_size, size_t n) {
 void test_memory_management(void) {
     printf("Testing Custom Memory Management\n");
     printf("==============================\n");
-    
+
     // Initialize memory system
     init_memory_system();
-    
+
     // Test malloc
     char* str1 = (char*)custom_malloc(50);
     if (str1) {
         safe_strcpy(str1, "Hello, World!", 50);
         printf("Allocated string: %s\n", str1);
     }
-    
+
     // Test multiple allocations
     int* numbers = (int*)custom_malloc(5 * sizeof(int));
     if (numbers) {
@@ -132,23 +132,23 @@ void test_memory_management(void) {
         }
         printf("\n");
     }
-    
+
     // Test free
     custom_free(str1);
     custom_free(numbers);
-    
+
     // Test safe string copy
     char dest[20];
     const char* src = "This is a test string";
-    
+
     size_t copied = safe_strcpy(dest, src, sizeof(dest));
     printf("Safe string copy result: %s (copied %zu characters)\n", dest, copied);
-    
+
     // Test safe string copy with truncation
     char dest2[10];
     copied = safe_strcpy(dest2, src, sizeof(dest2));
     printf("Safe string copy with truncation: %s (copied %zu characters)\n", dest2, copied);
-    
+
     // Test safe strncpy
     char dest3[15];
     copied = safe_strncpy(dest3, src, sizeof(dest3), 5);
@@ -158,4 +158,4 @@ void test_memory_management(void) {
 int main(void) {
     test_memory_management();
     return 0;
-} 
+}

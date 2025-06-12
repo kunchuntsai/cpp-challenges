@@ -10,7 +10,7 @@ class TrieNode {
 public:
     TrieNode* children[52];  // 26 for lowercase + 26 for uppercase
     bool isEndOfWord;
-    
+
     TrieNode() {
         for (int i = 0; i < 52; i++) {
             children[i] = nullptr;
@@ -36,7 +36,7 @@ public:
     Trie() {
         root = new TrieNode();
     }
-    
+
     void insert(string word) {
         TrieNode* current = root;
         for (char c : word) {
@@ -49,12 +49,12 @@ public:
         }
         current->isEndOfWord = true;
     }
-    
+
     bool search(string word) {
         TrieNode* node = findNode(word);
         return (node != nullptr && node->isEndOfWord);
     }
-    
+
     bool startsWith(string prefix) {
         return (findNode(prefix) != nullptr);
     }

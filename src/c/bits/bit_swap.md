@@ -48,16 +48,16 @@ Initial: a=A, b=B
 Now: a=(A⊕B), b=B
 
 ### Step 2: b = a ⊕ b = (A ⊕ B) ⊕ B
-Using associativity: = A ⊕ (B ⊕ B)  
-Using self-cancellation: = A ⊕ 0  
-Using identity: = A  
+Using associativity: = A ⊕ (B ⊕ B)
+Using self-cancellation: = A ⊕ 0
+Using identity: = A
 Now: a=(A⊕B), b=A
 
 ### Step 3: a = a ⊕ b = (A ⊕ B) ⊕ A
-Using commutativity: = (B ⊕ A) ⊕ A  
-Using associativity: = B ⊕ (A ⊕ A)  
-Using self-cancellation: = B ⊕ 0  
-Using identity: = B  
+Using commutativity: = (B ⊕ A) ⊕ A
+Using associativity: = B ⊕ (A ⊕ A)
+Using self-cancellation: = B ⊕ 0
+Using identity: = B
 Final: a=B, b=A ✓ SWAPPED!
 
 ## Concrete Example
@@ -65,8 +65,8 @@ Let's use A=5 (101₂) and B=3 (011₂):
 
 Initial: a=5 (00000101), b=3 (00000011)
 
-Step 1: a = 5⊕3 = 6 (00000110)  
-Step 2: b = (5⊕3)⊕3 = 5 (00000101)  
+Step 1: a = 5⊕3 = 6 (00000110)
+Step 2: b = (5⊕3)⊕3 = 5 (00000101)
 Step 3: a = (5⊕3)⊕5 = 3 (00000011)
 
 Result: Successfully swapped! a=3, b=5
@@ -105,12 +105,12 @@ Result: Successfully swapped! a=3, b=5
 # Limitations of XOR Swap
 
 ## 1. Same Variable Problem
-If you try to swap a variable with itself, it becomes 0!  
-Solution: Always check if pointers are different  
+If you try to swap a variable with itself, it becomes 0!
+Solution: Always check if pointers are different
 `if (a != b) { /* then do XOR swap */ }`
 
 ## 2. Integer Types Only
-XOR swap ONLY works with integer types.  
+XOR swap ONLY works with integer types.
 Floating-point numbers have complex IEEE 754 representation and cannot be XOR swapped.
 
 ## 3. Readability Issues

@@ -117,7 +117,7 @@ typedef struct {
 } WorkItem;
 
 ThreadPool* threadpool_create(int num_threads);
-int threadpool_submit(ThreadPool* pool, void* data, 
+int threadpool_submit(ThreadPool* pool, void* data,
                      void (*process_func)(void*),
                      void (*cleanup_func)(void*));
 void threadpool_destroy(ThreadPool* pool);
@@ -200,18 +200,18 @@ void example_usage() {
     // Create and use a reference-counted buffer
     RefCountedBuffer* buf = refbuf_create("Shared Data");
     if (!buf) return;
-    
+
     // Start multiple threads that use the buffer
     pthread_t threads[3];
     for (int i = 0; i < 3; i++) {
         pthread_create(&threads[i], NULL, ref_counting_thread, buf);
     }
-    
+
     // Wait for threads to complete
     for (int i = 0; i < 3; i++) {
         pthread_join(threads[i], NULL);
     }
-    
+
     // Release original reference
     refbuf_release(buf);
 }

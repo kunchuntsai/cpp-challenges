@@ -12,4 +12,4 @@ inline void print_result(const std::vector<int>& result) {
     }
 }
 
-#endif // TEST_UTILS_H 
+#endif // TEST_UTILS_H

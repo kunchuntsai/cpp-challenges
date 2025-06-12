@@ -60,4 +60,4 @@ The program will demonstrate:
 
 - [C string handling](https://en.wikipedia.org/wiki/C_string_handling)
 - [String (computer science)](https://en.wikipedia.org/wiki/String_(computer_science))
-- [String tokenization](https://en.wikipedia.org/wiki/Tokenization_(lexical_analysis)) 
+- [String tokenization](https://en.wikipedia.org/wiki/Tokenization_(lexical_analysis))

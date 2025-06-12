@@ -57,12 +57,12 @@ uint32_t extract_bits(uint32_t num, int start, int length) {
 ```c
 // Pack multiple values into a single integer
 uint32_t pack_data(uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
-    return ((uint32_t)a << 24) | ((uint32_t)b << 16) | 
+    return ((uint32_t)a << 24) | ((uint32_t)b << 16) |
            ((uint32_t)c << 8) | d;
 }
 
 // Unpack data from packed integer
-void unpack_data(uint32_t packed, uint8_t *a, uint8_t *b, 
+void unpack_data(uint32_t packed, uint8_t *a, uint8_t *b,
                 uint8_t *c, uint8_t *d) {
     *a = (packed >> 24) & 0xFF;
     *b = (packed >> 16) & 0xFF;
@@ -93,9 +93,9 @@ void clear_register_bits(volatile uint32_t *reg, uint32_t mask) {
     *reg &= ~mask;
 }
 
-void modify_register_field(volatile uint32_t *reg, uint32_t field_mask, 
+void modify_register_field(volatile uint32_t *reg, uint32_t field_mask,
                          uint32_t field_value, int field_shift) {
-    *reg = (*reg & ~field_mask) | 
+    *reg = (*reg & ~field_mask) |
            ((field_value << field_shift) & field_mask);
 }
 ```
@@ -200,4 +200,4 @@ uint32_t reverse_bits(uint32_t n) {
 - Understand masking for data extraction
 - Practice register operations for embedded systems
 - Know efficient algorithms for interviews
-- Think hardware-first in C programming 
+- Think hardware-first in C programming

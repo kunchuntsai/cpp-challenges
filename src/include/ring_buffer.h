@@ -26,10 +26,10 @@ private:
     std::vector<float> buffer;
 
 public:
-    RingBuffer(size_t size) : 
-        Size(size), 
-        head(0), 
-        tail(0), 
+    RingBuffer(size_t size) :
+        Size(size),
+        head(0),
+        tail(0),
         full(false),
         buffer(size, 0.0f)  // Initialize vector with size elements, all set to 0.0f
     {

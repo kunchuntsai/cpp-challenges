@@ -34,7 +34,7 @@ static pthread_mutex_t counter_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void fixed_function_v1() {
     static int counter = 0;
-    
+
     pthread_mutex_lock(&counter_mutex);
     counter++;
     printf("%d\n", counter);
@@ -48,7 +48,7 @@ void fixed_function_v1() {
 
 void fixed_function_v2() {
     static atomic_int counter = ATOMIC_VAR_INIT(0);
-    
+
     int value = atomic_fetch_add(&counter, 1) + 1;
     printf("%d\n", value);
 }
@@ -59,12 +59,12 @@ void fixed_function_v2() {
 void fixed_function_v3() {
     static int counter = 0;
     int local_value;
-    
+
     pthread_mutex_lock(&counter_mutex);
     counter++;
     local_value = counter;
     pthread_mutex_unlock(&counter_mutex);
-    
+
     printf("%d\n", local_value);  // Print outside critical section
 }
 ```
@@ -112,7 +112,7 @@ typedef struct {
 ThreadSafeList* list_create() {
     ThreadSafeList* list = malloc(sizeof(ThreadSafeList));
     if (!list) return NULL;
-    
+
     list->head = NULL;
     if (pthread_mutex_init(&list->mutex, NULL) != 0) {
         free(list);
@@ -123,17 +123,17 @@ ThreadSafeList* list_create() {
 
 int list_insert(ThreadSafeList* list, int data) {
     if (!list) return -1;
-    
+
     Node* new_node = malloc(sizeof(Node));
     if (!new_node) return -1;
-    
+
     new_node->data = data;
-    
+
     pthread_mutex_lock(&list->mutex);
     new_node->next = list->head;
     list->head = new_node;
     pthread_mutex_unlock(&list->mutex);
-    
+
     return 0;
 }
 ```
@@ -241,55 +241,55 @@ typedef struct {
 SafeCounter* counter_create(int initial_value) {
     SafeCounter* counter = malloc(sizeof(SafeCounter));
     if (!counter) return NULL;
-    
+
     counter->value = initial_value;
     if (pthread_mutex_init(&counter->mutex, NULL) != 0) {
         free(counter);
         return NULL;
     }
-    
+
     return counter;
 }
 
 // Increment counter and return new value
 int counter_increment(SafeCounter* counter) {
     if (!counter) return -1;
-    
+
     pthread_mutex_lock(&counter->mutex);
     counter->value++;
     int result = counter->value;
     pthread_mutex_unlock(&counter->mutex);
-    
+
     return result;
 }
 
 // Decrement counter and return new value
 int counter_decrement(SafeCounter* counter) {
     if (!counter) return -1;
-    
+
     pthread_mutex_lock(&counter->mutex);
     counter->value--;
     int result = counter->value;
     pthread_mutex_unlock(&counter->mutex);
-    
+
     return result;
 }
 
 // Get current value
 int counter_get(SafeCounter* counter) {
     if (!counter) return -1;
-    
+
     pthread_mutex_lock(&counter->mutex);
     int result = counter->value;
     pthread_mutex_unlock(&counter->mutex);
-    
+
     return result;
 }
 
 // Set new value
 void counter_set(SafeCounter* counter, int new_value) {
     if (!counter) return;
-    
+
     pthread_mutex_lock(&counter->mutex);
     counter->value = new_value;
     pthread_mutex_unlock(&counter->mutex);
@@ -298,7 +298,7 @@ void counter_set(SafeCounter* counter, int new_value) {
 // Cleanup
 void counter_destroy(SafeCounter* counter) {
     if (!counter) return;
-    
+
     pthread_mutex_destroy(&counter->mutex);
     free(counter);
 }
@@ -331,7 +331,7 @@ char* create_message(const char* name) {
 char* create_message_v1(const char* name) {
     char* msg = malloc(100);
     if (!msg) return NULL;  // Check allocation
-    
+
     sprintf(msg, "Hello %s", name);
     return msg;  // CALLER OWNS: Must call free() on returned pointer
 }
@@ -341,13 +341,13 @@ char* create_message_v1(const char* name) {
 ```c
 char* create_message_v2(const char* name) {
     if (!name) return NULL;
-    
+
     size_t name_len = strlen(name);
     size_t total_len = 6 + name_len + 1;  // "Hello " + name + '\0'
-    
+
     char* msg = malloc(total_len);
     if (!msg) return NULL;
-    
+
     snprintf(msg, total_len, "Hello %s", name);
     return msg;  // CALLER OWNS: Must call free() on returned pointer
 }
@@ -357,7 +357,7 @@ char* create_message_v2(const char* name) {
 ```c
 int create_message_v3(const char* name, char* buffer, size_t buffer_size) {
     if (!name || !buffer || buffer_size == 0) return -1;
-    
+
     int result = snprintf(buffer, buffer_size, "Hello %s", name);
     return (result >= 0 && result < buffer_size) ? 0 : -1;
 }
@@ -374,7 +374,7 @@ if (create_message_v3("World", buffer, sizeof(buffer)) == 0) {
 ```c
 const char* create_message_v4(const char* name) {
     static char buffer[256];  // WARNING: Not thread-safe!
-    
+
     if (!name) return NULL;
     snprintf(buffer, sizeof(buffer), "Hello %s", name);
     return buffer;  // CALLER DOES NOT OWN: Do not free!
@@ -393,20 +393,20 @@ typedef struct {
 MessageHandle* create_message_v5(const char* name) {
     MessageHandle* handle = malloc(sizeof(MessageHandle));
     if (!handle) return NULL;
-    
+
     handle->message = create_message_v2(name);
     if (!handle->message) {
         free(handle);
         return NULL;
     }
-    
+
     handle->cleanup = (void(*)(void*))free;
     return handle;
 }
 
 void message_destroy(MessageHandle* handle) {
     if (!handle) return;
-    
+
     if (handle->cleanup && handle->message) {
         handle->cleanup(handle->message);
     }

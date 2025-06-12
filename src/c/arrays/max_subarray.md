@@ -64,4 +64,4 @@ To compile and run:
 ```bash
 gcc max_subarray.c -o max_subarray
 ./max_subarray
-``` 
+```

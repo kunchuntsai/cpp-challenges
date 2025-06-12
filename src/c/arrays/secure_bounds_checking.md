@@ -116,4 +116,4 @@ typedef struct {
 - [Buffer overflow](https://en.wikipedia.org/wiki/Buffer_overflow)
 - [Integer overflow](https://en.wikipedia.org/wiki/Integer_overflow)
 - [Memory safety](https://en.wikipedia.org/wiki/Memory_safety)
-- [Defensive programming](https://en.wikipedia.org/wiki/Defensive_programming) 
+- [Defensive programming](https://en.wikipedia.org/wiki/Defensive_programming)

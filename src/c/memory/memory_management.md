@@ -104,10 +104,10 @@ char* str = (char*)custom_malloc(50);
 if (str) {
     // Safe string copy
     safe_strcpy(str, "Hello, World!", 50);
-    
+
     // Use the string
     printf("%s\n", str);
-    
+
     // Free memory
     custom_free(str);
 }
@@ -118,4 +118,4 @@ if (str) {
 - [Memory Management](https://en.wikipedia.org/wiki/Memory_management)
 - [String Handling in C](https://en.wikipedia.org/wiki/C_string_handling)
 - [Buffer Overflow](https://en.wikipedia.org/wiki/Buffer_overflow)
-- [Memory Fragmentation](https://en.wikipedia.org/wiki/Fragmentation_(computing)) 
+- [Memory Fragmentation](https://en.wikipedia.org/wiki/Fragmentation_(computing))

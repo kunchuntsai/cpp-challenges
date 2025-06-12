@@ -19,7 +19,7 @@ void exercise2() {
 
     matrix = (int**)malloc(rows * sizeof(int*));
     assert(matrix != NULL);
-    
+
     for (int i = 0; i < rows; i++) {
         matrix[i] = (int*)malloc(cols * sizeof(int));
         assert(matrix[i] != NULL);
@@ -52,7 +52,7 @@ typedef struct Node {
 void insert_at_beginning(Node** head, int value) {
     Node* new_node = (Node*)malloc(sizeof(Node));
     assert(new_node != NULL);
-    
+
     new_node->data = value;
     new_node->next = *head;
     *head = new_node;
@@ -60,7 +60,7 @@ void insert_at_beginning(Node** head, int value) {
 
 void exercise3() {
     Node* head = NULL;
-    
+
     insert_at_beginning(&head, 3);
     insert_at_beginning(&head, 2);
     insert_at_beginning(&head, 1);
@@ -88,7 +88,7 @@ void exercise4() {
 
     strings = (char**)malloc(num_strings * sizeof(char*));
     assert(strings != NULL);
-    
+
     const char* words[] = {"Hello", "World", "C"};
     for (int i = 0; i < num_strings; i++) {
         strings[i] = (char*)malloc(strlen(words[i]) + 1);
@@ -121,7 +121,7 @@ void exercise5() {
 
     operations = (Operation*)malloc(num_operations * sizeof(Operation));
     assert(operations != NULL);
-    
+
     operations[0] = add;
     operations[1] = subtract;
     operations[2] = multiply;
@@ -146,4 +146,4 @@ int main() {
     exercise5();
 
     return 0;
-} 
+}
