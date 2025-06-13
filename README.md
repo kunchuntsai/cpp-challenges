@@ -14,12 +14,6 @@ Keep in mind that the perceived difficulty can vary based on individual experien
 * Memory Pool Allocator: This requires deep understanding of memory management and low-level optimizations.
 * [Thread Pool](src/include/thread_pool.h): This is the most complex, combining advanced concurrency, templates, and careful resource management.
 
-# How to build and run
-
-## Prerequisites
-- CMake (version 3.10 or higher)
-- C++ compiler with C++17 support (gcc, clang, or MSVC)
-
 ## Build and Run
 The project uses CMake for building and includes convenient scripts for building and running:
 
@@ -68,7 +62,7 @@ The C practice section uses dedicated build and run scripts:
 ./scripts/run_c.sh -a
 
 # Run a specific program
-./scripts/run_c.sh -t pointer_demo
+./scripts/run_c.sh pointer_demo
 
 # List all available programs
 ./scripts/run_c.sh -l
