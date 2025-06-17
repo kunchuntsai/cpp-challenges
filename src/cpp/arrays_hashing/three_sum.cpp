@@ -37,14 +37,23 @@
 
 class Solution {
 public:
+    /**
+     * Finds all unique triplets in the array that sum up to zero.
+     * 
+     * @param nums Vector of integers to analyze
+     * @return Vector of vectors containing all unique triplets that sum to zero
+     * 
+     * Time Complexity: O(n^2) where n is the length of nums
+     * Space Complexity: O(1) excluding the output space
+     */
     std::vector<std::vector<int>> threeSum(std::vector<int>& nums) {
         std::vector<std::vector<int>> result;
         int n = nums.size();
         
-        // Sort the array to enable two-pointer technique
+        // Sort the array to enable two-pointer technique, O(n log n)
         std::sort(nums.begin(), nums.end());
         
-        // Iterate through each number as potential first element
+        // Iterate through each number as potential first element, Runs n-2 times ≈ O(n)
         for (int i = 0; i < n - 2; i++) {
             // Skip duplicates for the first element
             if (i > 0 && nums[i] == nums[i - 1]) continue;
@@ -52,7 +61,7 @@ public:
             int left = i + 1;
             int right = n - 1;
             
-            while (left < right) {
+            while (left < right) { // At most n steps per anchor
                 int sum = nums[i] + nums[left] + nums[right];
                 
                 if (sum == 0) {
