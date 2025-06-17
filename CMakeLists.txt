@@ -13,7 +13,7 @@ include_directories(
 find_package(Threads REQUIRED)
 
 # Add all test files from src/cpp/arrays_hashing
-file(GLOB ARRAY_HASHING_TESTS "src/cpp/arrays_hashing/*_test.cpp")
+file(GLOB ARRAY_HASHING_TESTS "src/cpp/arrays_hashing/*.cpp")
 
 # Create separate executables for each array hashing test
 foreach(test_file ${ARRAY_HASHING_TESTS})
