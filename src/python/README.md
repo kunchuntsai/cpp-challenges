@@ -23,31 +23,31 @@
 ## Project Structure
 ```
 python/
-├── problems/           # Solution files organized by category
-│   ├── arrays_hashing/
-│   ├── two_pointers/
-│   └── ...
-├── tests/             # Test cases for each problem
+├── arrays_hashing/    # Solution files organized by category
+├── two_pointers/      # (to be added)
+├── sliding_window/    # (to be added)
 └── requirements.txt   # Python dependencies
 ```
 
 ## Setup Instructions
 1. Create a virtual environment:
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    source venv/bin/activate  # On Unix/macOS
    # or
    .\venv\Scripts\activate  # On Windows
    ```
 
-2. Install dependencies:
+2. Install dependencies: (for the first time)
    ```bash
-   pip install -r requirements.txt
+   pip install -r src/python/requirements.txt
    ```
 
-3. Run tests:
+   Note: If you get "command not found: pip", use `pip3` instead. This is common on systems where Python 3 is installed alongside Python 2.
+
+3. Run a solution:
    ```bash
-   python -m pytest tests/
+   python3 arrays_hashing/two_sum.py
    ```
 
 ## Problem Categories
