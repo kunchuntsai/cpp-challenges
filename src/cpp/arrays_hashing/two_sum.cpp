@@ -27,6 +27,7 @@
  * - -10^9 <= target <= 10^9
  * - Only one valid answer exists.
  */
+ 
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -68,10 +69,10 @@ void test_two_sum() {
 
     // Test Case 2: Multiple possible solutions
     {
-        std::vector<int> nums = {3, 2, 4};
+        std::vector<int> nums = {3, 2, 1, 6, 4};
         int target = 6;
         std::cout << "\nTest Case 2:" << std::endl;
-        std::cout << "Input: nums = [3, 2, 4], target = " << target << std::endl;
+        std::cout << "Input: nums = [3, 2, 1, 6, 4], target = " << target << std::endl;
         auto result = TwoSum::solve(nums, target);
         print_result(result);
     }

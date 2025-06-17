@@ -21,7 +21,7 @@
 - [Bit Manipulation](#bit-manipulation)
 
 ## Arrays & Hashing
-1. **Two Sum** (Easy) - Classic hash map problem, foundation for understanding hash table optimization
+1. **3Sum** (Medium) - Sort + two pointers technique, tests optimization from O(n³) to O(n²) and duplicate handling
 2. **Group Anagrams** (Medium) - String sorting and grouping, tests hash map usage with complex keys
 3. **Top K Frequent Elements** (Medium) - Hash map + heap/bucket sort, combines multiple data structures
 
