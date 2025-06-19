@@ -12,21 +12,11 @@ include_directories(
 # Find the threading library
 find_package(Threads REQUIRED)
 
-# Add all test files from src/cpp/arrays_hashing
-file(GLOB ARRAY_HASHING_TESTS "src/cpp/arrays_hashing/*.cpp")
+# Add all problem files from src/cpp/*
+file(GLOB ALL_CPP_PROBLEMS "src/cpp/*/*.cpp")
 
-# Create separate executables for each array hashing test
-foreach(test_file ${ARRAY_HASHING_TESTS})
-    get_filename_component(test_name ${test_file} NAME_WE)
-    add_executable(${test_name} ${test_file})
-    target_link_libraries(${test_name} PRIVATE Threads::Threads)
-endforeach()
-
-# Add all test files from src/cpp/two_pointers
-file(GLOB TWO_POINTERS_TESTS "src/cpp/two_pointers/*.cpp")
-
-# Create separate executables for each two pointers test
-foreach(test_file ${TWO_POINTERS_TESTS})
+# Create separate executables for each problem file
+foreach(test_file ${ALL_CPP_PROBLEMS})
     get_filename_component(test_name ${test_file} NAME_WE)
     add_executable(${test_name} ${test_file})
     target_link_libraries(${test_name} PRIVATE Threads::Threads)
