@@ -1,27 +1,27 @@
 # Top 3 LeetCode Problems by Category - Neetcode 75
 
 ## Table of Contents
-- [Arrays & Hashing](#arrays--hashing)
-- [Two Pointers](#two-pointers)
-- [Sliding Window](#sliding-window)
-- [Stack](#stack)
-- [Binary Search](#binary-search)
-- [Linked List](#linked-list)
-- [Trees](#trees)
-- [Heap / Priority Queue](#heap--priority-queue)
-- [Backtracking](#backtracking)
-- [Tries](#tries)
-- [Graphs](#graphs)
-- [Advanced Graphs](#advanced-graphs)
-- [1-D Dynamic Programming](#1-d-dynamic-programming)
-- [2-D Dynamic Programming](#2-d-dynamic-programming)
-- [Greedy](#greedy)
-- [Intervals](#intervals)
-- [Math & Geometry](#math--geometry)
-- [Bit Manipulation](#bit-manipulation)
+1. [Arrays & Hashing](#arrays--hashing)
+2. [Two Pointers](#two-pointers)
+3. [Sliding Window](#sliding-window)
+4. [Stack](#stack)
+5. [Binary Search](#binary-search)
+6. [Linked List](#linked-list)
+7. [Trees](#trees)
+8. [Heap / Priority Queue](#heap--priority-queue)
+9. [Backtracking](#backtracking)
+10. [Tries](#tries)
+11. [Graphs](#graphs)
+12. [Advanced Graphs](#advanced-graphs)
+13. [1-D Dynamic Programming](#1-d-dynamic-programming)
+14. [2-D Dynamic Programming](#2-d-dynamic-programming)
+15. [Greedy](#greedy)
+16. [Intervals](#intervals)
+17. [Math & Geometry](#math--geometry)
+18. [Bit Manipulation](#bit-manipulation)
 
 ## Arrays & Hashing
-1. **3Sum** (Medium) - Sort + two pointers technique, tests optimization from O(n³) to O(n²) and duplicate handling
+1. **Product of Array Except Self** (Medium) - Tests understanding of prefix/suffix products without division, O(1) extra space optimization
 2. **Group Anagrams** (Medium) - String sorting and grouping, tests hash map usage with complex keys
 3. **Top K Frequent Elements** (Medium) - Hash map + heap/bucket sort, combines multiple data structures
 

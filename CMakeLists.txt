@@ -22,6 +22,16 @@ foreach(test_file ${ARRAY_HASHING_TESTS})
     target_link_libraries(${test_name} PRIVATE Threads::Threads)
 endforeach()
 
+# Add all test files from src/cpp/two_pointers
+file(GLOB TWO_POINTERS_TESTS "src/cpp/two_pointers/*.cpp")
+
+# Create separate executables for each two pointers test
+foreach(test_file ${TWO_POINTERS_TESTS})
+    get_filename_component(test_name ${test_file} NAME_WE)
+    add_executable(${test_name} ${test_file})
+    target_link_libraries(${test_name} PRIVATE Threads::Threads)
+endforeach()
+
 # Add all other test files
 file(GLOB TEST_SOURCES "test/*.cc")
 
