@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Buffer Algorithm</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .buffer-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .buffer-slot {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .buffer-slot.filled {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .buffer-slot.head {
+            border-color: #e74c3c;
+            border-width: 4px;
+        }
+        
+        .buffer-slot.tail {
+            border-color: #27ae60;
+            border-width: 4px;
+        }
+        
+        .buffer-slot.head.tail {
+            border-color: #f39c12;
+            border-width: 4px;
+        }
+        
+        .pointer-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .head-label {
+            color: #e74c3c;
+        }
+        
+        .tail-label {
+            color: #27ae60;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-write {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-read {
+            background: linear-gradient(45deg, #27ae60, #219a52);
+            color: white;
+        }
+        
+        .btn-reset {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .info-panel {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+        }
+        
+        .status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .status-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .status-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .status-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .algorithm-steps {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            white-space: pre-line;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        
+        input[type="number"] {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 80px;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+        }
+        
+        .head-arrow {
+            color: #e74c3c;
+        }
+        
+        .tail-arrow {
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Circular Buffer Algorithm</h1>
+        
+        <div class="buffer-container" id="bufferContainer">
+            <!-- Buffer slots will be generated here -->
+        </div>
+        
+        <div class="controls">
+            <div class="input-group">
+                <label>Value to write:</label>
+                <input type="number" id="writeValue" value="1" min="0" max="99">
+                <button class="btn btn-write" onclick="writeToBuffer()">Push</button>
+            </div>
+            <button class="btn btn-read" onclick="readFromBuffer()">Pop</button>
+            <button class="btn btn-reset" onclick="resetBuffer()">Reset</button>
+        </div>
+        
+        <div class="status">
+            <div class="status-item">
+                <div class="status-label">Buffer Size</div>
+                <div class="status-value" id="bufferSize">8</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Items Count</div>
+                <div class="status-value" id="itemCount">0</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Head Position</div>
+                <div class="status-value" id="headPos">0</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Tail Position</div>
+                <div class="status-value" id="tailPos">0</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Buffer State</div>
+                <div class="status-value" id="bufferState">Empty</div>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <h3>🎯 How Circular Buffer Works:</h3>
+            <p><strong>Head (Red):</strong> Points to the oldest item to be read (POP from here)</p>
+            <p><strong>Tail (Green):</strong> Points to where the next item will be written (PUSH to here)</p>
+            <p><strong>When buffer is full:</strong> Push operations will fail (no overwriting)</p>
+            <p><strong>When buffer is empty:</strong> Pop operations will fail</p>
+        </div>
+        
+        <div class="algorithm-steps">
+            <h3>📋 Algorithm Steps:</h3>
+            
+            <div class="step">
+                <div class="step-title">1. Push Operation:</div>
+                <div>Store data at tail position → Advance tail → If buffer full, reject operation</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">2. Pop Operation:</div>
+                <div>Read data from head position → Advance head → Return data</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">3. Position Wrapping:</div>
+                <div>When reaching end of array: position = (position + 1) % buffer_size</div>
+            </div>
+        </div>
+        
+        <div class="code-block">
+<strong>📝 Circular Buffer Implementation v1:</strong>
+
+<span style="color: #e74c3c;">// =================== CIRCULAR BUFFER STRUCTURE ===================</span>
+<span style="color: #f39c12;">typedef struct</span> {
+    <span style="color: #3498db;">int</span>* buffer;        <span style="color: #95a5a6;">// Pointer to buffer array</span>
+    <span style="color: #f39c12;">size_t</span> capacity;   <span style="color: #95a5a6;">// Maximum buffer capacity</span>
+    <span style="color: #f39c12;">size_t</span> head;       <span style="color: #95a5a6;">// Read position (front of queue)</span>
+    <span style="color: #f39c12;">size_t</span> tail;       <span style="color: #95a5a6;">// Write position (back of queue)</span>
+    <span style="color: #f39c12;">size_t</span> size;       <span style="color: #95a5a6;">// Current number of elements</span>
+} <span style="color: #f39c12;">CircularBuffer</span>;
+
+<span style="color: #e74c3c;">// =================== PUSH OPERATION (WRITE) ===================</span>
+<span style="color: #3498db;">int</span> <span style="color: #27ae60;">circular_buffer_push</span>(<span style="color: #f39c12;">CircularBuffer</span>* cb, <span style="color: #3498db;">int</span> value) {
+    <span style="color: #95a5a6;">// Check if buffer is full</span>
+    <span style="color: #e67e22;">if</span> (cb->size >= cb->capacity) 
+        <span style="color: #e67e22;">return</span> <span style="color: #9b59b6;">0</span>; <span style="color: #95a5a6;">// Buffer full, cannot push</span>
+    
+    <span style="color: #95a5a6;">// Write value at tail position</span>
+    cb->buffer[cb->tail] = value;
+    
+    <span style="color: #95a5a6;">// Advance tail with wraparound</span>
+    cb->tail = (cb->tail + <span style="color: #9b59b6;">1</span>) % cb->capacity;
+    
+    <span style="color: #95a5a6;">// Increment size counter</span>
+    cb->size++;
+    
+    <span style="color: #e67e22;">return</span> <span style="color: #9b59b6;">1</span>; <span style="color: #95a5a6;">// Success</span>
+}
+
+<span style="color: #e74c3c;">// =================== POP OPERATION (READ) ===================</span>
+<span style="color: #3498db;">int</span> <span style="color: #27ae60;">circular_buffer_pop</span>(<span style="color: #f39c12;">CircularBuffer</span>* cb, <span style="color: #3498db;">int</span>* value) {
+    <span style="color: #95a5a6;">// Check if buffer is empty</span>
+    <span style="color: #e67e22;">if</span> (cb->size == <span style="color: #9b59b6;">0</span>) 
+        <span style="color: #e67e22;">return</span> <span style="color: #9b59b6;">0</span>; <span style="color: #95a5a6;">// Buffer empty, cannot pop</span>
+    
+    <span style="color: #95a5a6;">// Read value from head position</span>
+    *value = cb->buffer[cb->head];
+    
+    <span style="color: #95a5a6;">// Advance head with wraparound</span>
+    cb->head = (cb->head + <span style="color: #9b59b6;">1</span>) % cb->capacity;
+    
+    <span style="color: #95a5a6;">// Decrement size counter</span>
+    cb->size--;
+    
+    <span style="color: #e67e22;">return</span> <span style="color: #9b59b6;">1</span>; <span style="color: #95a5a6;">// Success</span>
+}
+
+<span style="color: #e74c3c;">// =================== UTILITY FUNCTIONS ===================</span>
+<span style="color: #3498db;">int</span> <span style="color: #27ae60;">circular_buffer_is_empty</span>(<span style="color: #f39c12;">CircularBuffer</span>* cb) {
+    <span style="color: #e67e22;">return</span> cb->size == <span style="color: #9b59b6;">0</span>;
+}
+
+<span style="color: #3498db;">int</span> <span style="color: #27ae60;">circular_buffer_is_full</span>(<span style="color: #f39c12;">CircularBuffer</span>* cb) {
+    <span style="color: #e67e22;">return</span> cb->size == cb->capacity;
+}
+
+<span style="color: #f39c12;">size_t</span> <span style="color: #27ae60;">circular_buffer_size</span>(<span style="color: #f39c12;">CircularBuffer</span>* cb) {
+    <span style="color: #e67e22;">return</span> cb->size;
+}
+
+<span style="color: #e74c3c;">// =================== INITIALIZATION ===================</span>
+<span style="color: #3498db;">void</span> <span style="color: #27ae60;">circular_buffer_init</span>(<span style="color: #f39c12;">CircularBuffer</span>* cb, <span style="color: #3498db;">int</span>* buffer, <span style="color: #f39c12;">size_t</span> capacity) {
+    cb->buffer = buffer;
+    cb->capacity = capacity;
+    cb->head = <span style="color: #9b59b6;">0</span>;
+    cb->tail = <span style="color: #9b59b6;">0</span>;
+    cb->size = <span style="color: #9b59b6;">0</span>;
+}
+
+<span style="color: #e74c3c;">// =================== USAGE EXAMPLE ===================</span>
+<span style="color: #3498db;">int</span> <span style="color: #27ae60;">main</span>() {
+    <span style="color: #95a5a6;">// Static buffer allocation</span>
+    <span style="color: #3498db;">int</span> buffer_array[<span style="color: #9b59b6;">8</span>];
+    <span style="color: #f39c12;">CircularBuffer</span> cb;
+    
+    <span style="color: #95a5a6;">// Initialize buffer</span>
+    <span style="color: #27ae60;">circular_buffer_init</span>(&cb, buffer_array, <span style="color: #9b59b6;">8</span>);
+    
+    <span style="color: #95a5a6;">// Push some values</span>
+    <span style="color: #27ae60;">circular_buffer_push</span>(&cb, <span style="color: #9b59b6;">10</span>);
+    <span style="color: #27ae60;">circular_buffer_push</span>(&cb, <span style="color: #9b59b6;">20</span>);
+    <span style="color: #27ae60;">circular_buffer_push</span>(&cb, <span style="color: #9b59b6;">30</span>);
+    
+    <span style="color: #95a5a6;">// Pop values</span>
+    <span style="color: #3498db;">int</span> value;
+    <span style="color: #e67e22;">while</span> (<span style="color: #27ae60;">circular_buffer_pop</span>(&cb, &value)) {
+        <span style="color: #27ae60;">printf</span>(<span style="color: #2ecc71;">"Popped: %d\n"</span>, value);
+    }
+    
+    <span style="color: #e67e22;">return</span> <span style="color: #9b59b6;">0</span>;
+}
+        </div>
+    </div>
+
+    <script>
+        class CircularBuffer {
+            constructor(size) {
+                this.size = size;
+                this.buffer = new Array(size).fill(null);
+                this.head = 0;
+                this.tail = 0;
+                this.count = 0;
+            }
+            
+            write(value) {
+                if (this.isFull()) return false;
+                
+                this.buffer[this.tail] = value;
+                this.tail = (this.tail + 1) % this.size;
+                this.count++;
+                return true;
+            }
+            
+            read() {
+                if (this.count === 0) return null;
+                
+                const value = this.buffer[this.head];
+                this.buffer[this.head] = null;
+                this.head = (this.head + 1) % this.size;
+                this.count--;
+                return value;
+            }
+            
+            isEmpty() {
+                return this.count === 0;
+            }
+            
+            isFull() {
+                return this.count === this.size;
+            }
+            
+            getState() {
+                if (this.isEmpty()) return "Empty";
+                if (this.isFull()) return "Full";
+                return "Partial";
+            }
+        }
+        
+        let buffer = new CircularBuffer(8);
+        let writeCounter = 1;
+        
+        function createBufferVisual() {
+            const container = document.getElementById('bufferContainer');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < buffer.size; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'buffer-slot';
+                slot.id = `slot-${i}`;
+                
+                if (buffer.buffer[i] !== null) {
+                    slot.classList.add('filled');
+                    slot.textContent = buffer.buffer[i];
+                }
+                
+                // Add head/tail indicators
+                if (i === buffer.head && i === buffer.tail && buffer.count === 0) {
+                    slot.classList.add('head', 'tail');
+                    slot.innerHTML += '<div class="pointer-label head-label">H/T</div>';
+                } else if (i === buffer.head && buffer.count > 0) {
+                    slot.classList.add('head');
+                    slot.innerHTML += '<div class="pointer-label head-label">HEAD</div>';
+                    slot.innerHTML += '<div class="arrow head-arrow">↓</div>';
+                } else if (i === buffer.tail) {
+                    slot.classList.add('tail');
+                    slot.innerHTML += '<div class="pointer-label tail-label">TAIL</div>';
+                    slot.innerHTML += '<div class="arrow tail-arrow">↓</div>';
+                }
+                
+                container.appendChild(slot);
+            }
+        }
+        
+        function updateStatus() {
+            document.getElementById('itemCount').textContent = buffer.count;
+            document.getElementById('headPos').textContent = buffer.head;
+            document.getElementById('tailPos').textContent = buffer.tail;
+            document.getElementById('bufferState').textContent = buffer.getState();
+        }
+        
+        function writeToBuffer() {
+            if (buffer.isFull()) {
+                alert("Buffer is full! Cannot push more data.");
+                return;
+            }
+            
+            const value = parseInt(document.getElementById('writeValue').value) || writeCounter;
+            buffer.write(value);
+            
+            // Auto-increment for next write
+            document.getElementById('writeValue').value = value + 1;
+            writeCounter = value + 1;
+            
+            createBufferVisual();
+            updateStatus();
+        }
+        
+        function readFromBuffer() {
+            const value = buffer.read();
+            if (value !== null) {
+                alert(`Popped value: ${value}`);
+            } else {
+                alert("Buffer is empty!");
+            }
+            
+            createBufferVisual();
+            updateStatus();
+        }
+        
+        function resetBuffer() {
+            buffer = new CircularBuffer(8);
+            writeCounter = 1;
+            document.getElementById('writeValue').value = 1;
+            createBufferVisual();
+            updateStatus();
+        }
+        
+        // Initialize
+        createBufferVisual();
+        updateStatus();
+    </script>
+</body>
+</html>
