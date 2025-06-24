@@ -63,4 +63,4 @@ void test_median_data_stream() {
 int main() {
     test_median_data_stream();
     return 0;
-} 
+}

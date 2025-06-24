@@ -28,6 +28,12 @@
 
 class GasStation {
 public:
+    /**
+     * Finds the starting gas station index to complete the circuit, or -1 if impossible.
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(1)
+     */
     static int solve(const std::vector<int>& gas, const std::vector<int>& cost) {
         int total = 0, curr = 0, start = 0;
         for (int i = 0; i < gas.size(); ++i) {

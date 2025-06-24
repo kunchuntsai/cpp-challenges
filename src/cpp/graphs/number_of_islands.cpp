@@ -68,4 +68,4 @@ void test_number_of_islands() {
 int main() {
     test_number_of_islands();
     return 0;
-} 
+}

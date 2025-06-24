@@ -25,7 +25,7 @@
  * - 0 <= strs[i].length <= 100
  * - strs[i] consists of lowercase English letters.
  */
- 
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -37,10 +37,10 @@ class GroupAnagrams {
 public:
     /**
      * Groups anagrams together from a list of strings.
-     * 
+     *
      * @param strs Vector of strings to group
      * @return Vector of vectors containing grouped anagrams
-     * 
+     *
      * Time Complexity: O(n * k * log k) where n is number of strings and k is max string length
      * Space Complexity: O(n * k)
      */

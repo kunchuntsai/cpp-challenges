@@ -68,4 +68,4 @@ void test_course_schedule() {
 int main() {
     test_course_schedule();
     return 0;
-} 
+}

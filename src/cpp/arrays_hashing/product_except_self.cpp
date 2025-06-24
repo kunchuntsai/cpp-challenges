@@ -78,4 +78,4 @@ void test_product_except_self() {
 int main() {
     test_product_except_self();
     return 0;
-} 
+}

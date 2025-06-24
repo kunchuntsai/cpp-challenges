@@ -64,4 +64,4 @@ void test_longest_substring_without_repeating_characters() {
 int main() {
     test_longest_substring_without_repeating_characters();
     return 0;
-} 
+}

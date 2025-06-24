@@ -74,4 +74,4 @@ void test_minimum_window_substring() {
 int main() {
     test_minimum_window_substring();
     return 0;
-} 
+}

@@ -79,4 +79,4 @@ void test_daily_temperatures() {
 int main() {
     test_daily_temperatures();
     return 0;
-} 
+}

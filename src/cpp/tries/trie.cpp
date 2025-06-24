@@ -78,4 +78,4 @@ void test_trie() {
 int main() {
     test_trie();
     return 0;
-} 
+}

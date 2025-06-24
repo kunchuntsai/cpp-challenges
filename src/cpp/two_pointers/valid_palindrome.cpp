@@ -57,4 +57,4 @@ void test_valid_palindrome() {
 int main() {
     test_valid_palindrome();
     return 0;
-} 
+}

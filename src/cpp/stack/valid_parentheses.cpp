@@ -69,4 +69,4 @@ void test_valid_parentheses() {
 int main() {
     test_valid_parentheses();
     return 0;
-} 
+}

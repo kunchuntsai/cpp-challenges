@@ -20,7 +20,7 @@
  * - k is in the range [1, the number of unique elements in the array].
  * - It is guaranteed that the answer is unique.
  */
- 
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -30,11 +30,11 @@ class TopKFrequent {
 public:
     /**
      * Finds the k most frequent elements in an array.
-     * 
+     *
      * @param nums Vector of integers to analyze
      * @param k Number of most frequent elements to return
      * @return Vector containing the k most frequent elements
-     * 
+     *
      * Time Complexity: O(n) where n is the length of nums
      * Space Complexity: O(n)
      */

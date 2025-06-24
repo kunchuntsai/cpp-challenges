@@ -57,4 +57,4 @@ void test_best_time_to_buy_and_sell_stock() {
 int main() {
     test_best_time_to_buy_and_sell_stock();
     return 0;
-} 
+}

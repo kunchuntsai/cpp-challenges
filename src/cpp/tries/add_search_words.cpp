@@ -77,4 +77,4 @@ void test_add_search_words() {
 int main() {
     test_add_search_words();
     return 0;
-} 
+}

@@ -71,4 +71,4 @@ void test_min_stack() {
 int main() {
     test_min_stack();
     return 0;
-} 
+}

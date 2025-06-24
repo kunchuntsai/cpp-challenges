@@ -72,4 +72,4 @@ void test_max_depth_tree() {
 int main() {
     test_max_depth_tree();
     return 0;
-} 
+}

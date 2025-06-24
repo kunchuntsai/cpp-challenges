@@ -80,4 +80,4 @@ int main() {
     Node* clone = CloneGraph::solve(n1);
     std::cout << "Graph cloned.\n";
     return 0;
-} 
+}

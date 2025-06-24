@@ -24,6 +24,12 @@
 
 class MaximumSubarray {
 public:
+    /**
+     * Finds the maximum sum of a contiguous subarray (Kadane's algorithm).
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(1)
+     */
     static int solve(const std::vector<int>& nums) {
         int max_sum = nums[0];
         int curr_sum = nums[0];

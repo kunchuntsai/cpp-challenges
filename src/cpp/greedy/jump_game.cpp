@@ -27,6 +27,12 @@
 
 class JumpGame {
 public:
+    /**
+     * Determines if you can reach the last index using the greedy approach.
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(1)
+     */
     static bool solve(const std::vector<int>& nums) {
         int max_reach = 0;
         for (int i = 0; i < nums.size(); ++i) {
