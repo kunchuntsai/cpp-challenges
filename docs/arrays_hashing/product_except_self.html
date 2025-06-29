@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product of Array Except Self Visualization</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .algorithm-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #6c5ce7;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            min-width: 250px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #6c5ce7;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #6c5ce7, #5f3dc4);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .preset-examples {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 6px 12px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .phase-indicator {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #3498db;
+            text-align: center;
+        }
+
+        .phase-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .phase-description {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .visualization {
+            margin-bottom: 30px;
+        }
+
+        .array-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .array-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .array-element {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecf0f1;
+            border: 3px solid #bdc3c7;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.4s;
+            position: relative;
+            font-family: 'Courier New', monospace;
+        }
+
+        .array-element.current {
+            background: #6c5ce7;
+            color: white;
+            border-color: #5f3dc4;
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .array-element.processed {
+            background: #27ae60;
+            color: white;
+            border-color: #229954;
+        }
+
+        .array-element .index {
+            position: absolute;
+            top: -25px;
+            font-size: 12px;
+            color: #666;
+            font-weight: normal;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .current-calculation {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #ffc107;
+            text-align: center;
+        }
+
+        .calculation-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .calculation-details {
+            font-family: 'Courier New', monospace;
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .step-info {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #6c5ce7;
+            margin-bottom: 20px;
+        }
+
+        .step-counter {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .result-section {
+            background: #d1ecf1;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #17a2b8;
+            margin-top: 20px;
+        }
+
+        .result-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .complexity {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .complexity-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .complexity-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .complexity-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #6c5ce7;
+        }
+
+        .phase-complete {
+            background: #d4edda;
+            border-color: #27ae60;
+            color: #155724;
+        }
+
+        .explanation-box {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+        }
+
+        .explanation-title {
+            font-weight: bold;
+            color: #004085;
+            margin-bottom: 8px;
+        }
+
+        .key-insight {
+            background: #fff2e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #fd7e14;
+        }
+
+        .insight-title {
+            font-weight: bold;
+            color: #b45309;
+            margin-bottom: 8px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1.15); }
+            50% { transform: scale(1.25); }
+            100% { transform: scale(1.15); }
+        }
+
+        .array-element.current {
+            animation: pulse 1s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            input {
+                min-width: auto;
+            }
+            
+            .array-element {
+                width: 60px;
+                height: 60px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Product of Array Except Self</h1>
+        
+        <div class="algorithm-info">
+            <strong>Problem:</strong> Return an array where each element is the product of all other elements in the input array (excluding itself).
+            <br><br>
+            <strong>Constraint:</strong> Must run in O(n) time and cannot use division operation.
+            <br><br>
+            <strong>Solution:</strong> Two-pass approach using prefix and suffix products to avoid division.
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="arrayInput">Array (comma-separated):</label>
+                <input type="text" id="arrayInput" value="1,2,3,4" placeholder="e.g., 1,2,3,4">
+                <div class="preset-examples">
+                    <button class="preset-btn" onclick="setPreset('1,2,3,4')">Example 1</button>
+                    <button class="preset-btn" onclick="setPreset('-1,1,0,-3,3')">Example 2</button>
+                    <button class="preset-btn" onclick="setPreset('2,3,4,5')">Example 3</button>
+                    <button class="preset-btn" onclick="setPreset('5,2,1,3')">Example 4</button>
+                </div>
+            </div>
+            <button id="startBtn">Start Visualization</button>
+            <button id="stepBtn" disabled>Next Step</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+
+        <div class="phase-indicator" id="phaseIndicator">
+            <div class="phase-title">Ready to Start</div>
+            <div class="phase-description">Click "Start Visualization" to begin the algorithm demonstration.</div>
+        </div>
+
+        <div class="step-info" id="stepInfo" style="display: none;">
+            <div class="step-counter"></div>
+            <div class="step-description"></div>
+        </div>
+
+        <div class="current-calculation" id="currentCalculation" style="display: none;">
+            <div class="calculation-title">Current Operation</div>
+            <div class="calculation-details" id="calculationDetails"></div>
+        </div>
+
+        <div class="visualization">
+            <div class="array-section">
+                <div class="section-title">Input Array</div>
+                <div class="array-container" id="inputArray"></div>
+            </div>
+
+            <div class="array-section" id="prefixSection" style="display: none;">
+                <div class="section-title">Result Array (Prefix Products)</div>
+                <div class="array-container" id="prefixArray"></div>
+                <div class="explanation-box">
+                    <div class="explanation-title">Pass 1: Left-to-Right (Prefix Products)</div>
+                    <div>Each position stores the product of all elements to its left. Position 0 starts with 1.</div>
+                </div>
+            </div>
+
+            <div class="array-section" id="suffixSection" style="display: none;">
+                <div class="section-title">Result Array (After Suffix Multiplication)</div>
+                <div class="array-container" id="suffixArray"></div>
+                <div class="explanation-box">
+                    <div class="explanation-title">Pass 2: Right-to-Left (Suffix Products)</div>
+                    <div>Multiply each position by the product of all elements to its right.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-insight">
+            <div class="insight-title">🔑 Key Insight</div>
+            <div>For each position i, the result is: (product of elements before i) × (product of elements after i). The two-pass approach calculates these products efficiently without division.</div>
+        </div>
+
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="result-title">Algorithm Complete!</div>
+            <div id="finalResult"></div>
+        </div>
+
+        <div class="complexity">
+            <div class="complexity-item">
+                <div class="complexity-label">Time Complexity</div>
+                <div class="complexity-value">O(n)</div>
+                <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                    Two passes through the array
+                </div>
+            </div>
+            <div class="complexity-item">
+                <div class="complexity-label">Space Complexity</div>
+                <div class="complexity-value">O(1)</div>
+                <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                    Only output array (not counting input)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ProductExceptSelfVisualizer {
+            constructor() {
+                this.nums = [];
+                this.result = [];
+                this.currentIndex = 0;
+                this.phase = 'ready'; // 'ready', 'prefix', 'suffix', 'complete'
+                this.stepCount = 0;
+                this.isRunning = false;
+                this.prefixProduct = 1;
+                this.suffixProduct = 1;
+                
+                this.initializeElements();
+                this.bindEvents();
+            }
+
+            initializeElements() {
+                this.arrayInput = document.getElementById('arrayInput');
+                this.startBtn = document.getElementById('startBtn');
+                this.stepBtn = document.getElementById('stepBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.phaseIndicator = document.getElementById('phaseIndicator');
+                this.stepInfo = document.getElementById('stepInfo');
+                this.currentCalculation = document.getElementById('currentCalculation');
+                this.calculationDetails = document.getElementById('calculationDetails');
+                this.inputArray = document.getElementById('inputArray');
+                this.prefixSection = document.getElementById('prefixSection');
+                this.prefixArray = document.getElementById('prefixArray');
+                this.suffixSection = document.getElementById('suffixSection');
+                this.suffixArray = document.getElementById('suffixArray');
+                this.resultSection = document.getElementById('resultSection');
+                this.finalResult = document.getElementById('finalResult');
+            }
+
+            bindEvents() {
+                this.startBtn.addEventListener('click', () => this.startVisualization());
+                this.stepBtn.addEventListener('click', () => this.nextStep());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        if (!this.isRunning) {
+                            this.startVisualization();
+                        } else if (this.stepBtn.disabled === false) {
+                            this.nextStep();
+                        }
+                    }
+                });
+            }
+
+            startVisualization() {
+                try {
+                    const input = this.arrayInput.value.trim();
+                    if (!input) {
+                        throw new Error('Please enter an array');
+                    }
+                    
+                    this.nums = input.split(',').map(x => {
+                        const num = parseInt(x.trim());
+                        if (isNaN(num)) throw new Error('Invalid number');
+                        return num;
+                    });
+                    
+                    if (this.nums.length < 2) {
+                        throw new Error('Array must have at least 2 elements');
+                    }
+                    
+                    // Initialize
+                    this.result = new Array(this.nums.length).fill(1);
+                    this.currentIndex = 0;
+                    this.phase = 'prefix';
+                    this.stepCount = 0;
+                    this.isRunning = true;
+                    this.prefixProduct = 1;
+                    this.suffixProduct = 1;
+                    
+                    // Update UI
+                    this.startBtn.disabled = true;
+                    this.stepBtn.disabled = false;
+                    this.resultSection.style.display = 'none';
+                    this.stepInfo.style.display = 'block';
+                    this.currentCalculation.style.display = 'block';
+                    this.prefixSection.style.display = 'block';
+                    
+                    this.renderInputArray();
+                    this.updatePhase();
+                    
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+
+            nextStep() {
+                if (!this.isRunning) return;
+
+                this.stepCount++;
+
+                if (this.phase === 'prefix') {
+                    this.executePrefixStep();
+                } else if (this.phase === 'suffix') {
+                    this.executeSuffixStep();
+                }
+            }
+
+            executePrefixStep() {
+                if (this.currentIndex >= this.nums.length) {
+                    this.phase = 'suffix';
+                    this.currentIndex = this.nums.length - 1;
+                    this.suffixSection.style.display = 'block';
+                    this.updatePhase();
+                    return;
+                }
+
+                // Store prefix product in result
+                this.result[this.currentIndex] = this.prefixProduct;
+                
+                this.updateStepInfo(
+                    `Prefix Pass - Step ${this.stepCount}`,
+                    `Setting result[${this.currentIndex}] = ${this.prefixProduct} (product of all elements to the left)`
+                );
+
+                this.calculationDetails.innerHTML = `
+                    result[${this.currentIndex}] = ${this.prefixProduct}<br>
+                    Next: prefix *= nums[${this.currentIndex}] = ${this.prefixProduct} * ${this.nums[this.currentIndex]} = ${this.prefixProduct * this.nums[this.currentIndex]}
+                `;
+
+                // Update prefix product for next iteration
+                this.prefixProduct *= this.nums[this.currentIndex];
+                this.currentIndex++;
+                
+                this.renderArrays();
+            }
+
+            executeSuffixStep() {
+                if (this.currentIndex < 0) {
+                    this.phase = 'complete';
+                    this.endVisualization();
+                    return;
+                }
+
+                // Multiply result by suffix product
+                const oldValue = this.result[this.currentIndex];
+                this.result[this.currentIndex] *= this.suffixProduct;
+                
+                this.updateStepInfo(
+                    `Suffix Pass - Step ${this.stepCount}`,
+                    `Multiplying result[${this.currentIndex}] by suffix product: ${oldValue} * ${this.suffixProduct} = ${this.result[this.currentIndex]}`
+                );
+
+                this.calculationDetails.innerHTML = `
+                    result[${this.currentIndex}] *= ${this.suffixProduct} → ${oldValue} * ${this.suffixProduct} = ${this.result[this.currentIndex]}<br>
+                    Next: suffix *= nums[${this.currentIndex}] = ${this.suffixProduct} * ${this.nums[this.currentIndex]} = ${this.suffixProduct * this.nums[this.currentIndex]}
+                `;
+
+                // Update suffix product for next iteration
+                this.suffixProduct *= this.nums[this.currentIndex];
+                this.currentIndex--;
+                
+                this.renderArrays();
+            }
+
+            updatePhase() {
+                if (this.phase === 'prefix') {
+                    this.phaseIndicator.innerHTML = `
+                        <div class="phase-title">Phase 1: Prefix Products (Left-to-Right)</div>
+                        <div class="phase-description">For each position, store the product of all elements to its left.</div>
+                    `;
+                } else if (this.phase === 'suffix') {
+                    this.phaseIndicator.className = 'phase-indicator phase-complete';
+                    this.phaseIndicator.innerHTML = `
+                        <div class="phase-title">Phase 2: Suffix Products (Right-to-Left)</div>
+                        <div class="phase-description">Multiply each position by the product of all elements to its right.</div>
+                    `;
+                }
+            }
+
+            renderInputArray() {
+                this.inputArray.innerHTML = '';
+                this.nums.forEach((num, index) => {
+                    const element = document.createElement('div');
+                    element.className = 'array-element';
+                    element.innerHTML = `<span class="index">${index}</span>${num}`;
+                    
+                    if ((this.phase === 'prefix' && index === this.currentIndex) ||
+                        (this.phase === 'suffix' && index === this.currentIndex)) {
+                        element.classList.add('current');
+                    } else if ((this.phase === 'prefix' && index < this.currentIndex) ||
+                               (this.phase === 'suffix' && index > this.currentIndex)) {
+                        element.classList.add('processed');
+                    }
+                    
+                    this.inputArray.appendChild(element);
+                });
+            }
+
+            renderArrays() {
+                this.renderInputArray();
+                
+                // Render prefix array
+                this.prefixArray.innerHTML = '';
+                this.result.forEach((value, index) => {
+                    const element = document.createElement('div');
+                    element.className = 'array-element';
+                    element.innerHTML = `<span class="index">${index}</span>${value}`;
+                    
+                    if (this.phase === 'prefix' && index === this.currentIndex - 1) {
+                        element.classList.add('current');
+                    } else if (this.phase === 'prefix' && index < this.currentIndex) {
+                        element.classList.add('processed');
+                    }
+                    
+                    this.prefixArray.appendChild(element);
+                });
+                
+                // Render suffix array (if in suffix phase)
+                if (this.phase === 'suffix' || this.phase === 'complete') {
+                    this.suffixArray.innerHTML = '';
+                    this.result.forEach((value, index) => {
+                        const element = document.createElement('div');
+                        element.className = 'array-element';
+                        element.innerHTML = `<span class="index">${index}</span>${value}`;
+                        
+                        if (this.phase === 'suffix' && index === this.currentIndex + 1) {
+                            element.classList.add('current');
+                        } else if (this.phase === 'suffix' && index > this.currentIndex) {
+                            element.classList.add('processed');
+                        } else if (this.phase === 'complete') {
+                            element.classList.add('processed');
+                        }
+                        
+                        this.suffixArray.appendChild(element);
+                    });
+                }
+            }
+
+            updateStepInfo(title, description) {
+                this.stepInfo.innerHTML = `
+                    <div class="step-counter">${title}</div>
+                    <div class="step-description">${description}</div>
+                `;
+            }
+
+            endVisualization() {
+                this.isRunning = false;
+                this.stepBtn.disabled = true;
+                this.currentCalculation.style.display = 'none';
+                this.resultSection.style.display = 'block';
+                
+                this.phaseIndicator.className = 'phase-indicator phase-complete';
+                this.phaseIndicator.innerHTML = `
+                    <div class="phase-title">✅ Algorithm Complete!</div>
+                    <div class="phase-description">Successfully computed product of array except self using two passes.</div>
+                `;
+                
+                this.updateStepInfo(
+                    'Algorithm Complete',
+                    `Generated result array where each element is the product of all other elements in the input array.`
+                );
+                
+                this.finalResult.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <strong>Input:</strong> [${this.nums.join(', ')}]<br>
+                        <strong>Output:</strong> [${this.result.join(', ')}]
+                    </div>
+                    <div style="font-size: 0.9em; color: #6c757d;">
+                        Each position contains the product of all elements except the one at that position.
+                    </div>
+                `;
+                
+                this.renderArrays();
+            }
+
+            reset() {
+                this.isRunning = false;
+                this.nums = [];
+                this.result = [];
+                this.currentIndex = 0;
+                this.phase = 'ready';
+                this.stepCount = 0;
+                this.prefixProduct = 1;
+                this.suffixProduct = 1;
+                
+                this.startBtn.disabled = false;
+                this.stepBtn.disabled = true;
+                this.stepInfo.style.display = 'none';
+                this.currentCalculation.style.display = 'none';
+                this.prefixSection.style.display = 'none';
+                this.suffixSection.style.display = 'none';
+                this.resultSection.style.display = 'none';
+                
+                this.phaseIndicator.className = 'phase-indicator';
+                this.phaseIndicator.innerHTML = `
+                    <div class="phase-title">Ready to Start</div>
+                    <div class="phase-description">Click "Start Visualization" to begin the algorithm demonstration.</div>
+                `;
+                
+                // Render initial input if valid
+                try {
+                    const input = this.arrayInput.value.trim();
+                    if (input) {
+                        this.nums = input.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
+                        if (this.nums.length >= 2) {
+                            this.renderInputArray();
+                        }
+                    }
+                } catch (error) {
+                    this.inputArray.innerHTML = '';
+                }
+            }
+        }
+
+        function setPreset(preset) {
+            document.getElementById('arrayInput').value = preset;
+            if (window.visualizer) {
+                window.visualizer.reset();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.visualizer = new ProductExceptSelfVisualizer();
+        });
+    </script>
+</body>
+</html>

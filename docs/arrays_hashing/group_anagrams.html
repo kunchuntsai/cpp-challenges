@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Anagrams Algorithm Visualization</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .algorithm-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            min-width: 300px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .visualization {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-strings, .hash-map-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .string-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .string-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .string-item.current {
+            background: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .string-item.processed {
+            background: #27ae60;
+            color: white;
+            border-color: #229954;
+        }
+
+        .string-original {
+            font-weight: bold;
+            margin-right: 15px;
+            min-width: 80px;
+        }
+
+        .string-sorted {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .string-item.current .string-sorted {
+            color: #ecf0f1;
+        }
+
+        .string-item.processed .string-sorted {
+            color: #d5f4e6;
+        }
+
+        .hash-map {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .hash-map-group {
+            background: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+
+        .hash-map-group.highlight {
+            background: #f39c12;
+            color: white;
+            border-color: #e67e22;
+            transform: scale(1.02);
+        }
+
+        .hash-map-key {
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .hash-map-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hash-map-value {
+            background: #3498db;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .hash-map-group.highlight .hash-map-value {
+            background: #2c3e50;
+        }
+
+        .step-info {
+            background: #fdf2e9;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .step-counter {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .current-processing {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #3498db;
+        }
+
+        .processing-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .processing-details {
+            font-family: 'Courier New', monospace;
+            color: #555;
+        }
+
+        .result-section {
+            background: #d5f4e6;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+            margin-top: 20px;
+        }
+
+        .result-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #155724;
+            margin-bottom: 15px;
+        }
+
+        .result-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .result-group {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid #27ae60;
+        }
+
+        .result-group-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .result-group-item {
+            background: #27ae60;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .complexity {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .complexity-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .complexity-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .complexity-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .preset-examples {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 8px 16px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background: #7f8c8d;
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hash-map-group {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .visualization {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            input {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Group Anagrams Algorithm Visualization</h1>
+        
+        <div class="algorithm-info">
+            <strong>Problem:</strong> Group anagrams from an array of strings. Anagrams are words formed by rearranging letters of another word.
+            <br><br>
+            <strong>Approach:</strong> Sort each string to create a key. Strings with the same sorted key are anagrams and belong to the same group.
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="stringsInput">Strings (comma-separated):</label>
+                <input type="text" id="stringsInput" value="eat,tea,tan,ate,nat,bat" placeholder="e.g., eat,tea,tan,ate,nat,bat">
+                <div class="preset-examples">
+                    <button class="preset-btn" onclick="setPreset('eat,tea,tan,ate,nat,bat')">Example 1</button>
+                    <button class="preset-btn" onclick="setPreset('abc,bca,cab,xyz,zyx,yxz')">Example 2</button>
+                    <button class="preset-btn" onclick="setPreset('a,aa,aaa')">Example 3</button>
+                    <button class="preset-btn" onclick="setPreset('listen,silent,enlist,hello,world')">Example 4</button>
+                </div>
+            </div>
+            <button id="startBtn">Start Visualization</button>
+            <button id="stepBtn" disabled>Next Step</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+
+        <div class="step-info" id="stepInfo">
+            <div class="step-counter">Ready to start</div>
+            <div class="step-description">Click "Start Visualization" to begin the Group Anagrams algorithm demonstration.</div>
+        </div>
+
+        <div class="current-processing" id="currentProcessing" style="display: none;">
+            <div class="processing-title">Currently Processing:</div>
+            <div class="processing-details" id="processingDetails"></div>
+        </div>
+
+        <div class="visualization">
+            <div class="input-strings">
+                <div class="section-title">Input Strings</div>
+                <div class="string-list" id="stringsList"></div>
+            </div>
+            
+            <div class="hash-map-section">
+                <div class="section-title">Hash Map (sorted_key → [anagrams])</div>
+                <div class="hash-map" id="hashMapDisplay">
+                    <div style="text-align: center; color: #999; font-style: italic;">Hash map will appear here as we process strings</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="result-title">Final Grouped Anagrams</div>
+            <div class="result-groups" id="resultGroups"></div>
+        </div>
+
+        <div class="complexity">
+            <div class="complexity-item">
+                <div class="complexity-label">Time Complexity</div>
+                <div class="complexity-value">O(n × k × log k)</div>
+                <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                    n = number of strings<br>k = max string length
+                </div>
+            </div>
+            <div class="complexity-item">
+                <div class="complexity-label">Space Complexity</div>
+                <div class="complexity-value">O(n × k)</div>
+                <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                    For storing the hash map
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class GroupAnagramsVisualizer {
+            constructor() {
+                this.strings = [];
+                this.hashMap = new Map();
+                this.currentIndex = 0;
+                this.stepCount = 0;
+                this.isRunning = false;
+                
+                this.initializeElements();
+                this.bindEvents();
+            }
+
+            initializeElements() {
+                this.stringsInput = document.getElementById('stringsInput');
+                this.startBtn = document.getElementById('startBtn');
+                this.stepBtn = document.getElementById('stepBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.stepInfo = document.getElementById('stepInfo');
+                this.stringsList = document.getElementById('stringsList');
+                this.hashMapDisplay = document.getElementById('hashMapDisplay');
+                this.currentProcessing = document.getElementById('currentProcessing');
+                this.processingDetails = document.getElementById('processingDetails');
+                this.resultSection = document.getElementById('resultSection');
+                this.resultGroups = document.getElementById('resultGroups');
+            }
+
+            bindEvents() {
+                this.startBtn.addEventListener('click', () => this.startVisualization());
+                this.stepBtn.addEventListener('click', () => this.nextStep());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                
+                // Allow Enter key to start/step
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        if (!this.isRunning) {
+                            this.startVisualization();
+                        } else if (this.stepBtn.disabled === false) {
+                            this.nextStep();
+                        }
+                    }
+                });
+            }
+
+            startVisualization() {
+                try {
+                    // Parse input
+                    const input = this.stringsInput.value.trim();
+                    if (!input) {
+                        throw new Error('Please enter some strings');
+                    }
+                    
+                    this.strings = input.split(',').map(s => s.trim()).filter(s => s.length > 0);
+                    
+                    if (this.strings.length === 0) {
+                        throw new Error('Please enter valid strings');
+                    }
+                    
+                    // Reset state
+                    this.hashMap.clear();
+                    this.currentIndex = 0;
+                    this.stepCount = 0;
+                    this.isRunning = true;
+                    
+                    // Update UI
+                    this.startBtn.disabled = true;
+                    this.stepBtn.disabled = false;
+                    this.resultSection.style.display = 'none';
+                    this.currentProcessing.style.display = 'block';
+                    
+                    this.renderStrings();
+                    this.renderHashMap();
+                    this.updateStepInfo('Algorithm started', `We will process ${this.strings.length} strings. For each string, we'll sort its characters to create a key, then group strings with the same key together.`);
+                    
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+
+            nextStep() {
+                if (!this.isRunning || this.currentIndex >= this.strings.length) return;
+
+                this.stepCount++;
+                const currentStr = this.strings[this.currentIndex];
+                const sortedStr = currentStr.split('').sort().join('');
+                
+                // Update processing details
+                this.processingDetails.innerHTML = `
+                    Original: <strong>${currentStr}</strong><br>
+                    Sorted: <strong>${sortedStr}</strong><br>
+                    Action: ${this.hashMap.has(sortedStr) ? 'Adding to existing group' : 'Creating new group'}
+                `;
+
+                // Add to hash map
+                if (!this.hashMap.has(sortedStr)) {
+                    this.hashMap.set(sortedStr, []);
+                }
+                this.hashMap.get(sortedStr).push(currentStr);
+
+                this.updateStepInfo(
+                    `Step ${this.stepCount}: Processing "${currentStr}"`,
+                    `Sorted "${currentStr}" to get key "${sortedStr}". ${this.hashMap.get(sortedStr).length === 1 ? 'Created new group.' : `Added to existing group with ${this.hashMap.get(sortedStr).length - 1} other string(s).`}`
+                );
+
+                this.renderStrings();
+                this.renderHashMap();
+                
+                this.currentIndex++;
+                
+                // Check if we're done
+                if (this.currentIndex >= this.strings.length) {
+                    this.endVisualization();
+                }
+            }
+
+            renderStrings() {
+                this.stringsList.innerHTML = '';
+                this.strings.forEach((str, index) => {
+                    const element = document.createElement('div');
+                    element.className = 'string-item';
+                    
+                    if (index === this.currentIndex && this.isRunning) {
+                        element.classList.add('current');
+                    } else if (index < this.currentIndex) {
+                        element.classList.add('processed');
+                    }
+                    
+                    const sortedStr = str.split('').sort().join('');
+                    element.innerHTML = `
+                        <span class="string-original">"${str}"</span>
+                        <span class="string-sorted">→ "${sortedStr}"</span>
+                    `;
+                    
+                    this.stringsList.appendChild(element);
+                });
+            }
+
+            renderHashMap() {
+                this.hashMapDisplay.innerHTML = '';
+                
+                if (this.hashMap.size === 0) {
+                    this.hashMapDisplay.innerHTML = '<div style="text-align: center; color: #999; font-style: italic;">Hash map is empty</div>';
+                    return;
+                }
+                
+                const currentStr = this.currentIndex < this.strings.length ? this.strings[this.currentIndex] : null;
+                const currentSortedStr = currentStr ? currentStr.split('').sort().join('') : null;
+                
+                this.hashMap.forEach((values, key) => {
+                    const group = document.createElement('div');
+                    group.className = 'hash-map-group';
+                    
+                    if (key === currentSortedStr && this.isRunning) {
+                        group.classList.add('highlight');
+                    }
+                    
+                    const keyElement = document.createElement('div');
+                    keyElement.className = 'hash-map-key';
+                    keyElement.textContent = `"${key}"`;
+                    
+                    const valuesElement = document.createElement('div');
+                    valuesElement.className = 'hash-map-values';
+                    
+                    values.forEach(value => {
+                        const valueElement = document.createElement('div');
+                        valueElement.className = 'hash-map-value';
+                        valueElement.textContent = `"${value}"`;
+                        valuesElement.appendChild(valueElement);
+                    });
+                    
+                    group.appendChild(keyElement);
+                    group.appendChild(valuesElement);
+                    this.hashMapDisplay.appendChild(group);
+                });
+            }
+
+            updateStepInfo(title, description) {
+                this.stepInfo.innerHTML = `
+                    <div class="step-counter">${title}</div>
+                    <div class="step-description">${description}</div>
+                `;
+            }
+
+            endVisualization() {
+                this.isRunning = false;
+                this.stepBtn.disabled = true;
+                this.currentProcessing.style.display = 'none';
+                
+                this.updateStepInfo(
+                    'Algorithm Complete!',
+                    `Successfully grouped all ${this.strings.length} strings into ${this.hashMap.size} group(s) of anagrams.`
+                );
+                
+                this.showResult();
+            }
+
+            showResult() {
+                this.resultSection.style.display = 'block';
+                this.resultGroups.innerHTML = '';
+                
+                let groupIndex = 1;
+                this.hashMap.forEach((values, key) => {
+                    const groupElement = document.createElement('div');
+                    groupElement.className = 'result-group';
+                    
+                    const titleElement = document.createElement('div');
+                    titleElement.innerHTML = `<strong>Group ${groupIndex}:</strong> (key: "${key}")`;
+                    titleElement.style.marginBottom = '8px';
+                    
+                    const itemsElement = document.createElement('div');
+                    itemsElement.className = 'result-group-items';
+                    
+                    values.forEach(value => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'result-group-item';
+                        itemElement.textContent = `"${value}"`;
+                        itemsElement.appendChild(itemElement);
+                    });
+                    
+                    groupElement.appendChild(titleElement);
+                    groupElement.appendChild(itemsElement);
+                    this.resultGroups.appendChild(groupElement);
+                    
+                    groupIndex++;
+                });
+            }
+
+            reset() {
+                this.isRunning = false;
+                this.hashMap.clear();
+                this.currentIndex = 0;
+                this.stepCount = 0;
+                
+                this.startBtn.disabled = false;
+                this.stepBtn.disabled = true;
+                this.resultSection.style.display = 'none';
+                this.currentProcessing.style.display = 'none';
+                
+                this.updateStepInfo('Ready to start', 'Click "Start Visualization" to begin the Group Anagrams algorithm demonstration.');
+                
+                // Render initial state
+                try {
+                    const input = this.stringsInput.value.trim();
+                    if (input) {
+                        this.strings = input.split(',').map(s => s.trim()).filter(s => s.length > 0);
+                        this.renderStrings();
+                    }
+                } catch (error) {
+                    this.stringsList.innerHTML = '';
+                }
+                
+                this.hashMapDisplay.innerHTML = '<div style="text-align: center; color: #999; font-style: italic;">Hash map will appear here as we process strings</div>';
+            }
+        }
+
+        // Global function for preset buttons
+        function setPreset(preset) {
+            document.getElementById('stringsInput').value = preset;
+            if (window.visualizer) {
+                window.visualizer.reset();
+            }
+        }
+
+        // Initialize the visualizer when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.visualizer = new GroupAnagramsVisualizer();
+        });
+    </script>
+</body>
+</html>

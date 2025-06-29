@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimum Window Substring Visualization</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .algorithm-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 200px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .preset-examples {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 6px 12px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .algorithm-status {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #667eea;
+            text-align: center;
+        }
+
+        .status-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .status-description {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .visualization {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .string-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .string-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            min-height: 70px;
+        }
+
+        .char-element {
+            width: 45px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecf0f1;
+            border: 3px solid #bdc3c7;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.4s;
+            position: relative;
+            font-family: 'Courier New', monospace;
+        }
+
+        .char-element .char-index {
+            position: absolute;
+            top: -25px;
+            font-size: 12px;
+            color: #666;
+            font-weight: normal;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .char-element.in-window {
+            background: #ddd6fe;
+            border-color: #8b5cf6;
+        }
+
+        .char-element.left-pointer {
+            background: #f472b6;
+            color: white;
+            border-color: #ec4899;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(244, 114, 182, 0.4);
+        }
+
+        .char-element.right-pointer {
+            background: #10b981;
+            color: white;
+            border-color: #059669;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .char-element.target-char {
+            background: #f59e0b;
+            color: white;
+            border-color: #d97706;
+        }
+
+        .char-element.valid-window {
+            background: #3b82f6;
+            color: white;
+            border-color: #1d4ed8;
+        }
+
+        .char-element.minimum-window {
+            background: #ef4444;
+            color: white;
+            border-color: #dc2626;
+            animation: minimumPulse 1s infinite;
+        }
+
+        .target-string {
+            background: #fef3c7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #f59e0b;
+            text-align: center;
+        }
+
+        .target-display {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: bold;
+            color: #92400e;
+        }
+
+        .frequency-tracking {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .frequency-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .frequency-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .frequency-map {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .frequency-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .frequency-entry.satisfied {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .frequency-entry.need {
+            border-color: #f59e0b;
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .window-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .info-box.left {
+            border-color: #f472b6;
+            background: #fdf2f8;
+        }
+
+        .info-box.right {
+            border-color: #10b981;
+            background: #f0fdf9;
+        }
+
+        .info-box.valid {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .info-box.min-length {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-box.left .info-value {
+            color: #f472b6;
+        }
+
+        .info-box.right .info-value {
+            color: #10b981;
+        }
+
+        .info-box.valid .info-value {
+            color: #3b82f6;
+        }
+
+        .info-box.min-length .info-value {
+            color: #ef4444;
+        }
+
+        .step-info {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+        }
+
+        .step-counter {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .current-action {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #ffc107;
+            text-align: center;
+        }
+
+        .action-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .action-details {
+            font-family: 'Courier New', monospace;
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .result-section {
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .result-section.found {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            color: #065f46;
+        }
+
+        .result-section.not-found {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .result-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .result-content {
+            font-size: 1.1em;
+        }
+
+        .minimum-window-display {
+            background: #ef4444;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 24px;
+            font-family: 'Courier New', monospace;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .complexity {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .complexity-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .complexity-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .complexity-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .key-insight {
+            background: #fff2e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #fd7e14;
+        }
+
+        .insight-title {
+            font-weight: bold;
+            color: #b45309;
+            margin-bottom: 8px;
+        }
+
+        @keyframes minimumPulse {
+            0%, 100% { transform: scale(1.1); }
+            50% { transform: scale(1.2); }
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .window-info {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .frequency-tracking {
+                grid-template-columns: 1fr;
+            }
+            
+            .char-element {
+                width: 40px;
+                height: 55px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Minimum Window Substring</h1>
+        
+        <div class="algorithm-info">
+            <strong>Problem:</strong> Find the minimum window in string s that contains all characters from string t.
+            <br><br>
+            <strong>Strategy:</strong> Use sliding window with two frequency maps - one for needed characters, one for current window.
+            <br><br>
+            <strong>Key Idea:</strong> Expand window until all characters are covered, then contract from left to find minimum valid window.
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="sInput">Source String (s):</label>
+                <input type="text" id="sInput" value="ADOBECODEBANC" placeholder="Enter source string">
+                <div class="preset-examples">
+                    <button class="preset-btn" onclick="setPreset('ADOBECODEBANC', 'ABC')">Example 1</button>
+                    <button class="preset-btn" onclick="setPreset('a', 'a')">Example 2</button>
+                    <button class="preset-btn" onclick="setPreset('a', 'aa')">Example 3</button>
+                    <button class="preset-btn" onclick="setPreset('ADOBECBANEBANC', 'ABC')">Example 4</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="tInput">Target String (t):</label>
+                <input type="text" id="tInput" value="ABC" placeholder="Enter target string">
+            </div>
+            <button id="startBtn">Start Visualization</button>
+            <button id="stepBtn" disabled>Next Step</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+
+        <div class="algorithm-status" id="algorithmStatus">
+            <div class="status-title">Ready to Start</div>
+            <div class="status-description">Click "Start Visualization" to begin finding the minimum window substring.</div>
+        </div>
+
+        <div class="target-string" id="targetSection" style="display: none;">
+            <div style="font-weight: bold; margin-bottom: 8px;">Target Characters to Find:</div>
+            <div class="target-display" id="targetDisplay"></div>
+        </div>
+
+        <div class="step-info" id="stepInfo" style="display: none;">
+            <div class="step-counter"></div>
+            <div class="step-description"></div>
+        </div>
+
+        <div class="current-action" id="currentAction" style="display: none;">
+            <div class="action-title">Current Action</div>
+            <div class="action-details" id="actionDetails"></div>
+        </div>
+
+        <div class="visualization">
+            <div class="string-section">
+                <div class="section-title">Source String with Sliding Window</div>
+                <div class="string-container" id="stringContainer"></div>
+                
+                <div class="window-info">
+                    <div class="info-box left">
+                        <div class="info-label">Left Pointer</div>
+                        <div class="info-value" id="leftValue">-</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                            Position: <span id="leftPosition">-</span>
+                        </div>
+                    </div>
+                    <div class="info-box right">
+                        <div class="info-label">Right Pointer</div>
+                        <div class="info-value" id="rightValue">-</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                            Position: <span id="rightPosition">-</span>
+                        </div>
+                    </div>
+                    <div class="info-box valid">
+                        <div class="info-label">Valid Window</div>
+                        <div class="info-value" id="validWindow">No</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                            Length: <span id="currentLength">0</span>
+                        </div>
+                    </div>
+                    <div class="info-box min-length">
+                        <div class="info-label">Min Length</div>
+                        <div class="info-value" id="minLength">∞</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                            Start: <span id="minStart">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="frequency-tracking" id="frequencySection" style="display: none;">
+                <div class="frequency-section">
+                    <div class="frequency-title">Need (Target Requirements)</div>
+                    <div class="frequency-map" id="needMap"></div>
+                </div>
+                <div class="frequency-section">
+                    <div class="frequency-title">Window (Current Window)</div>
+                    <div class="frequency-map" id="windowMap"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-insight">
+            <div class="insight-title">🔑 Two-Phase Sliding Window</div>
+            <div>
+                <strong>Phase 1 - Expand:</strong> Move right pointer to include characters until window is valid (contains all target characters).<br>
+                <strong>Phase 2 - Contract:</strong> Move left pointer to shrink window while maintaining validity, updating minimum when smaller valid window is found.<br>
+                <strong>Frequency Tracking:</strong> Use hash maps to track character counts needed vs. current window counts.
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-content" id="resultContent"></div>
+        </div>
+
+        <div class="complexity">
+            <div class="complexity-item">
+                <div class="complexity-label">Time Complexity</div>
+                <div class="complexity-value">O(n + m)</div>
+                <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                    n = |s|, m = |t|
+                </div>
+            </div>
+            <div class="complexity-item">
+                <div class="complexity-label">Space Complexity</div>
+                <div class="complexity-value">O(m)</div>
+                <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                    For frequency maps
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class MinimumWindowSubstringVisualizer {
+            constructor() {
+                this.s = '';
+                this.t = '';
+                this.left = 0;
+                this.right = 0;
+                this.need = new Map();
+                this.window = new Map();
+                this.have = 0;
+                this.needCount = 0;
+                this.minLength = Infinity;
+                this.minStart = 0;
+                this.stepCount = 0;
+                this.isRunning = false;
+                this.isExpanding = true;
+                
+                this.initializeElements();
+                this.bindEvents();
+            }
+
+            initializeElements() {
+                this.sInput = document.getElementById('sInput');
+                this.tInput = document.getElementById('tInput');
+                this.startBtn = document.getElementById('startBtn');
+                this.stepBtn = document.getElementById('stepBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.algorithmStatus = document.getElementById('algorithmStatus');
+                this.targetSection = document.getElementById('targetSection');
+                this.targetDisplay = document.getElementById('targetDisplay');
+                this.stepInfo = document.getElementById('stepInfo');
+                this.currentAction = document.getElementById('currentAction');
+                this.actionDetails = document.getElementById('actionDetails');
+                this.stringContainer = document.getElementById('stringContainer');
+                this.leftValue = document.getElementById('leftValue');
+                this.rightValue = document.getElementById('rightValue');
+                this.leftPosition = document.getElementById('leftPosition');
+                this.rightPosition = document.getElementById('rightPosition');
+                this.validWindow = document.getElementById('validWindow');
+                this.currentLength = document.getElementById('currentLength');
+                this.minLength = document.getElementById('minLength');
+                this.minStart = document.getElementById('minStart');
+                this.frequencySection = document.getElementById('frequencySection');
+                this.needMap = document.getElementById('needMap');
+                this.windowMap = document.getElementById('windowMap');
+                this.resultSection = document.getElementById('resultSection');
+                this.resultTitle = document.getElementById('resultTitle');
+                this.resultContent = document.getElementById('resultContent');
+            }
+
+            bindEvents() {
+                this.startBtn.addEventListener('click', () => this.startVisualization());
+                this.stepBtn.addEventListener('click', () => this.nextStep());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        if (!this.isRunning) {
+                            this.startVisualization();
+                        } else if (this.stepBtn.disabled === false) {
+                            this.nextStep();
+                        }
+                    }
+                });
+            }
+
+            startVisualization() {
+                try {
+                    this.s = this.sInput.value.trim();
+                    this.t = this.tInput.value.trim();
+                    
+                    if (!this.s || !this.t) {
+                        throw new Error('Please enter both source and target strings');
+                    }
+                    
+                    // Initialize
+                    this.left = 0;
+                    this.right = 0;
+                    this.need.clear();
+                    this.window.clear();
+                    this.have = 0;
+                    this.minLength = Infinity;
+                    this.minStart = 0;
+                    this.stepCount = 0;
+                    this.isRunning = true;
+                    this.isExpanding = true;
+                    
+                    // Build need map
+                    for (let char of this.t) {
+                        this.need.set(char, (this.need.get(char) || 0) + 1);
+                    }
+                    this.needCount = this.need.size;
+                    
+                    // Update UI
+                    this.startBtn.disabled = true;
+                    this.stepBtn.disabled = false;
+                    this.targetSection.style.display = 'block';
+                    this.stepInfo.style.display = 'block';
+                    this.currentAction.style.display = 'block';
+                    this.frequencySection.style.display = 'grid';
+                    this.resultSection.style.display = 'none';
+                    
+                    this.targetDisplay.textContent = `"${this.t}"`;
+                    this.renderString();
+                    this.updateDisplay();
+                    this.renderFrequencyMaps();
+                    this.updateStatus();
+                    this.updateStepInfo('Algorithm Started', 'Beginning sliding window approach to find minimum window containing all target characters.');
+                    
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+
+            nextStep() {
+                if (!this.isRunning) return;
+
+                this.stepCount++;
+
+                if (this.right >= this.s.length && this.have < this.needCount) {
+                    this.endVisualization();
+                    return;
+                }
+
+                // Expanding phase
+                if (this.have < this.needCount && this.right < this.s.length) {
+                    const char = this.s[this.right];
+                    this.window.set(char, (this.window.get(char) || 0) + 1);
+                    
+                    if (this.need.has(char) && this.window.get(char) === this.need.get(char)) {
+                        this.have++;
+                    }
+                    
+                    this.updateStepInfo(
+                        `Step ${this.stepCount}: Expand Window`,
+                        `Adding character '${char}' at position ${this.right}. ${this.need.has(char) ? 'This is a target character.' : 'This is not a target character.'} Window now contains ${this.have}/${this.needCount} required character types.`
+                    );
+                    
+                    this.actionDetails.innerHTML = `
+                        Adding '${char}' to window<br>
+                        Valid characters: ${this.have}/${this.needCount}
+                    `;
+                    
+                    this.right++;
+                    this.isExpanding = true;
+                }
+                // Contracting phase
+                else if (this.have === this.needCount) {
+                    // Update minimum if current window is smaller
+                    if (this.right - this.left < this.minLength) {
+                        this.minLength = this.right - this.left;
+                        this.minStart = this.left;
+                    }
+                    
+                    const char = this.s[this.left];
+                    
+                    this.updateStepInfo(
+                        `Step ${this.stepCount}: Contract Window`,
+                        `Current window is valid with length ${this.right - this.left}. ${this.minLength === this.right - this.left ? 'This is our new minimum!' : 'Current minimum is still ' + this.minLength + '.'} Removing character '${char}' from left.`
+                    );
+                    
+                    this.actionDetails.innerHTML = `
+                        Valid window found: length ${this.right - this.left}<br>
+                        Removing '${char}' from left
+                    `;
+                    
+                    if (this.need.has(char) && this.window.get(char) === this.need.get(char)) {
+                        this.have--;
+                    }
+                    
+                    this.window.set(char, this.window.get(char) - 1);
+                    if (this.window.get(char) === 0) {
+                        this.window.delete(char);
+                    }
+                    
+                    this.left++;
+                    this.isExpanding = false;
+                }
+
+                this.renderString();
+                this.updateDisplay();
+                this.renderFrequencyMaps();
+
+                // Check if algorithm is complete
+                if (this.right >= this.s.length && this.have < this.needCount) {
+                    setTimeout(() => this.endVisualization(), 500);
+                }
+            }
+
+            renderString() {
+                this.stringContainer.innerHTML = '';
+                
+                for (let i = 0; i < this.s.length; i++) {
+                    const char = this.s[i];
+                    const element = document.createElement('div');
+                    element.className = 'char-element';
+                    element.innerHTML = `
+                        <span class="char-index">${i}</span>
+                        ${char}
+                    `;
+                    
+                    // Style based on position and state
+                    if (i >= this.left && i < this.right) {
+                        element.classList.add('in-window');
+                        
+                        if (this.have === this.needCount) {
+                            element.classList.add('valid-window');
+                        }
+                        
+                        if (i >= this.minStart && i < this.minStart + this.minLength && this.minLength !== Infinity) {
+                            element.classList.add('minimum-window');
+                        }
+                    }
+                    
+                    if (this.need.has(char)) {
+                        element.classList.add('target-char');
+                    }
+                    
+                    if (i === this.left && this.isRunning) {
+                        element.classList.add('left-pointer');
+                    }
+                    
+                    if (i === this.right && this.isRunning && this.right < this.s.length) {
+                        element.classList.add('right-pointer');
+                    }
+                    
+                    this.stringContainer.appendChild(element);
+                }
+            }
+
+            renderFrequencyMaps() {
+                // Render need map
+                this.needMap.innerHTML = '';
+                this.need.forEach((count, char) => {
+                    const entry = document.createElement('div');
