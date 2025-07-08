@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheapest Flights Within K Stops Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #185a9d; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #185a9d; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #185a9d; }
+        .step-title { font-weight: bold; color: #185a9d; margin-bottom: 5px; }
+        .graph-view { display: flex; gap: 40px; margin-bottom: 1em; justify-content: center; }
+        .node { display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; border: 2px solid #888; text-align: center; line-height: 40px; font-size: 1.1em; margin: 0 8px; position: relative; }
+        .visited { background: #ffe082; border-color: #ffb300; }
+        .edge { display: inline-block; width: 30px; height: 2px; background: #888; vertical-align: middle; margin: 0 2px; position: relative; }
+        .edge-label { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 0.9em; color: #185a9d; }
+        .cost-label { font-size: 0.9em; color: #388e3c; display: block; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✈️ Cheapest Flights Within K Stops Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given flights between cities, find the cheapest price from src to dst with at most K stops using BFS/DP.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Use BFS or DP to expand all possible paths up to K+1 edges, updating the minimum cost to each city at each step.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>flights = [[0,1,100],[1,2,100],[0,2,500]], n = 3, src = 0, dst = 2, K = 1</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How BFS/DP Works</h3>
+            <ul>
+                <li>Track the minimum cost to each city for each number of stops.</li>
+                <li>Expand all possible paths up to K+1 edges.</li>
+                <li>Update costs if a cheaper path is found.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Cheapest Flights simulation
+        const flights = [[0,1,100],[1,2,100],[0,2,500]];
+        const n = 3, src = 0, dst = 2, K = 1;
+        const graph = {0:[],1:[],2:[]};
+        for (let [u,v,w] of flights) graph[u].push([v,w]);
+        const cost = Array.from({length: n}, () => Array(K+2).fill(Infinity));
+        cost[src][0] = 0;
+        const steps = [];
+        let queue = [[src, 0, 0]]; // [city, stops, totalCost]
+        while (queue.length) {
+            let [u, stops, c] = queue.shift();
+            steps.push({action: 'visit', node: u, stops, cost: cost.map(row=>[...row])});
+            if (stops === K+1) continue;
+            for (let [v, w] of graph[u]) {
+                if (cost[v][stops+1] > c + w) {
+                    cost[v][stops+1] = c + w;
+                    steps.push({action: 'update', from: u, to: v, stops: stops+1, newCost: cost[v][stops+1], cost: cost.map(row=>[...row])});
+                    queue.push([v, stops+1, cost[v][stops+1]]);
+                }
+            }
+        }
+        // Render steps
+        function renderGraph(cost) {
+            let html = '';
+            for (let n = 0; n < 3; ++n) {
+                html += `<span class="node">${n}<span class="cost-label">${Math.min(...cost[n]) === Infinity ? '∞' : Math.min(...cost[n])}</span></span>`;
+                if (n < 2) html += '<span class="edge"><span class="edge-label">'+(n===0?100:100)+'</span></span>';
+            }
+            html += '<span class="edge"><span class="edge-label">500</span></span>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = step.action === 'visit' ? `Visit city ${step.node} (stops: ${step.stops})` : `Update cost to city ${step.to} via ${step.from} (stops: ${step.stops}, new cost: ${step.newCost})`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += '<div class="graph-view">' + renderGraph(step.cost) + '</div>';
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

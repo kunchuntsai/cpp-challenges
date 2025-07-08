@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Intervals Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #ffd200 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #f7971e; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #f7971e; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #f7971e; }
+        .step-title { font-weight: bold; color: #f7971e; margin-bottom: 5px; }
+        .intervals-view { display: flex; gap: 10px; margin-bottom: 1em; justify-content: center; }
+        .interval { min-width: 60px; height: 40px; border-radius: 8px; background: #fffde7; border: 2px solid #fbc02d; text-align: center; line-height: 40px; font-size: 1.1em; position: relative; padding: 0 10px; }
+        .merged { background: #ffe082; border-color: #ffb300; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧩 Merge Intervals Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given a list of intervals, merge all overlapping intervals.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Sort intervals by start. Merge if current overlaps with previous, otherwise add as new interval.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>intervals = [[1,3],[2,6],[8,10],[15,18]]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Merging Works</h3>
+            <ul>
+                <li>Sort intervals by start time.</li>
+                <li>Iterate and merge if overlapping.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Merge Intervals simulation
+        let intervals = [[1,3],[2,6],[8,10],[15,18]];
+        intervals = intervals.sort((a,b)=>a[0]-b[0]);
+        const merged = [];
+        const steps = [{intervals: intervals.map(i=>[...i]), merged: []}];
+        for (let i = 0; i < intervals.length; ++i) {
+            if (!merged.length || merged[merged.length-1][1] < intervals[i][0]) {
+                merged.push([...intervals[i]]);
+            } else {
+                merged[merged.length-1][1] = Math.max(merged[merged.length-1][1], intervals[i][1]);
+            }
+            steps.push({intervals: intervals.map(i=>[...i]), merged: merged.map(i=>[...i])});
+        }
+        // Render steps
+        function renderIntervals(intervals, merged) {
+            let html = '<div class="intervals-view">';
+            for (let i = 0; i < intervals.length; ++i) {
+                let isMerged = merged.some(m => m[0] === intervals[i][0] && m[1] === intervals[i][1]);
+                html += `<div class="interval${isMerged ? ' merged' : ''}">[${intervals[i][0]},${intervals[i][1]}]</div>`;
+            }
+            html += '</div>';
+            html += '<div class="intervals-view">Merged: ';
+            for (let i = 0; i < merged.length; ++i) {
+                html += `<span class="interval merged">[${merged[i][0]},${merged[i][1]}]</span>`;
+            }
+            html += '</div>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = idx === 0 ? 'Sort intervals' : 'Process interval ' + (idx-1);
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += renderIntervals(step.intervals, step.merged);
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

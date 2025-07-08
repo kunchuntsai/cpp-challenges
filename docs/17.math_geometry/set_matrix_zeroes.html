@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Matrix Zeroes Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #ffd200 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #f7971e; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #f7971e; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #f7971e; }
+        .step-title { font-weight: bold; color: #f7971e; margin-bottom: 5px; }
+        .matrix-view { display: inline-block; margin-bottom: 1em; }
+        .matrix-row { display: flex; }
+        .matrix-cell { width: 50px; height: 50px; border-radius: 10px; background: #fffde7; border: 2px solid #fbc02d; text-align: center; line-height: 50px; font-size: 1.2em; margin: 2px; position: relative; }
+        .zeroed { background: #ffcdd2; border-color: #e57373; }
+        .marked { background: #ffe082; border-color: #ffb300; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>0️⃣ Set Matrix Zeroes Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given an m x n matrix, if an element is 0, set its entire row and column to 0 in-place.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>First mark rows and columns to be zeroed, then update the matrix.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>matrix = [[1,1,1],[1,0,1],[1,1,1]]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Zeroing Works</h3>
+            <ul>
+                <li>First pass: mark rows and columns to be zeroed.</li>
+                <li>Second pass: set marked rows and columns to zero.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Set Matrix Zeroes simulation
+        let matrix = [[1,1,1],[1,0,1],[1,1,1]];
+        const m = matrix.length, n = matrix[0].length;
+        let rows = Array(m).fill(false), cols = Array(n).fill(false);
+        const steps = [];
+        // First pass: mark
+        for (let r = 0; r < m; ++r) for (let c = 0; c < n; ++c) if (matrix[r][c] === 0) { rows[r] = true; cols[c] = true; steps.push({matrix: matrix.map(row=>[...row]), rows: [...rows], cols: [...cols], phase: 'mark', r, c}); }
+        // Second pass: zero
+        for (let r = 0; r < m; ++r) for (let c = 0; c < n; ++c) if (rows[r] || cols[c]) { matrix[r][c] = 0; steps.push({matrix: matrix.map(row=>[...row]), rows: [...rows], cols: [...cols], phase: 'zero', r, c}); }
+        // Render steps
+        function renderMatrix(matrix, rows, cols, phase, r, c) {
+            let html = '<div class="matrix-view">';
+            for (let i = 0; i < matrix.length; ++i) {
+                html += '<div class="matrix-row">';
+                for (let j = 0; j < matrix[0].length; ++j) {
+                    let cls = '';
+                    if (phase === 'mark' && (i === r || j === c)) cls = 'marked';
+                    if (phase === 'zero' && (i === r && j === c)) cls = 'zeroed';
+                    html += `<div class="matrix-cell ${cls}">${matrix[i][j]}</div>`;
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = step.phase === 'mark' ? `Mark row ${step.r} and col ${step.c}` : `Zero cell (${step.r},${step.c})`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += renderMatrix(step.matrix, step.rows, step.cols, step.phase, step.r, step.c);
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

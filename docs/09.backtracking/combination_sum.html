@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combination Sum Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #764ba2; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #764ba2; }
+        .step-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .path-view { display: flex; gap: 8px; margin-bottom: 1em; }
+        .path-node { min-width: 40px; min-height: 32px; padding: 6px 12px; border: 2px solid #888; border-radius: 6px; background: #f0f0f0; text-align: center; font-size: 1.1em; }
+        .output { color: #388e3c; font-weight: bold; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧩 Combination Sum (Backtracking) Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given a set of candidates and a target, find all unique combinations where the candidate numbers sum to the target. Each number may be used unlimited times.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>At each step, choose a candidate, subtract from target, and recurse. If the target is 0, add the path to the result. If negative, backtrack.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>candidates = [2,3,6,7], target = 7</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Backtracking Works</h3>
+            <ul>
+                <li>At each index, try including the candidate and recurse with reduced target.</li>
+                <li>If target is 0, add path to result. If negative, backtrack.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Backtracking simulation for the example
+        const candidates = [2,3,6,7];
+        const target = 7;
+        const steps = [];
+        function backtrack(path, remain, start) {
+            steps.push({path: path.slice(), remain, start});
+            if (remain < 0) return;
+            if (remain === 0) return;
+            for (let i = start; i < candidates.length; ++i) {
+                path.push(candidates[i]);
+                backtrack(path, remain - candidates[i], i);
+                path.pop();
+            }
+        }
+        backtrack([], target, 0);
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: remain=${step.remain}, path=[${step.path.join(', ')}]</div>`;
+            let html = '<div class="path-view">';
+            step.path.forEach(v => { html += `<div class="path-node">${v}</div>`; });
+            html += '</div>';
+            div.innerHTML += html;
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

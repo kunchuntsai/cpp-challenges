@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiral Matrix Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #ffd200 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #f7971e; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #f7971e; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #f7971e; }
+        .step-title { font-weight: bold; color: #f7971e; margin-bottom: 5px; }
+        .matrix-view { display: inline-block; margin-bottom: 1em; }
+        .matrix-row { display: flex; }
+        .matrix-cell { width: 50px; height: 50px; border-radius: 10px; background: #fffde7; border: 2px solid #fbc02d; text-align: center; line-height: 50px; font-size: 1.2em; margin: 2px; position: relative; }
+        .visited { background: #ffe082; border-color: #ffb300; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌀 Spiral Matrix Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given an m x n matrix, return all elements in spiral order.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Traverse the matrix in layers, marking visited cells in spiral order.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>matrix = [[1,2,3],[4,5,6],[7,8,9]]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Spiral Traversal Works</h3>
+            <ul>
+                <li>Traverse the outer layer, then move inward.</li>
+                <li>Mark each cell as visited in spiral order.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Spiral Matrix simulation
+        let matrix = [[1,2,3],[4,5,6],[7,8,9]];
+        const m = matrix.length, n = matrix[0].length;
+        const visited = Array.from({length: m}, () => Array(n).fill(false));
+        const steps = [];
+        let res = [], dirs = [[0,1],[1,0],[0,-1],[-1,0]], d = 0, r = 0, c = 0;
+        for (let i = 0; i < m*n; ++i) {
+            res.push(matrix[r][c]);
+            visited[r][c] = true;
+            steps.push({matrix: matrix.map(row=>[...row]), visited: visited.map(row=>[...row]), r, c});
+            let nr = r + dirs[d][0], nc = c + dirs[d][1];
+            if (nr < 0 || nr >= m || nc < 0 || nc >= n || visited[nr][nc]) {
+                d = (d + 1) % 4;
+                nr = r + dirs[d][0];
+                nc = c + dirs[d][1];
+            }
+            r = nr; c = nc;
+        }
+        // Render steps
+        function renderMatrix(matrix, visited) {
+            let html = '<div class="matrix-view">';
+            for (let r = 0; r < matrix.length; ++r) {
+                html += '<div class="matrix-row">';
+                for (let c = 0; c < matrix[0].length; ++c) {
+                    let cls = visited[r][c] ? 'visited' : '';
+                    html += `<div class="matrix-cell ${cls}">${matrix[r][c]}</div>`;
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = `Visit (${step.r},${step.c})`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += renderMatrix(step.matrix, step.visited);
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

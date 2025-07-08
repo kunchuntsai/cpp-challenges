@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implement Trie (Prefix Tree) Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #764ba2; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #764ba2; }
+        .step-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .trie-view { margin-bottom: 1em; }
+        .trie-level { display: flex; gap: 8px; margin-bottom: 8px; }
+        .trie-node { min-width: 32px; min-height: 32px; padding: 6px 12px; border: 2px solid #888; border-radius: 6px; background: #f0f0f0; text-align: center; font-size: 1.1em; position: relative; }
+        .end-node { background: #ffe082; border-color: #ffb300; }
+        .output { color: #388e3c; font-weight: bold; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌲 Implement Trie (Prefix Tree) Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Implement a trie with insert, search, and startsWith operations.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Each node has a map of children. Insert adds nodes for each character. Search and startsWith traverse the trie.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: Insert "apple", "app"; search "app"; startsWith "ap"</p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Trie Works</h3>
+            <ul>
+                <li>Each node represents a character.</li>
+                <li>End of word is marked specially.</li>
+                <li>Insert, search, and prefix search are O(L) where L is word length.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Trie simulation for the example
+        function TrieNode() { this.children = {}; this.end = false; }
+        let root = new TrieNode();
+        const steps = [];
+        function insert(word) {
+            let node = root;
+            for (let i = 0; i < word.length; ++i) {
+                if (!node.children[word[i]]) node.children[word[i]] = new TrieNode();
+                node = node.children[word[i]];
+                steps.push({action: 'insert', char: word[i], idx: i, word, snapshot: JSON.parse(JSON.stringify(root))});
+            }
+            node.end = true;
+            steps.push({action: 'end', word, snapshot: JSON.parse(JSON.stringify(root))});
+        }
+        function search(word) {
+            let node = root;
+            for (let i = 0; i < word.length; ++i) {
+                if (!node.children[word[i]]) { steps.push({action: 'search', char: word[i], idx: i, word, found: false, snapshot: JSON.parse(JSON.stringify(root))}); return false; }
+                node = node.children[word[i]];
+                steps.push({action: 'search', char: word[i], idx: i, word, found: true, snapshot: JSON.parse(JSON.stringify(root))});
+            }
+            steps.push({action: 'search-end', word, found: node.end, snapshot: JSON.parse(JSON.stringify(root))});
+            return node.end;
+        }
+        function startsWith(prefix) {
+            let node = root;
+            for (let i = 0; i < prefix.length; ++i) {
+                if (!node.children[prefix[i]]) { steps.push({action: 'prefix', char: prefix[i], idx: i, word: prefix, found: false, snapshot: JSON.parse(JSON.stringify(root))}); return false; }
+                node = node.children[prefix[i]];
+                steps.push({action: 'prefix', char: prefix[i], idx: i, word: prefix, found: true, snapshot: JSON.parse(JSON.stringify(root))});
+            }
+            steps.push({action: 'prefix-end', word: prefix, found: true, snapshot: JSON.parse(JSON.stringify(root))});
+            return true;
+        }
+        insert('apple');
+        insert('app');
+        search('app');
+        startsWith('ap');
+        // Render steps
+        function renderTrie(node, level=0) {
+            let html = '<div class="trie-level">';
+            for (let c in node.children) {
+                html += `<div class="trie-node${node.children[c].end ? ' end-node' : ''}">${c}</div>`;
+            }
+            html += '</div>';
+            for (let c in node.children) {
+                html += renderTrie(node.children[c], level+1);
+            }
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${step.action} ${step.word}${step.char ? ' ('+step.char+')' : ''}</div>`;
+            div.innerHTML += '<div class="trie-view">' + renderTrie(step.snapshot) + '</div>';
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

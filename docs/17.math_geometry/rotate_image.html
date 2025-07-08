@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotate Image Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #ffd200 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #f7971e; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #f7971e; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #f7971e; }
+        .step-title { font-weight: bold; color: #f7971e; margin-bottom: 5px; }
+        .matrix-view { display: inline-block; margin-bottom: 1em; }
+        .matrix-row { display: flex; }
+        .matrix-cell { width: 50px; height: 50px; border-radius: 10px; background: #fffde7; border: 2px solid #fbc02d; text-align: center; line-height: 50px; font-size: 1.2em; margin: 2px; position: relative; }
+        .rotating { background: #ffe082; border-color: #ffb300; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Rotate Image Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given an n x n matrix, rotate it 90 degrees clockwise in-place.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Rotate layer by layer, moving four elements at a time.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>matrix = [[1,2,3],[4,5,6],[7,8,9]]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Rotation Works</h3>
+            <ul>
+                <li>Process each layer from outer to inner.</li>
+                <li>Move four elements at a time in a cycle.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Rotate Image simulation
+        let matrix = [[1,2,3],[4,5,6],[7,8,9]];
+        const n = matrix.length;
+        const steps = [{matrix: matrix.map(row=>[...row]), layer: -1, i: -1}];
+        for (let layer = 0; layer < Math.floor(n/2); ++layer) {
+            let first = layer, last = n - 1 - layer;
+            for (let i = first; i < last; ++i) {
+                let offset = i - first;
+                let top = matrix[first][i];
+                // left -> top
+                matrix[first][i] = matrix[last-offset][first];
+                // bottom -> left
+                matrix[last-offset][first] = matrix[last][last-offset];
+                // right -> bottom
+                matrix[last][last-offset] = matrix[i][last];
+                // top -> right
+                matrix[i][last] = top;
+                steps.push({matrix: matrix.map(row=>[...row]), layer, i});
+            }
+        }
+        // Render steps
+        function renderMatrix(matrix, layer, i) {
+            let html = '<div class="matrix-view">';
+            for (let r = 0; r < matrix.length; ++r) {
+                html += '<div class="matrix-row">';
+                for (let c = 0; c < matrix[0].length; ++c) {
+                    let cls = '';
+                    if (layer >= 0 && (r === layer || r === matrix.length-1-layer || c === layer || c === matrix.length-1-layer)) cls = 'rotating';
+                    html += `<div class="matrix-cell ${cls}">${matrix[r][c]}</div>`;
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = step.layer === -1 ? 'Initial matrix' : `Rotate layer ${step.layer}, index ${step.i}`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += renderMatrix(step.matrix, step.layer, step.i);
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

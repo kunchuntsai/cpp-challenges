@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invert Binary Tree Visualization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .explanation-panel {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #764ba2;
+        }
+        .algorithm-steps {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .tree-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1em;
+        }
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+        .node {
+            min-width: 40px;
+            min-height: 32px;
+            padding: 6px 12px;
+            border: 2px solid #888;
+            border-radius: 6px;
+            background: #f0f0f0;
+            text-align: center;
+            font-size: 1.1em;
+            position: relative;
+        }
+        .invert {
+            background: #ffe082;
+            border-color: #ffb300;
+        }
+        .output { color: #388e3c; font-weight: bold; }
+        ul {
+            margin: 0 0 1em 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Invert Binary Tree Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given the root of a binary tree, invert the tree and return its root.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Recursively swap the left and right children of every node in the tree.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>[4,2,7,1,3,6,9]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Inversion Works</h3>
+            <ul>
+                <li>Recursively swap left and right children at each node.</li>
+                <li>Continue until all nodes are processed.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Helper to build tree from array (null as null)
+        function buildTree(arr) {
+            if (!arr.length) return null;
+            let nodes = arr.map(v => v === null ? null : {val: v, left: null, right: null});
+            let j = 1;
+            for (let i = 0; i < nodes.length && j < nodes.length; ++i) {
+                if (nodes[i]) {
+                    if (j < nodes.length) nodes[i].left = nodes[j++];
+                    if (j < nodes.length) nodes[i].right = nodes[j++];
+                }
+            }
+            return nodes[0];
+        }
+        // Helper to get tree levels
+        function getLevels(root) {
+            let levels = [], q = [root];
+            while (q.length) {
+                let next = [], level = [];
+                for (let node of q) {
+                    level.push(node ? node.val : null);
+                    if (node) {
+                        next.push(node.left, node.right);
+                    }
+                }
+                if (level.every(x => x === null)) break;
+                levels.push(level);
+                q = next;
+            }
+            return levels;
+        }
+        // Step-by-step inversion
+        const arr = [4,2,7,1,3,6,9];
+        let root = buildTree(arr);
+        const steps = [];
+        function invert(node) {
+            if (!node) return;
+            steps.push({tree: JSON.parse(JSON.stringify(root)), invertVal: node.val});
+            let tmp = node.left;
+            node.left = node.right;
+            node.right = tmp;
+            invert(node.left);
+            invert(node.right);
+        }
+        invert(root);
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: Invert node ${step.invertVal}</div>`;
+            // Tree view
+            let levels = getLevels(step.tree);
+            let html = '<div class="tree-view">';
+            levels.forEach(level => {
+                html += '<div class="tree-level">';
+                level.forEach(v => {
+                    html += `<div class="node${v === step.invertVal ? ' invert' : ''}">${v !== null ? v : ''}</div>`;
+                });
+                html += '</div>';
+            });
+            html += '</div>';
+            div.innerHTML += html;
+            vis.appendChild(div);
+        });
+        // Final output
+        const final = document.createElement('div');
+        final.innerHTML = `<h2>Final Output: <span class="output">[4,7,2,9,6,3,1]</span></h2>`;
+        vis.appendChild(final);
+    </script>
+</body>
+</html> 

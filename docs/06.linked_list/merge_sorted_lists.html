@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Two Sorted Lists Visualization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .explanation-panel {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #764ba2;
+        }
+        .algorithm-steps {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .list-view {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1em;
+        }
+        .node {
+            min-width: 40px;
+            min-height: 32px;
+            padding: 6px 12px;
+            border: 2px solid #888;
+            border-radius: 6px;
+            background: #f0f0f0;
+            text-align: center;
+            font-size: 1.1em;
+            position: relative;
+        }
+        .arrow {
+            font-size: 1.5em;
+            color: #764ba2;
+        }
+        .ptr {
+            font-size: 0.9em;
+            color: #388e3c;
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffe082;
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+        .merged {
+            background: #b2dfdb;
+            border-color: #009688;
+        }
+        .output { color: #388e3c; font-weight: bold; }
+        ul {
+            margin: 0 0 1em 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 Merge Two Sorted Lists Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Merge two sorted linked lists and return the merged sorted list.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Iteratively compare the heads of both lists, attach the smaller node to the merged list, and advance the pointer. Continue until both lists are exhausted.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>l1 = [1,2,4], l2 = [1,3,4]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Merging Works</h3>
+            <ul>
+                <li>Compare the heads of both lists.</li>
+                <li>Attach the smaller node to the merged list and advance the pointer.</li>
+                <li>Continue until both lists are empty.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Step-by-step simulation for the main example
+        const l1 = [1,2,4];
+        const l2 = [1,3,4];
+        let p1 = 0, p2 = 0;
+        let merged = [];
+        const steps = [];
+        while (p1 < l1.length && p2 < l2.length) {
+            steps.push({l1: l1.slice(p1), l2: l2.slice(p2), merged: merged.slice(), pick: l1[p1] < l2[p2] ? 'l1' : 'l2'});
+            if (l1[p1] < l2[p2]) merged.push(l1[p1++]);
+            else merged.push(l2[p2++]);
+        }
+        while (p1 < l1.length) {
+            steps.push({l1: l1.slice(p1), l2: l2.slice(p2), merged: merged.slice(), pick: 'l1'});
+            merged.push(l1[p1++]);
+        }
+        while (p2 < l2.length) {
+            steps.push({l1: l1.slice(p1), l2: l2.slice(p2), merged: merged.slice(), pick: 'l2'});
+            merged.push(l2[p2++]);
+        }
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}</div>`;
+            // Merged list
+            let html = '<div class="list-view">';
+            step.merged.forEach((v, i) => {
+                html += `<div class="node merged">${v}</div>`;
+                if (i < step.merged.length - 1) html += '<span class="arrow">→</span>';
+            });
+            html += '</div>';
+            // l1
+            html += '<div class="list-view">l1: ';
+            step.l1.forEach((v, i) => {
+                html += `<div class="node">${v}</div>`;
+                if (i < step.l1.length - 1) html += '<span class="arrow">→</span>';
+            });
+            html += '</div>';
+            // l2
+            html += '<div class="list-view">l2: ';
+            step.l2.forEach((v, i) => {
+                html += `<div class="node">${v}</div>`;
+                if (i < step.l2.length - 1) html += '<span class="arrow">→</span>';
+            });
+            html += '</div>';
+            div.innerHTML += html;
+            vis.appendChild(div);
+        });
+        // Final output
+        const final = document.createElement('div');
+        final.innerHTML = `<h2>Final Output: <span class="output">[1,1,2,3,4,4]</span></h2>`;
+        vis.appendChild(final);
+    </script>
+</body>
+</html> 

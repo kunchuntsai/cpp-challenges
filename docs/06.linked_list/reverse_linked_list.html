@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse Linked List Visualization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .explanation-panel {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #764ba2;
+        }
+        .algorithm-steps {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .list-view {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1em;
+        }
+        .node {
+            min-width: 40px;
+            min-height: 32px;
+            padding: 6px 12px;
+            border: 2px solid #888;
+            border-radius: 6px;
+            background: #f0f0f0;
+            text-align: center;
+            font-size: 1.1em;
+            position: relative;
+        }
+        .arrow {
+            font-size: 1.5em;
+            color: #764ba2;
+        }
+        .ptr {
+            font-size: 0.9em;
+            color: #388e3c;
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffe082;
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+        .output { color: #388e3c; font-weight: bold; }
+        ul {
+            margin: 0 0 1em 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Reverse Linked List Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given the head of a singly linked list, reverse the list and return the new head.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Iteratively reverse the next pointers of each node, using <b>prev</b> and <b>head</b> pointers. At each step, move <b>head</b> forward and update <b>prev</b> to the current node.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>[1,2,3,4,5]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Reversal Works</h3>
+            <ul>
+                <li>At each step, reverse the current node's next pointer to point to <b>prev</b>.</li>
+                <li>Move <b>prev</b> and <b>head</b> forward.</li>
+                <li>Continue until <b>head</b> is null.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Step-by-step simulation for the main example
+        const vals = [1,2,3,4,5];
+        let nodes = vals.map(v => ({val: v, next: null}));
+        for (let i = 0; i < nodes.length - 1; ++i) nodes[i].next = nodes[i+1];
+        let head = nodes[0] || null;
+        let prev = null;
+        const steps = [];
+        let curr = head;
+        while (curr) {
+            steps.push({
+                list: nodes.map(n => ({val: n.val, next: n.next})),
+                head: curr,
+                prev: prev,
+                currIdx: nodes.indexOf(curr),
+                prevIdx: prev ? nodes.indexOf(prev) : -1
+            });
+            let next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        // Final state
+        steps.push({
+            list: nodes.map(n => ({val: n.val, next: n.next})),
+            head: null,
+            prev: prev,
+            currIdx: -1,
+            prevIdx: nodes.indexOf(prev)
+        });
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}</div>`;
+            // List view
+            let html = '<div class="list-view">';
+            step.list.forEach((node, i) => {
+                html += `<div class="node">${node.val}`;
+                if (i === step.currIdx) html += `<div class="ptr">head</div>`;
+                if (i === step.prevIdx) html += `<div class="ptr">prev</div>`;
+                html += '</div>';
+                if (i < step.list.length - 1) html += '<span class="arrow">→</span>';
+            });
+            html += '</div>';
+            div.innerHTML += html;
+            vis.appendChild(div);
+        });
+        // Final output
+        const final = document.createElement('div');
+        final.innerHTML = `<h2>Final Output: <span class="output">[${vals.slice().reverse().join(', ')}]</span></h2>`;
+        vis.appendChild(final);
+    </script>
+</body>
+</html> 

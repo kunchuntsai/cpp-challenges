@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number of 1 Bits Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #ffd200 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #f7971e; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #f7971e; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #f7971e; }
+        .step-title { font-weight: bold; color: #f7971e; margin-bottom: 5px; }
+        .bits-view { display: flex; gap: 6px; margin-bottom: 1em; justify-content: center; }
+        .bit-cell { width: 36px; height: 36px; border-radius: 8px; background: #fffde7; border: 2px solid #fbc02d; text-align: center; line-height: 36px; font-size: 1.1em; position: relative; }
+        .counted { background: #ffe082; border-color: #ffb300; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 Number of 1 Bits Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given an integer, count the number of 1 bits in its binary representation.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Use bitwise AND and shift to count set bits.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>n = 11 (binary 1011)</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Bit Counting Works</h3>
+            <ul>
+                <li>Check each bit from right to left.</li>
+                <li>Increment count if bit is 1.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Number of 1 Bits simulation
+        let n = 11;
+        let bits = n.toString(2).padStart(8,'0').split('').map(Number);
+        let count = 0;
+        const steps = [];
+        for (let i = bits.length-1; i >= 0; --i) {
+            let counted = bits.length-1-i;
+            if (bits[i] === 1) count++;
+            steps.push({bits: [...bits], idx: i, count});
+        }
+        // Render steps
+        function renderBits(bits, idx) {
+            let html = '<div class="bits-view">';
+            for (let i = 0; i < bits.length; ++i) {
+                let cls = i === idx ? 'counted' : '';
+                html += `<div class="bit-cell ${cls}">${bits[i]}</div>`;
+            }
+            html += '</div>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = `Check bit ${step.idx} (${step.bits[step.idx]}), count = ${step.count}`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += renderBits(step.bits, step.idx);
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

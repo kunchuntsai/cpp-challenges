@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jump Game Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #ff9800; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #fffde7); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #ff9800; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #ff9800; }
+        .step-title { font-weight: bold; color: #ff9800; margin-bottom: 5px; }
+        .array-view { display: flex; gap: 10px; margin-bottom: 1em; justify-content: center; }
+        .array-cell { width: 50px; height: 50px; border-radius: 10px; background: #fffde7; border: 2px solid #ffb300; text-align: center; line-height: 50px; font-size: 1.2em; position: relative; }
+        .reachable { background: #ffe082; border-color: #ffb300; }
+        .current { background: #ffd54f; border-color: #ff9800; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏃 Jump Game Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given an array where each element represents your maximum jump length, determine if you can reach the last index.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Greedily track the farthest index you can reach as you iterate through the array.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>nums = [2,3,1,1,4]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Greedy Works</h3>
+            <ul>
+                <li>At each index, update the farthest reachable index.</li>
+                <li>If the current index is beyond the farthest, you can't reach the end.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Jump Game simulation
+        const nums = [2,3,1,1,4];
+        let farthest = 0;
+        const steps = [];
+        for (let i = 0; i < nums.length; ++i) {
+            let prevFarthest = farthest;
+            if (i > farthest) break;
+            farthest = Math.max(farthest, i + nums[i]);
+            steps.push({i, nums: [...nums], farthest, prevFarthest});
+        }
+        // Render steps
+        function renderArray(nums, i, farthest) {
+            let html = '<div class="array-view">';
+            for (let idx = 0; idx < nums.length; ++idx) {
+                let cls = idx === i ? 'current' : idx <= farthest ? 'reachable' : '';
+                html += `<div class="array-cell ${cls}">${nums[idx]}</div>`;
+            }
+            html += '</div>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = `At index ${step.i}, farthest = max(${step.prevFarthest}, ${step.i} + ${step.nums[step.i]}) = ${step.farthest}`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += renderArray(step.nums, step.i, step.farthest);
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

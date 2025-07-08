@@ -16,7 +16,7 @@ The website above is the public GitHub Pages deployment of this project. It cont
 ---
 
 Explore the docs to:
-- See algorithm visualizations for Two Pointers, Greedy, and more
+- See algorithm visualizations for 02.two_pointers, 15.greedy, and more
 - Quickly access C, C++, and Python code for each algorithm
 - Read notes and explanations for interview prep and learning
 

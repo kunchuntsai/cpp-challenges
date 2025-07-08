@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Search Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #764ba2; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #764ba2; }
+        .step-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .grid-view { display: inline-block; margin-bottom: 1em; }
+        .grid-row { display: flex; }
+        .grid-cell { width: 40px; height: 40px; border: 2px solid #888; border-radius: 6px; background: #f0f0f0; text-align: center; font-size: 1.1em; line-height: 40px; margin: 2px; position: relative; }
+        .path-cell { background: #ffe082; border-color: #ffb300; }
+        .output { color: #388e3c; font-weight: bold; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔤 Word Search (Backtracking) Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given a 2D board and a word, find if the word exists in the grid using backtracking.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>For each cell, start a DFS to match the word. Mark visited cells and backtrack if needed.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Backtracking Works</h3>
+            <ul>
+                <li>Start DFS from each cell matching the first letter.</li>
+                <li>Mark cells as visited and backtrack if needed.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Backtracking simulation for the example
+        const board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]];
+        const word = "ABCCED";
+        const steps = [];
+        let found = false;
+        function dfs(r, c, idx, path, visited) {
+            if (found) return;
+            if (idx === word.length) { found = true; steps.push({grid: JSON.parse(JSON.stringify(board)), path: path.slice(), visited: JSON.parse(JSON.stringify(visited)), idx}); return; }
+            if (r < 0 || c < 0 || r >= board.length || c >= board[0].length || visited[r][c] || board[r][c] !== word[idx]) return;
+            visited[r][c] = true;
+            path.push([r, c]);
+            steps.push({grid: JSON.parse(JSON.stringify(board)), path: path.slice(), visited: JSON.parse(JSON.stringify(visited)), idx});
+            dfs(r+1, c, idx+1, path, visited);
+            dfs(r-1, c, idx+1, path, visited);
+            dfs(r, c+1, idx+1, path, visited);
+            dfs(r, c-1, idx+1, path, visited);
+            path.pop();
+            visited[r][c] = false;
+        }
+        let visited = Array.from({length: board.length}, () => Array(board[0].length).fill(false));
+        for (let r = 0; r < board.length; ++r) {
+            for (let c = 0; c < board[0].length; ++c) {
+                if (board[r][c] === word[0]) {
+                    dfs(r, c, 0, [], visited);
+                    if (found) break;
+                }
+            }
+            if (found) break;
+        }
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: idx=${step.idx}, path=[${step.path.map(([r,c])=>`(${r},${c})`).join(' ')}]</div>`;
+            let html = '<div class="grid-view">';
+            for (let r = 0; r < step.grid.length; ++r) {
+                html += '<div class="grid-row">';
+                for (let c = 0; c < step.grid[0].length; ++c) {
+                    let isPath = step.path.some(([pr,pc])=>pr===r&&pc===c);
+                    html += `<div class="grid-cell${isPath ? ' path-cell' : ''}">${step.grid[r][c]}</div>`;
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+            div.innerHTML += html;
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

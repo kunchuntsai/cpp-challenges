@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Min Stack Algorithm Visualization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .explanation-panel {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #764ba2;
+        }
+        .algorithm-steps {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .stack-view {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 1em;
+        }
+        .stack-col {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            min-width: 60px;
+        }
+        .stack-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stack-box {
+            min-width: 40px;
+            min-height: 32px;
+            padding: 6px 12px;
+            margin: 2px 0;
+            border: 2px solid #888;
+            border-radius: 6px;
+            background: #f0f0f0;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        .min-box {
+            background: #ffe082;
+            border-color: #ffb300;
+        }
+        .output { color: #388e3c; font-weight: bold; }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            white-space: pre-line;
+        }
+        ul {
+            margin: 0 0 1em 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📉 Min Stack: Constant-Time Minimum Retrieval</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>We use two stacks:
+                <ul>
+                    <li><b>Main stack</b> for all values</li>
+                    <li><b>Min stack</b> to keep track of the minimum value at each level</li>
+                </ul>
+                When pushing, if the new value is less than or equal to the current min, also push it to the min stack. When popping, if the popped value is the current min, pop from the min stack as well.
+            </p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Operations: <b>["MinStack","push","push","push","getMin","pop","top","getMin"]</b><br>
+            Arguments: <b>[[],[-2],[0],[-3],[],[],[],[]]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How the Min Stack Works</h3>
+            <ul>
+                <li>Min stack always holds the minimum value at the top.</li>
+                <li>Push to min stack only if the new value is &le; current min.</li>
+                <li>Pop from min stack only if the popped value is the current min.</li>
+                <li>All operations are O(1) time.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Step-by-step simulation for the example in the C++ code
+        const ops = ["MinStack","push","push","push","getMin","pop","top","getMin"];
+        const args = [[],[-2],[0],[-3],[],[],[],[]];
+        const steps = [];
+        let stk = [], minStk = [], output = [];
+
+        for (let i = 0; i < ops.length; ++i) {
+            let op = ops[i], arg = args[i][0];
+            let action = '', out = null;
+            if (op === "MinStack") {
+                stk = [];
+                minStk = [];
+                action = 'Initialize MinStack';
+            } else if (op === "push") {
+                stk.push(arg);
+                if (minStk.length === 0 || arg <= minStk[minStk.length-1]) minStk.push(arg);
+                action = `push(${arg})`;
+            } else if (op === "pop") {
+                if (stk[stk.length-1] === minStk[minStk.length-1]) minStk.pop();
+                stk.pop();
+                action = 'pop()';
+            } else if (op === "top") {
+                out = stk[stk.length-1];
+                action = 'top()';
+            } else if (op === "getMin") {
+                out = minStk[minStk.length-1];
+                action = 'getMin()';
+            }
+            steps.push({
+                op, arg, action, stk: [...stk], minStk: [...minStk], out
+            });
+        }
+
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `
+                <div class="step-title">Step ${idx + 1}: ${step.action}</div>
+                <div class="stack-view">
+                    <div class="stack-col">
+                        <div class="stack-label">Main Stack</div>
+                        ${step.stk.map((v, i) => `<div class="stack-box${step.minStk.includes(v) && v === Math.min(...step.minStk) ? ' min-box' : ''}">${v}</div>`).join('') || '<div class="stack-box">(empty)</div>'}
+                    </div>
+                    <div class="stack-col">
+                        <div class="stack-label">Min Stack</div>
+                        ${step.minStk.map((v, i) => `<div class="stack-box min-box">${v}</div>`).join('') || '<div class="stack-box">(empty)</div>'}
+                    </div>
+                </div>
+                ${step.out !== null ? `<div><span class="output">Output: ${step.out}</span></div>` : ''}
+            `;
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clone Graph Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #185a9d; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #185a9d; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #185a9d; }
+        .step-title { font-weight: bold; color: #185a9d; margin-bottom: 5px; }
+        .graph-view { display: flex; gap: 40px; margin-bottom: 1em; }
+        .graph-panel { flex: 1; }
+        .node { display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; border: 2px solid #888; text-align: center; line-height: 40px; font-size: 1.1em; margin: 0 8px; position: relative; }
+        .cloned { background: #ffe082; border-color: #ffb300; }
+        .edge { display: inline-block; width: 30px; height: 2px; background: #888; vertical-align: middle; margin: 0 2px; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 Clone Graph Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given a reference of a node in a connected undirected graph, return a deep copy (clone) of the graph.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Use DFS or BFS to traverse the graph. For each node, create a copy and recursively clone its neighbors.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>1--2</b>, <b> |  |</b>, <b>4--3</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Cloning Works</h3>
+            <ul>
+                <li>Visit each node and create a clone.</li>
+                <li>For each neighbor, recursively clone if not already done.</li>
+                <li>Maintain a map from original to cloned nodes.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Clone Graph simulation
+        const graph = {
+            1: [2,4],
+            2: [1,3],
+            3: [2,4],
+            4: [1,3]
+        };
+        const visited = {};
+        const cloned = {};
+        const steps = [];
+        function clone(node) {
+            if (cloned[node]) return cloned[node];
+            cloned[node] = node + "'";
+            steps.push({action: 'clone', node, cloned: Object.assign({}, cloned)});
+            for (let neighbor of graph[node]) {
+                if (!cloned[neighbor]) clone(neighbor);
+                steps.push({action: 'link', node, neighbor, cloned: Object.assign({}, cloned)});
+            }
+        }
+        clone(1);
+        // Render steps
+        function renderGraph(nodes, highlight) {
+            let html = '';
+            for (let n of [1,2,3,4]) {
+                html += `<span class="node${highlight && highlight.includes(n) ? ' cloned' : ''}">${n}</span>`;
+                if (n < 4) html += '<span class="edge"></span>';
+            }
+            return html;
+        }
+        function renderCloned(cloned) {
+            let html = '';
+            for (let n of [1,2,3,4]) {
+                if (cloned[n]) html += `<span class="node cloned">${cloned[n]}</span>`;
+                else html += `<span class="node">?</span>`;
+                if (n < 4) html += '<span class="edge"></span>';
+            }
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${step.action === 'clone' ? 'Clone node ' + step.node : 'Link ' + step.node + ' to ' + step.neighbor}</div>`;
+            div.innerHTML += '<div class="graph-view"><div class="graph-panel"><b>Original:</b><br>' + renderGraph([1,2,3,4], [step.node]) + '</div>';
+            div.innerHTML += '<div class="graph-panel"><b>Cloned:</b><br>' + renderCloned(step.cloned) + '</div></div>';
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

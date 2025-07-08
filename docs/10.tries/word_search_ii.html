@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Search II Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #764ba2; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #764ba2; }
+        .step-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .trie-view { margin-bottom: 1em; }
+        .trie-level { display: flex; gap: 8px; margin-bottom: 8px; }
+        .trie-node { min-width: 32px; min-height: 32px; padding: 6px 12px; border: 2px solid #888; border-radius: 6px; background: #f0f0f0; text-align: center; font-size: 1.1em; position: relative; }
+        .end-node { background: #ffe082; border-color: #ffb300; }
+        .grid-view { display: inline-block; margin-bottom: 1em; }
+        .grid-row { display: flex; }
+        .grid-cell { width: 40px; height: 40px; border: 2px solid #888; border-radius: 6px; background: #f0f0f0; text-align: center; font-size: 1.1em; line-height: 40px; margin: 2px; position: relative; }
+        .path-cell { background: #ffe082; border-color: #ffb300; }
+        .output { color: #388e3c; font-weight: bold; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔤 Word Search II (Trie + Backtracking) Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given a 2D board and a list of words, find all words in the grid using a trie and backtracking.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Build a trie of words. For each cell, start a DFS to match words in the trie. Mark visited cells and backtrack if needed.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Trie + Backtracking Works</h3>
+            <ul>
+                <li>Build a trie of all words.</li>
+                <li>Start DFS from each cell, following trie paths.</li>
+                <li>Mark cells as visited and backtrack if needed.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Trie + backtracking simulation for the example
+        function TrieNode() { this.children = {}; this.end = false; this.word = null; }
+        let root = new TrieNode();
+        const words = ["oath","pea","eat","rain"];
+        for (let w of words) {
+            let node = root;
+            for (let c of w) {
+                if (!node.children[c]) node.children[c] = new TrieNode();
+                node = node.children[c];
+            }
+            node.end = true; node.word = w;
+        }
+        const board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]];
+        const found = [];
+        const steps = [];
+        function dfs(r, c, node, path, visited) {
+            if (node.end && !found.includes(node.word)) { found.push(node.word); steps.push({action: 'found', word: node.word, path: path.slice(), trie: JSON.parse(JSON.stringify(root)), grid: JSON.parse(JSON.stringify(board)), visited: JSON.parse(JSON.stringify(visited))}); }
+            if (r < 0 || c < 0 || r >= board.length || c >= board[0].length || visited[r][c] || !node.children[board[r][c]]) return;
+            visited[r][c] = true;
+            path.push([r, c]);
+            steps.push({action: 'visit', path: path.slice(), trie: JSON.parse(JSON.stringify(root)), grid: JSON.parse(JSON.stringify(board)), visited: JSON.parse(JSON.stringify(visited))});
+            let next = node.children[board[r][c]];
+            dfs(r+1, c, next, path, visited);
+            dfs(r-1, c, next, path, visited);
+            dfs(r, c+1, next, path, visited);
+            dfs(r, c-1, next, path, visited);
+            path.pop();
+            visited[r][c] = false;
+        }
+        let visited = Array.from({length: board.length}, () => Array(board[0].length).fill(false));
+        for (let r = 0; r < board.length; ++r) {
+            for (let c = 0; c < board[0].length; ++c) {
+                dfs(r, c, root, [], visited);
+            }
+        }
+        // Render steps
+        function renderTrie(node, level=0) {
+            let html = '<div class="trie-level">';
+            for (let c in node.children) {
+                html += `<div class="trie-node${node.children[c].end ? ' end-node' : ''}">${c}</div>`;
+            }
+            html += '</div>';
+            for (let c in node.children) {
+                html += renderTrie(node.children[c], level+1);
+            }
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${step.action}${step.word ? ' ' + step.word : ''}</div>`;
+            div.innerHTML += '<div class="trie-view">' + renderTrie(step.trie) + '</div>';
+            // Grid
+            let html = '<div class="grid-view">';
+            for (let r = 0; r < step.grid.length; ++r) {
+                html += '<div class="grid-row">';
+                for (let c = 0; c < step.grid[0].length; ++c) {
+                    let isPath = step.path && step.path.some(([pr,pc])=>pr===r&&pc===c);
+                    html += `<div class="grid-cell${isPath ? ' path-cell' : ''}">${step.grid[r][c]}</div>`;
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+            div.innerHTML += html;
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

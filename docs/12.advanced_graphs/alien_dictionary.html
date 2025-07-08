@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alien Dictionary Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #185a9d; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #185a9d; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #185a9d; }
+        .step-title { font-weight: bold; color: #185a9d; margin-bottom: 5px; }
+        .graph-view { display: flex; gap: 10px; margin-bottom: 1em; justify-content: center; }
+        .node { display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; border: 2px solid #888; text-align: center; line-height: 40px; font-size: 1.1em; margin: 0 8px; position: relative; }
+        .ordered { background: #ffe082; border-color: #ffb300; }
+        .edge { display: inline-block; width: 30px; height: 2px; background: #888; vertical-align: middle; margin: 0 2px; position: relative; }
+        .edge-label { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 0.9em; color: #185a9d; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👽 Alien Dictionary Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given a list of words sorted lexicographically in an alien language, find the order of the alphabet using topological sort.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Build a graph of character dependencies. Use Kahn's algorithm (BFS) to find a valid ordering.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>words = ["wrt","wrf","er","ett","rftt"]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Topological Sort Works</h3>
+            <ul>
+                <li>Build a graph of character dependencies.</li>
+                <li>Use BFS to order characters with zero in-degree first.</li>
+                <li>Continue until all characters are ordered or a cycle is detected.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Alien Dictionary simulation
+        const words = ["wrt","wrf","er","ett","rftt"];
+        const graph = {};
+        const inDegree = {};
+        for (let w of words) for (let c of w) { graph[c] = graph[c] || []; inDegree[c] = 0; }
+        for (let i = 0; i < words.length-1; ++i) {
+            let w1 = words[i], w2 = words[i+1];
+            for (let j = 0; j < Math.min(w1.length, w2.length); ++j) {
+                if (w1[j] !== w2[j]) { graph[w1[j]].push(w2[j]); inDegree[w2[j]]++; break; }
+            }
+        }
+        const steps = [];
+        let queue = Object.keys(inDegree).filter(c => inDegree[c] === 0);
+        let order = [];
+        while (queue.length) {
+            let c = queue.shift();
+            order.push(c);
+            steps.push({action: 'order', char: c, order: [...order]});
+            for (let nei of graph[c]) {
+                inDegree[nei]--;
+                if (inDegree[nei] === 0) queue.push(nei);
+            }
+        }
+        // Render steps
+        function renderGraph(order) {
+            let html = '';
+            for (let c of Object.keys(graph)) {
+                let cls = order.includes(c) ? 'ordered' : '';
+                html += `<span class="node ${cls}">${c}</span>`;
+            }
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = `Add '${step.char}' to order: [${step.order.join(', ')}]`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += '<div class="graph-view">' + renderGraph(step.order) + '</div>';
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

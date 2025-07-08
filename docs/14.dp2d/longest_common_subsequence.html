@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Common Subsequence Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #ffd200 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #f7971e; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #f7971e; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #f7971e; }
+        .step-title { font-weight: bold; color: #f7971e; margin-bottom: 5px; }
+        .dp-grid { display: inline-block; margin-bottom: 1em; }
+        .dp-row { display: flex; }
+        .dp-cell { width: 50px; height: 50px; border-radius: 10px; background: #fffde7; border: 2px solid #fbc02d; text-align: center; line-height: 50px; font-size: 1.2em; position: relative; margin: 2px; }
+        .dp-label { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 0.9em; color: #f7971e; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 Longest Common Subsequence Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given two strings, find the length of their longest common subsequence (LCS).</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Use DP: dp[i][j] = LCS of first i chars of text1 and first j chars of text2. If chars match, add 1 to dp[i-1][j-1]; else take max of left/top.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>text1 = "abcde", text2 = "ace"</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How DP Works</h3>
+            <ul>
+                <li>Each dp[i][j] is the LCS length for text1[0..i-1] and text2[0..j-1].</li>
+                <li>If chars match, add 1 to dp[i-1][j-1]; else take max of left/top.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // LCS simulation
+        const text1 = "abcde", text2 = "ace";
+        const m = text1.length, n = text2.length;
+        const dp = Array.from({length: m+1}, () => Array(n+1).fill(0));
+        const steps = [{action:'init', dp: dp.map(row=>[...row])}];
+        for (let i = 1; i <= m; ++i) {
+            for (let j = 1; j <= n; ++j) {
+                if (text1[i-1] === text2[j-1]) dp[i][j] = dp[i-1][j-1] + 1;
+                else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                steps.push({action:'fill', i, j, dp: dp.map(row=>[...row])});
+            }
+        }
+        // Render steps
+        function renderDP(dp) {
+            let html = '<div class="dp-grid">';
+            for (let i = 0; i < dp.length; ++i) {
+                html += '<div class="dp-row">';
+                for (let j = 0; j < dp[0].length; ++j) {
+                    html += `<div class="dp-cell">${dp[i][j]}</div>`;
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = step.action === 'init' ? 'Initialize dp grid to 0' : `Fill dp[${step.i}][${step.j}]`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += renderDP(step.dp);
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

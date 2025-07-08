@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Temperatures Algorithm Visualization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .explanation-panel {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #764ba2;
+        }
+        .algorithm-steps {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .array { display: flex; gap: 8px; margin-bottom: 1em; }
+        .cell { padding: 8px 12px; border: 1px solid #888; border-radius: 4px; background: #f0f0f0; }
+        .highlight { background: #ffe082; border-color: #ffb300; }
+        .stack { margin-bottom: 1em; }
+        .stack-label { font-weight: bold; }
+        .output { color: #388e3c; font-weight: bold; }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            white-space: pre-line;
+        }
+        ul {
+            margin: 0 0 1em 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌡️ Daily Temperatures: Stack Algorithm Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>For each day, find out how many days you have to wait until a warmer temperature. If there is no future day for this, put 0 instead.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>We use a <b>monotonic stack</b> to keep track of indices of days with unresolved temperatures. As we iterate through the array, whenever we find a warmer temperature, we resolve all previous days in the stack that are colder.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Input: <b>[73, 74, 75, 71, 69, 72, 76, 73]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How the Stack Works</h3>
+            <ul>
+                <li>The stack stores indices of unresolved days (waiting for a warmer temperature).</li>
+                <li>When a warmer temperature is found, we pop from the stack and calculate the wait.</li>
+                <li>If no warmer day is found, the answer remains 0 for that day.</li>
+            </ul>
+            <p>This approach ensures each index is pushed and popped at most once, making the algorithm O(n).</p>
+        </div>
+    </div>
+    <script>
+        // Example input
+        const temperatures = [73, 74, 75, 71, 69, 72, 76, 73];
+        const n = temperatures.length;
+        const answer = Array(n).fill(0);
+        const steps = [];
+        let stack = [];
+
+        for (let i = 0; i < n; ++i) {
+            let step = {
+                i,
+                temp: temperatures[i],
+                stack: [...stack],
+                answer: [...answer],
+                resolved: []
+            };
+            while (stack.length && temperatures[i] > temperatures[stack[stack.length - 1]]) {
+                const idx = stack.pop();
+                answer[idx] = i - idx;
+                step.resolved.push(idx);
+            }
+            stack.push(i);
+            step.stackAfter = [...stack];
+            step.answerAfter = [...answer];
+            steps.push(step);
+        }
+
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `
+                <div class="step-title">Step ${idx + 1}: Day ${step.i} (Temp: <span class="highlight">${step.temp}</span>)</div>
+                <div class="array">
+                  ${temperatures.map((t, j) =>
+                    `<div class="cell${j === step.i ? ' highlight' : ''}">${t}</div>`
+                  ).join('')}
+                </div>
+                <div class="stack">
+                  <span class="stack-label">Stack before:</span>
+                  [${step.stack.map(i => `${i} (${temperatures[i]})`).join(', ')}]
+                </div>
+                ${step.resolved.length > 0 ? `
+                  <div>
+                    <span class="stack-label">Resolved indices:</span>
+                    ${step.resolved.map(i => `Day ${i} (waited ${step.i - i} days)`).join(', ')}
+                  </div>
+                ` : ''}
+                <div class="stack">
+                  <span class="stack-label">Stack after:</span>
+                  [${step.stackAfter.map(i => `${i} (${temperatures[i]})`).join(', ')}]
+                </div>
+                <div>
+                  <span class="stack-label">Answer so far:</span>
+                  <span class="output">[${step.answerAfter.join(', ') }]</span>
+                </div>
+            `;
+            vis.appendChild(div);
+        });
+
+        // Final output
+        const final = document.createElement('div');
+        final.innerHTML = `<h2>Final Output: <span class="output">[${answer.join(', ')}]</span></h2>`;
+        vis.appendChild(final);
+    </script>
+</body>
+</html>

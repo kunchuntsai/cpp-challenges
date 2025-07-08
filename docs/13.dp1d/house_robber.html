@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Robber Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #f7971e; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #f7971e; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #f7971e; }
+        .step-title { font-weight: bold; color: #f7971e; margin-bottom: 5px; }
+        .dp-view { display: flex; gap: 10px; margin-bottom: 1em; justify-content: center; }
+        .dp-cell { width: 50px; height: 50px; border-radius: 10px; background: #fffde7; border: 2px solid #fbc02d; text-align: center; line-height: 50px; font-size: 1.2em; position: relative; }
+        .dp-label { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 0.9em; color: #f7971e; }
+        .house-view { display: flex; gap: 10px; margin-bottom: 1em; justify-content: center; }
+        .house-cell { width: 50px; height: 50px; border-radius: 10px; background: #ffe082; border: 2px solid #ffb300; text-align: center; line-height: 50px; font-size: 1.2em; position: relative; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 House Robber Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given a row of houses, each with some money, find the maximum amount you can rob without robbing adjacent houses.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Use DP: dp[i] = max(dp[i-1], dp[i-2] + nums[i]).</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>nums = [2,7,9,3,1]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How DP Works</h3>
+            <ul>
+                <li>Each dp[i] is the max money up to house i.</li>
+                <li>Choose to rob current house (add to dp[i-2]) or skip (take dp[i-1]).</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // House Robber simulation
+        const nums = [2,7,9,3,1];
+        const n = nums.length;
+        const dp = Array(n).fill(0);
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[0], nums[1]);
+        const steps = [{action:'init', dp: [...dp]}];
+        for (let i = 2; i < n; ++i) {
+            dp[i] = Math.max(dp[i-1], dp[i-2] + nums[i]);
+            steps.push({action:'fill', i, dp: [...dp]});
+        }
+        // Render steps
+        function renderDP(dp) {
+            let html = '<div class="dp-view">';
+            for (let i = 0; i < dp.length; ++i) {
+                html += `<div class="dp-cell"><span class="dp-label">${i}</span>${dp[i]}</div>`;
+            }
+            html += '</div>';
+            return html;
+        }
+        function renderHouses(nums) {
+            let html = '<div class="house-view">';
+            for (let i = 0; i < nums.length; ++i) {
+                html += `<div class="house-cell">${nums[i]}</div>`;
+            }
+            html += '</div>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = step.action === 'init' ? 'Initialize base cases' : `Fill dp[${step.i}] = max(dp[${step.i-1}], dp[${step.i-2}] + nums[${step.i}]) = max(${step.dp[step.i-1]}, ${step.dp[step.i-2]} + ${nums[step.i]}) = ${step.dp[step.i]}`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += renderHouses(nums);
+            div.innerHTML += renderDP(step.dp);
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

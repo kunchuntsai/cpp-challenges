@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subsets Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #764ba2; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #764ba2; }
+        .step-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .subset-view { display: flex; gap: 8px; margin-bottom: 1em; }
+        .subset-node { min-width: 40px; min-height: 32px; padding: 6px 12px; border: 2px solid #888; border-radius: 6px; background: #f0f0f0; text-align: center; font-size: 1.1em; }
+        .output { color: #388e3c; font-weight: bold; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧩 Subsets (Backtracking) Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given a set of numbers, generate all possible subsets (the power set) using backtracking.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>At each step, decide to include or exclude the current element, recursively building all possible combinations.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>[1,2,3]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Backtracking Works</h3>
+            <ul>
+                <li>At each index, branch into two: include or exclude the element.</li>
+                <li>When the end is reached, add the current subset to the result.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Backtracking simulation for the example
+        const nums = [1,2,3];
+        const steps = [];
+        function backtrack(path, idx) {
+            steps.push({path: path.slice(), idx});
+            if (idx === nums.length) return;
+            // Include nums[idx]
+            backtrack(path.concat(nums[idx]), idx+1);
+            // Exclude nums[idx]
+            backtrack(path, idx+1);
+        }
+        backtrack([], 0);
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: idx=${step.idx}, subset=[${step.path.join(', ')}]</div>`;
+            let html = '<div class="subset-view">';
+            step.path.forEach(v => { html += `<div class="subset-node">${v}</div>`; });
+            html += '</div>';
+            div.innerHTML += html;
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

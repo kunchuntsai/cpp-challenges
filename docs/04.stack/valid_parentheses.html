@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valid Parentheses Algorithm Visualization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .explanation-panel {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #764ba2;
+        }
+        .algorithm-steps {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .input-view {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1em;
+        }
+        .char-box {
+            min-width: 32px;
+            min-height: 32px;
+            padding: 6px 12px;
+            border: 2px solid #888;
+            border-radius: 6px;
+            background: #f0f0f0;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .current {
+            background: #ffe082;
+            border-color: #ffb300;
+        }
+        .stack-view {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            margin-bottom: 1em;
+        }
+        .stack-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stack-box {
+            min-width: 32px;
+            min-height: 32px;
+            padding: 6px 12px;
+            margin: 2px 0;
+            border: 2px solid #888;
+            border-radius: 6px;
+            background: #e3e3e3;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        .invalid {
+            background: #ffb3b3;
+            border-color: #e53935;
+        }
+        .output { color: #388e3c; font-weight: bold; }
+        .fail { color: #e53935; font-weight: bold; }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            white-space: pre-line;
+        }
+        ul {
+            margin: 0 0 1em 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧩 Valid Parentheses: Stack Matching Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid. A string is valid if open brackets are closed by the same type and in the correct order.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>We use a <b>stack</b> to track open brackets. For each character:
+                <ul>
+                    <li>If it's an open bracket, push to stack.</li>
+                    <li>If it's a close bracket, check if it matches the top of the stack. If not, the string is invalid.</li>
+                </ul>
+                At the end, the stack must be empty for the string to be valid.
+            </p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Examples: <b>"()"</b>, <b>"()[]{}"</b>, <b>"(]"</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How the Stack Works</h3>
+            <ul>
+                <li>Push open brackets onto the stack.</li>
+                <li>On a close bracket, check for a match with the stack's top.</li>
+                <li>If a mismatch or empty stack occurs, the string is invalid.</li>
+                <li>At the end, the stack must be empty for validity.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Step-by-step simulation for the examples in the C++ code
+        const examples = [
+            {input: "()", expected: true},
+            {input: "()[]{}", expected: true},
+            {input: "(]", expected: false}
+        ];
+        const pairs = {')': '(', ']': '[', '}': '{'};
+        const vis = document.getElementById('visualization');
+        examples.forEach((ex, exIdx) => {
+            let s = ex.input;
+            let stk = [];
+            let valid = true;
+            let steps = [];
+            for (let i = 0; i < s.length; ++i) {
+                let c = s[i];
+                let action = '', fail = false;
+                if (pairs[c]) {
+                    if (stk.length === 0 || stk[stk.length-1] !== pairs[c]) {
+                        action = `Mismatch or empty stack for '${c}'`;
+                        fail = true;
+                        valid = false;
+                        steps.push({i, c, stk: [...stk], action, fail, done: false});
+                        break;
+                    } else {
+                        action = `Pop '${stk[stk.length-1]}' for '${c}'`;
+                        stk.pop();
+                    }
+                } else {
+                    action = `Push '${c}'`;
+                    stk.push(c);
+                }
+                steps.push({i, c, stk: [...stk], action, fail: false, done: false});
+            }
+            // After loop, check if stack is empty
+            if (valid && stk.length > 0) {
+                steps.push({i: s.length, c: '', stk: [...stk], action: 'Stack not empty at end', fail: true, done: true});
+                valid = false;
+            } else if (valid) {
+                steps.push({i: s.length, c: '', stk: [...stk], action: 'Stack empty at end', fail: false, done: true});
+            }
+            // Render steps
+            const exDiv = document.createElement('div');
+            exDiv.className = 'step';
+            exDiv.innerHTML = `<div class="step-title">Example ${exIdx+1}: Input <b>"${s}"</b> (Expected: ${ex.expected})</div>`;
+            steps.forEach((step, idx) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.style.marginBottom = '1em';
+                stepDiv.innerHTML = `
+                    <div class="input-view">
+                        ${[...s].map((ch, j) => `<div class="char-box${j === step.i ? ' current' : ''}">${ch}</div>`).join('')}
+                    </div>
+                    <div class="stack-label">Stack:</div>
+                    <div class="stack-view">
+                        ${step.stk.length ? step.stk.map(x => `<div class="stack-box">${x}</div>`).join('') : '<div class="stack-box">(empty)</div>'}
+                    </div>
+                    <div>${step.fail ? `<span class="fail">${step.action}</span>` : step.action}</div>
+                `;
+                exDiv.appendChild(stepDiv);
+            });
+            exDiv.innerHTML += `<div>${valid === ex.expected ? `<span class="output">Result: ${valid}</span>` : `<span class="fail">Result: ${valid}</span>`}</div>`;
+            vis.appendChild(exDiv);
+        });
+    </script>
+</body>
+</html> 

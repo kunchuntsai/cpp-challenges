@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Median from Data Stream Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #764ba2; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #764ba2; }
+        .step-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .heap-row { display: flex; gap: 8px; margin-bottom: 1em; }
+        .heap-label { font-weight: bold; margin-right: 8px; }
+        .heap-node { min-width: 40px; min-height: 32px; padding: 6px 12px; border: 2px solid #888; border-radius: 6px; background: #f0f0f0; text-align: center; font-size: 1.1em; }
+        .output { color: #388e3c; font-weight: bold; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Find Median from Data Stream Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Continuously find the median as numbers are added to a data stream using two heaps.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Maintain a max heap for the lower half and a min heap for the upper half. Balance the heaps after each insertion. The median is the root of the larger heap or the average of both roots if equal size.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>stream = [1,2,3,4]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Two Heaps Work</h3>
+            <ul>
+                <li>Insert number into max heap (lower half) or min heap (upper half).</li>
+                <li>Balance the heaps so their sizes differ by at most 1.</li>
+                <li>Median is the root of the larger heap or the average of both roots.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Two heaps simulation for the example
+        const stream = [1,2,3,4];
+        let maxHeap = [], minHeap = [];
+        const steps = [];
+        function addNum(num) {
+            maxHeap.push(num);
+            maxHeap.sort((a,b)=>b-a);
+            minHeap.push(maxHeap.shift());
+            minHeap.sort((a,b)=>a-b);
+            if (minHeap.length > maxHeap.length) maxHeap.push(minHeap.shift());
+        }
+        for (let i = 0; i < stream.length; ++i) {
+            addNum(stream[i]);
+            let median = maxHeap.length > minHeap.length ? maxHeap[0] : (maxHeap[0] + minHeap[0]) / 2;
+            steps.push({i, num: stream[i], maxHeap: maxHeap.slice(), minHeap: minHeap.slice(), median});
+        }
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: Insert ${step.num}</div>`;
+            let html = '<div class="heap-row"><span class="heap-label">Max Heap:</span>';
+            step.maxHeap.forEach(v => { html += `<div class="heap-node">${v}</div>`; });
+            html += '</div>';
+            html += '<div class="heap-row"><span class="heap-label">Min Heap:</span>';
+            step.minHeap.forEach(v => { html += `<div class="heap-node">${v}</div>`; });
+            html += '</div>';
+            div.innerHTML += html;
+            div.innerHTML += `<div>Median: <span class="output">${step.median}</span></div>`;
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

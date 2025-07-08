@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maximum Depth of Binary Tree Visualization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .explanation-panel {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #764ba2;
+        }
+        .algorithm-steps {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #764ba2;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .tree-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1em;
+        }
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+        .node {
+            min-width: 40px;
+            min-height: 32px;
+            padding: 6px 12px;
+            border: 2px solid #888;
+            border-radius: 6px;
+            background: #f0f0f0;
+            text-align: center;
+            font-size: 1.1em;
+            position: relative;
+        }
+        .highlight {
+            background: #ffe082;
+            border-color: #ffb300;
+        }
+        .output { color: #388e3c; font-weight: bold; }
+        ul {
+            margin: 0 0 1em 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌳 Maximum Depth of Binary Tree Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given the root of a binary tree, return its maximum depth.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Recursively compute the depth of left and right subtrees, and return the greater depth plus one.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>[3,9,20,null,null,15,7]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Depth Calculation Works</h3>
+            <ul>
+                <li>Recursively calculate the depth of left and right subtrees.</li>
+                <li>Return the greater depth plus one for the current node.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Helper to build tree from array (null as null)
+        function buildTree(arr) {
+            if (!arr.length) return null;
+            let nodes = arr.map(v => v === null ? null : {val: v, left: null, right: null});
+            let j = 1;
+            for (let i = 0; i < nodes.length && j < nodes.length; ++i) {
+                if (nodes[i]) {
+                    if (j < nodes.length) nodes[i].left = nodes[j++];
+                    if (j < nodes.length) nodes[i].right = nodes[j++];
+                }
+            }
+            return nodes[0];
+        }
+        // Helper to get tree levels
+        function getLevels(root) {
+            let levels = [], q = [root];
+            while (q.length) {
+                let next = [], level = [];
+                for (let node of q) {
+                    level.push(node ? node.val : null);
+                    if (node) {
+                        next.push(node.left, node.right);
+                    }
+                }
+                if (level.every(x => x === null)) break;
+                levels.push(level);
+                q = next;
+            }
+            return levels;
+        }
+        // Step-by-step depth calculation
+        const arr = [3,9,20,null,null,15,7];
+        let root = buildTree(arr);
+        const steps = [];
+        function maxDepth(node, depth) {
+            if (!node) return depth;
+            steps.push({tree: JSON.parse(JSON.stringify(root)), nodeVal: node.val, depth: depth+1});
+            let left = maxDepth(node.left, depth+1);
+            let right = maxDepth(node.right, depth+1);
+            return Math.max(left, right);
+        }
+        const maxD = maxDepth(root, 0);
+        // Render steps
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: Visit node ${step.nodeVal}, depth=${step.depth}</div>`;
+            // Tree view
+            let levels = getLevels(step.tree);
+            let html = '<div class="tree-view">';
+            levels.forEach(level => {
+                html += '<div class="tree-level">';
+                level.forEach(v => {
+                    html += `<div class="node${v === step.nodeVal ? ' highlight' : ''}">${v !== null ? v : ''}</div>`;
+                });
+                html += '</div>';
+            });
+            html += '</div>';
+            div.innerHTML += html;
+            vis.appendChild(div);
+        });
+        // Final output
+        const final = document.createElement('div');
+        final.innerHTML = `<h2>Final Output: <span class="output">Max Depth = ${maxD}</span></h2>`;
+        vis.appendChild(final);
+    </script>
+</body>
+</html> 

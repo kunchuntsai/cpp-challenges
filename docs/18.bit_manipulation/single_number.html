@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Number Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #43cea2 0%, #ffd200 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #f7971e; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #f7971e; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #f7971e; }
+        .step-title { font-weight: bold; color: #f7971e; margin-bottom: 5px; }
+        .array-view { display: flex; gap: 10px; margin-bottom: 1em; justify-content: center; }
+        .array-cell { width: 50px; height: 50px; border-radius: 10px; background: #fffde7; border: 2px solid #fbc02d; text-align: center; line-height: 50px; font-size: 1.2em; position: relative; }
+        .current { background: #ffe082; border-color: #ffb300; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>❌ Single Number Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Given an array where every element appears twice except for one, find that single one using XOR.</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>XOR all elements. Pairs cancel out, leaving the unique number.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: <b>nums = [4,1,2,1,2]</b></p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How XOR Works</h3>
+            <ul>
+                <li>XOR of a number with itself is 0.</li>
+                <li>XOR of a number with 0 is the number itself.</li>
+                <li>Order doesn't matter (commutative).</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Single Number simulation
+        const nums = [4,1,2,1,2];
+        let xor = 0;
+        const steps = [];
+        for (let i = 0; i < nums.length; ++i) {
+            let prev = xor;
+            xor ^= nums[i];
+            steps.push({i, nums: [...nums], xor, prev});
+        }
+        // Render steps
+        function renderArray(nums, i) {
+            let html = '<div class="array-view">';
+            for (let idx = 0; idx < nums.length; ++idx) {
+                let cls = idx === i ? 'current' : '';
+                html += `<div class="array-cell ${cls}">${nums[idx]}</div>`;
+            }
+            html += '</div>';
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            let desc = `XOR so far: ${step.prev} ^ ${step.nums[step.i]} = ${step.xor}`;
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${desc}</div>`;
+            div.innerHTML += renderArray(step.nums, step.i);
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 

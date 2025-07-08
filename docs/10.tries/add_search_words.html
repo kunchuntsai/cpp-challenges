@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add and Search Words Data Structure Visualization</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        .container { background: rgba(255, 255, 255, 0.97); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; font-size: 2.5em; }
+        .explanation-panel { background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 20px; margin: 20px 0; border-left: 5px solid #764ba2; }
+        .algorithm-steps { background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .step { margin: 15px 0; padding: 15px; background: white; border-radius: 10px; border-left: 4px solid #764ba2; }
+        .step-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .trie-view { margin-bottom: 1em; }
+        .trie-level { display: flex; gap: 8px; margin-bottom: 8px; }
+        .trie-node { min-width: 32px; min-height: 32px; padding: 6px 12px; border: 2px solid #888; border-radius: 6px; background: #f0f0f0; text-align: center; font-size: 1.1em; position: relative; }
+        .end-node { background: #ffe082; border-color: #ffb300; }
+        .output { color: #388e3c; font-weight: bold; }
+        ul { margin: 0 0 1em 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔡 Add and Search Words Data Structure Visualization</h1>
+        <div class="explanation-panel">
+            <h3>🎯 Problem:</h3>
+            <p>Design a data structure that supports adding words and searching with wildcards ('.').</p>
+            <h3>🧠 Algorithm:</h3>
+            <p>Use a trie. For wildcard search, recursively check all children at wildcard positions.</p>
+        </div>
+        <div class="algorithm-steps">
+            <h3>📋 Step-by-Step Example</h3>
+            <p>Example: Add "bad", "dad", "mad"; search "pad", "bad", ".ad", "b.."</p>
+            <div id="visualization"></div>
+        </div>
+        <div class="explanation-panel">
+            <h3>🔍 How Wildcard Search Works</h3>
+            <ul>
+                <li>Insert words as in a normal trie.</li>
+                <li>For '.', try all possible children at that position.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Trie with wildcard simulation for the example
+        function TrieNode() { this.children = {}; this.end = false; }
+        let root = new TrieNode();
+        const steps = [];
+        function addWord(word) {
+            let node = root;
+            for (let i = 0; i < word.length; ++i) {
+                if (!node.children[word[i]]) node.children[word[i]] = new TrieNode();
+                node = node.children[word[i]];
+                steps.push({action: 'add', char: word[i], idx: i, word, snapshot: JSON.parse(JSON.stringify(root))});
+            }
+            node.end = true;
+            steps.push({action: 'end', word, snapshot: JSON.parse(JSON.stringify(root))});
+        }
+        function search(word) {
+            function dfs(node, i) {
+                if (i === word.length) return node.end;
+                if (word[i] === '.') {
+                    for (let c in node.children) {
+                        if (dfs(node.children[c], i+1)) return true;
+                    }
+                    return false;
+                } else {
+                    if (!node.children[word[i]]) return false;
+                    return dfs(node.children[word[i]], i+1);
+                }
+            }
+            let found = dfs(root, 0);
+            steps.push({action: 'search', word, found, snapshot: JSON.parse(JSON.stringify(root))});
+        }
+        addWord('bad');
+        addWord('dad');
+        addWord('mad');
+        search('pad');
+        search('bad');
+        search('.ad');
+        search('b..');
+        // Render steps
+        function renderTrie(node, level=0) {
+            let html = '<div class="trie-level">';
+            for (let c in node.children) {
+                html += `<div class="trie-node${node.children[c].end ? ' end-node' : ''}">${c}</div>`;
+            }
+            html += '</div>';
+            for (let c in node.children) {
+                html += renderTrie(node.children[c], level+1);
+            }
+            return html;
+        }
+        const vis = document.getElementById('visualization');
+        steps.forEach((step, idx) => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">Step ${idx + 1}: ${step.action} ${step.word}${step.char ? ' ('+step.char+')' : ''}${step.found !== undefined ? ' (found: '+step.found+')' : ''}</div>`;
+            div.innerHTML += '<div class="trie-view">' + renderTrie(step.snapshot) + '</div>';
+            vis.appendChild(div);
+        });
+    </script>
+</body>
+</html> 
